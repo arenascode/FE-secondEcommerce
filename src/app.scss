@@ -1,6 +1,9 @@
-.main {
-  background-color: pink;
-  .subdiv {
-    background-color: blueviolet;
-  }
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;1,200;1,300;1,400;1,500;1,600&display=swap');
+
+:root {
+  font-family: 'Bebas Neue', sans-serif;
+}
+body {
+  background-color: grey;
+  overflow-x: hidden;
 }
