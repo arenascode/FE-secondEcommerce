@@ -1,0 +1,60 @@
+.contact-form {
+  max-width: 100vw;
+  margin-top: -8px;
+  padding: 20px;
+  // border: 2px solid #ccc;
+  // border-radius: 10px;
+  background-color: #000;
+  color: white;
+  .form-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  form {
+    .form-label {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: grey;
+    }
+
+    .form-checkbox {
+      display: block;
+      margin-bottom: 20px;
+      font-size: 16px;
+
+      input[type="checkbox"] {
+        margin-right: 10px;
+      }
+    }
+
+    .form-button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: background-color 0.3s ease-in-out;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+  }
+}

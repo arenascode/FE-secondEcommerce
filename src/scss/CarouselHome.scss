@@ -1,0 +1,13 @@
+.carouselHome {
+  height: 360px;
+  img {
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  #slide1 {
+    img {
+      object-fit: fill;
+    }
+  }
+}

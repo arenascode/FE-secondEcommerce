@@ -1,16 +1,16 @@
 const CarouselHome = () => {
   return (
-    <div className="carousel w-full mt-5">
+    <div className="carousel w-full mt-5 carouselHome">
       <div id="slide1" className="carousel-item relative w-full">
         <img
-          src="../src/assets/carouselHome/differentModels.jpg"
-          className="w-full"
+          src="../src/assets/carouselHome/carousel1.jpg"
+          className="w-full h-full"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide4" className="btn btn-circle">
+          <a href="#slide4" className="btn btn-circle btn-sm">
             ❮
           </a>
-          <a href="#slide2" className="btn btn-circle">
+          <a href="#slide2" className="btn btn-circle btn-sm">
             ❯
           </a>
         </div>
@@ -18,41 +18,41 @@ const CarouselHome = () => {
       <div id="slide2" className="carousel-item relative w-full">
         <img
           src="../src/assets/carouselHome/carousel2.jpg"
-          className="w-full"
+          className="w-full object-bottom"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide1" className="btn btn-circle">
+          <a href="#slide1" className="btn btn-circle btn-sm">
             ❮
           </a>
-          <a href="#slide3" className="btn btn-circle">
+          <a href="#slide3" className="btn btn-circle btn-sm">
             ❯
           </a>
         </div>
       </div>
       <div id="slide3" className="carousel-item relative w-full">
         <img
-          src="/images/stock/photo-1414694762283-acccc27bca85.jpg"
+          src="../src/assets/carouselHome/carousel3.jpg"
           className="w-full"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide2" className="btn btn-circle">
+          <a href="#slide2" className="btn btn-circle btn-sm">
             ❮
           </a>
-          <a href="#slide4" className="btn btn-circle">
+          <a href="#slide4" className="btn btn-circle btn-sm">
             ❯
           </a>
         </div>
       </div>
       <div id="slide4" className="carousel-item relative w-full">
         <img
-          src="/images/stock/photo-1665553365602-b2fb8e5d1707.jpg"
+          src="../src/assets/carouselHome/carousel4.jpg"
           className="w-full"
         />
         <div className="absolute flex justify-between transform -translate-y-1/2 left-5 right-5 top-1/2">
-          <a href="#slide3" className="btn btn-circle">
+          <a href="#slide3" className="btn btn-circle btn-sm">
             ❮
           </a>
-          <a href="#slide1" className="btn btn-circle">
+          <a href="#slide1" className="btn btn-circle btn-sm">
             ❯
           </a>
         </div>
