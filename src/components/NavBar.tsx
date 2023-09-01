@@ -1,59 +1,8 @@
+import { Link } from "react-router-dom";
+
 const NavBar = () => {
   return (
     <>
-      {/* <div className="navBar h-20 p-5 pl-10 w-screen flex bg-white">
-        <div className="navBar_desktop">
-          <ul className="navBarLinks">
-            <li className="">Style</li>
-            <li>Rider Equipment</li>
-            <li>Accesorios</li>
-            <li>Repuestos</li>
-            <li>Novedades</li>
-            <li>Ofertas</li>
-          </ul>
-        </div>
-        <div className="navBar_mobile">
-          <div className="navBar_Mobile_menuHamburguer">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-              />
-            </svg>
-          </div>
-        </div>
-        <div className="title">Luxury Motorcycles</div>
-        <div className="cartWidgetAndLogo">
-          <div className="cartWidget">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="w-9 h-8"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"
-              />
-            </svg>
-            <span className="badge badge-sm indicator-item"></span>
-          </div>
-          <div className="logo">
-            <img src="../src/assets/logo.png" alt="" />
-          </div>
-        </div>
-      </div> */}
       <div className="navbar bg-base-100 shadow-xl">
         <div className="navbar-start">
           <div className="dropdown">
@@ -96,9 +45,9 @@ const NavBar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <a className="btn btn-ghost normal-case text-xl">
+          <Link to={'/'} className="btn btn-ghost normal-case text-xl">
             Luxury Motorcycles
-          </a>
+          </Link>
         </div>
         <div className="navbar-end gap-3">
           <div className="dropdown dropdown-end">

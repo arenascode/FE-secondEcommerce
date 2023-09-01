@@ -1,6 +1,6 @@
 const CarouselHome = () => {
   return (
-    <div className="carousel w-full mt-5 carouselHome">
+    <div className="carousel w-full mt-2 carouselHome">
       <div id="slide1" className="carousel-item relative w-full">
         <img
           src="../src/assets/carouselHome/carousel1.jpg"

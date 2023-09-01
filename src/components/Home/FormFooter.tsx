@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import '../../scss/FormFooter.scss'
-const ContactForm: React.FC = () => {
+
+const FormFooter: React.FC = () => {
   const [email, setEmail] = useState("");
   const [isChecked, setIsChecked] = useState(false);
 
@@ -54,4 +55,4 @@ const ContactForm: React.FC = () => {
   );
 };
 
-export default ContactForm;
+export default FormFooter;

@@ -1,18 +1,18 @@
-import CarouselHome from "./components/Home/CarouselHome"
-import FormFooter from "./components/Home/FormFooter"
-import HeroHome from "./components/Home/HeroHome"
-import NavBar from "./components/Home/NavBar"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
+import NavBar from "./components/NavBar"
+import Home from "./components/Home/Home"
+import Products from "./components/Products/Products"
 
 function App() {
   
-
   return (
-    <div className="main">
+  <BrowserRouter>
       <NavBar />
-      <HeroHome />
-      <CarouselHome />
-      <FormFooter />
-    </div>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path={"/products"} element={<Products/>} />
+      </Routes>
+  </BrowserRouter>
   )
 }
 
