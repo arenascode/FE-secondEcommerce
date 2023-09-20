@@ -1,17 +1,13 @@
 import ProductListContainer from "./ProductListContainer"
-import PaginateProductsList from "../Products/PaginateProductsList"
 
 const Products = () => {
   return (
     <>
-      <div className="text-xl glass">
+      <div className="text-xl glass pt-16 h-100vh">
         <h1 className="text-center text-white text-3xl pt-6">Nuestras Motos</h1>
-        <PaginateProductsList/>
-      <ProductListContainer />
+        <ProductListContainer />
       </div>
-      
     </>
-    
-  )
+  );
 }
 export default Products
