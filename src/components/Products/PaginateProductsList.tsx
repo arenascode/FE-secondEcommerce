@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Product } from "./ProductListContainer";
 // import Products from "./Products";
 
@@ -15,6 +15,10 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   setProducts, PageOptions
 }) => {
 
+  useEffect(() => {
+    setArrowLeft(false)
+  }, []) 
+  
   console.log(PageOptions);
   
   const [arrowRight, setArrowRight] = useState(true);

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import PaginateProductsList from "./PaginateProductsList";
-import { AiOutlineCaretUp, AiOutlineCaretDown } from "react-icons/ai";
+import { AiOutlineCaretUp, AiOutlineCaretDown, AiOutlineArrowUp, AiOutlineArrowDown } from "react-icons/ai";
 
 export type Product = {
   id: string;
@@ -19,9 +19,13 @@ export type PageOptions = {
   hasNextPage: boolean;
   hasPrevPage: boolean
 };
+
+export type Category = string | null
+
 const ProductListContainer = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [pageOptions, setPageOptions] = useState<PageOptions>();
+  const [category, setCategory] = useState<Category>()
   const CLIENT_URL = useRef(null);
 
   useEffect(function getProducts() {
@@ -74,13 +78,16 @@ const ProductListContainer = () => {
     }, []);
     
     const filterProducts = (event: React.MouseEvent<HTMLLIElement>): void => {
-      console.log(event.currentTarget.textContent);
+      // console.log(event.currentTarget.textContent);
       let category: string | null = event.currentTarget.textContent
 
       if (category === 'Todas') {
         category = ''
       }
+      setCategory(category)
+      console.log(category);
       
+
       fetch(`http://localhost:8080/api/products?category=${category}`)
         .then((res) => res.json())
         .then((data) => {
@@ -101,13 +108,14 @@ const ProductListContainer = () => {
     };
 
     return (
+      <div className="filterContainer border-lg border-solid">
       <div
         ref={miRef}
         className="relative flex flex-col items-center roundend-lg width-max"
       >
         <button
           onClick={() => setIsOpen((prev: boolean) => !prev)}
-          className="bg-blue-400 p-2 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white"
+          className="bg-zinc-200 p-2 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500"
         >
           Selecciona la categoría
           {!isOpen ? (
@@ -117,7 +125,7 @@ const ProductListContainer = () => {
           )}
         </button>
         {isOpen && (
-          <div className="bg-blue-400 absolute top-14 flex flex-col items-start rounded-lg p-2 w-full z-10 text-black text-sm">
+          <div className="bg-zinc-300 absolute top-14 flex flex-col items-start rounded-lg p-2 w-full z-10 text-black text-sm">
             <ul className="flex flex-col w-full justify-between p-2 ">
               <li
                 onClick={filterProducts}
@@ -146,10 +154,103 @@ const ProductListContainer = () => {
             </ul>
           </div>
         )}
+        </div>
       </div>
     );
   };
 
+  const SortProducts = () => {
+    const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
+
+    const miRef = useRef<HTMLDivElement | null>(null);
+
+    //**Cerrar menú desplegable */
+    useEffect(() => {
+      // Función para manejar el clic fuera del componente
+      const handleClickExterno = (e: MouseEvent) => {
+        if (miRef.current && !miRef.current.contains(e.target as Node)) {
+          // El clic se realizó fuera del componente, puedes realizar alguna acción aquí
+          setIsSortOpen(false);
+          console.log("Click fuera del componente");
+          // Aquí puedes ocultar el componente, actualizar el estado, etc.
+        }
+      };
+
+      // Agregar un controlador de eventos al elemento document.body
+      document.body.addEventListener("click", handleClickExterno);
+
+      // Limpieza: eliminar el controlador de eventos cuando el componente se desmonte
+      return () => {
+        document.body.removeEventListener("click", handleClickExterno);
+      };
+    }, []);
+
+    const sortProducts = (event: React.MouseEvent<HTMLLIElement>): void => {
+      console.log(event.currentTarget.textContent);
+      const dataSort: string | null = event.currentTarget.dataset.sort || null;
+      console.log(dataSort);
+      
+      console.log(`sortProducts ${category}`);
+      
+      fetch(`http://localhost:8080/api/products?sortprice=${dataSort}&category=${category}`)
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data);
+
+          setProducts(data.products.docs);
+          const pageOptions: PageOptions = {
+            prevPage: data.products.prevPage,
+            nextPage: data.products.nextPage,
+            hasNextPage: data.products.hasNextPage,
+            hasPrevPage: data.products.hasPrevPage,
+          };
+
+          setPageOptions(pageOptions);
+          CLIENT_URL.current = data.CLIENT_URL;
+        })
+        .catch((err) => console.log(err));
+    };
+
+    return (
+      <div className="filterContainer border-lg border-solid">
+        <div
+          ref={miRef}
+          className="relative flex flex-col items-center roundend-lg width-max"
+        >
+          <button
+            onClick={() => setIsSortOpen((prev: boolean) => !prev)}
+            className="bg-zinc-200 p-2 px-3 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500"
+          >
+            <AiOutlineArrowUp/><AiOutlineArrowDown/> Ordenar
+            {!isSortOpen ? (
+              <AiOutlineCaretDown className="h-8" />
+            ) : (
+              <AiOutlineCaretUp className="h-8" />
+            )}
+          </button>
+          {isSortOpen && (
+            <div className="bg-zinc-300 absolute top-14 flex flex-col items-start rounded-lg p-2 w-full z-10 text-black text-sm">
+              <ul className="flex flex-col w-full justify-between p-2 ">
+                <li
+                  onClick={sortProducts} data-sort='-1'
+                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest"
+                >
+                  
+                  Mayor
+                </li>
+                <li
+                  onClick={sortProducts} data-sort='1'
+                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest"
+                >
+                  Menor
+                </li>
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
   // ** Loading Products component */
   const LoadingProducts = () => {
     return (
@@ -189,9 +290,11 @@ const ProductListContainer = () => {
   return (
     <div>
       <div className="mt-7 pb-6 flex flex-col gap-1">
-        <div className="filterProductsContainer flex justify-end pr-4 pt-4 mb-8">
+        <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1">
+          {products.length !== 0 && <SortProducts />}
           {products.length !== 0 && <FilterProducts />}
         </div>
+        <hr />
         <div className="productsContainer">
           {products.length == 0 ? <LoadingProducts /> : renderProducts}
         </div>
