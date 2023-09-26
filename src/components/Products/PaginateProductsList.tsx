@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Product } from "./ProductListContainer";
-// import Products from "./Products";
+import { PageNumber, Product } from "./ProductListContainer";
 
 interface ChildComponentProps {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
@@ -9,10 +8,13 @@ interface ChildComponentProps {
     nextPage: number | null;
     prevPage: number | null;
   };
+  Sort: string | null;
+  pageNumber: string;
+  setPageNumber: React.Dispatch<React.SetStateAction<PageNumber>>;
 }
 
 const PaginateProductsList: React.FC<ChildComponentProps> = ({
-  setProducts, PageOptions
+  setProducts, PageOptions, Sort, setPageNumber
 }) => {
 
   useEffect(() => {
@@ -20,6 +22,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   }, []) 
   
   console.log(PageOptions);
+  console.log(`sort in paginate ${Sort}`);
   
   const [arrowRight, setArrowRight] = useState(true);
   const [arrowLeft, setArrowLeft] = useState(true);
@@ -37,14 +40,15 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor1(true);
     setBtnColor2(false);
     setBtnColor3(false);
-    fetch("http://localhost:8080/api/products?page=1/")
+    
+    fetch(`http://localhost:8080/api/products?page=1/&sortprice=${Sort}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
         setProducts(data.products.docs);
-
         setArrowRight(data.products.hasNextPage);
         setArrowLeft(data.products.hasPrevPage);
+        setPageNumber(data.products.page);
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
@@ -53,7 +57,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor1(false);
     setBtnColor2(true);
     setBtnColor3(false);
-    fetch("http://localhost:8080/api/products?page=2/")
+    fetch(`http://localhost:8080/api/products?page=2&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -64,7 +68,8 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         setArrowLeft(data.products.hasPrevPage);
         setPreviousPage(data.products.prevPage);
         setNextPage(data.products.nextPage);
-        console.log(`nextPage ${data.products.nextPage}`);
+        setPageNumber(data.products.page)
+        // console.log(`nextPage ${data.products.nextPage}`);
 
         CLIENT_URL.current = data.CLIENT_URL;
       })
@@ -74,15 +79,16 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor1(false);
     setBtnColor2(false);
     setBtnColor3(true);
-    fetch("http://localhost:8080/api/products?page=3/")
+    fetch(`http://localhost:8080/api/products?page=3&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
+        setPageNumber(data.products.page)
         setProducts(data.products.docs);
-
         setArrowRight(data.products.hasNextPage);
         setArrowLeft(data.products.hasPrevPage);
         setPreviousPage(data.products.prevPage);
+
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
@@ -98,9 +104,9 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
       setBtnColor1(false);
       setBtnColor2(true);
     }
-    console.log(`nextPage un arrow ${nextPage}`);
-
-    fetch(`http://localhost:8080/api/products?page=${nextPage}/`)
+    // console.log(`nextPage un arrow ${nextPage}`);
+   
+    fetch(`http://localhost:8080/api/products?page=${nextPage}&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -108,14 +114,18 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         setArrowLeft(data.products.hasPrevPage);
         setNextPage(data.products.nextPage)
         setPreviousPage(data.products.prevPage)
+        setPageNumber(data.products.page);
+        
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
   }
   function previousOnePage() {
-    console.log(`previousPage in arrowLeft ${previousPage}`);
+    // console.log(`previousPage in arrowLeft ${previousPage}`);
 
-    fetch(`http://localhost:8080/api/products?page=${previousPage}/`)
+    fetch(
+      `http://localhost:8080/api/products?page=${previousPage}&sortprice=${Sort}/`
+    )
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -123,6 +133,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         setArrowLeft(data.products.hasPrevPage);
         setNextPage(data.products.nextPage);
         setPreviousPage(data.products.prevPage);
+        setPageNumber(data.products.page);
         CLIENT_URL.current = data.CLIENT_URL;
 
         if (data.products.page === 1) {

@@ -21,11 +21,15 @@ export type PageOptions = {
 };
 
 export type Category = string | null
+export type SortProducts = string | null
+export type PageNumber = string
 
 const ProductListContainer = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [pageOptions, setPageOptions] = useState<PageOptions>();
   const [category, setCategory] = useState<Category>()
+  const [sortProducts, setSortProducts] = useState<SortProducts>('1')
+  const [pageNumber, setPageNumber] = useState('1')
   const CLIENT_URL = useRef(null);
 
   useEffect(function getProducts() {
@@ -44,7 +48,7 @@ const ProductListContainer = () => {
         console.log(pageOptions);
         
         setPageOptions(pageOptions);
-    
+        setCategory('')
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
@@ -189,15 +193,22 @@ const ProductListContainer = () => {
       console.log(event.currentTarget.textContent);
       const dataSort: string | null = event.currentTarget.dataset.sort || null;
       console.log(dataSort);
-      
+      setSortProducts(dataSort)
       console.log(`sortProducts ${category}`);
+      console.log(`pageNumberInSort ${pageNumber}`);
+      if (pageNumber != '1') {
+        console.log(`entró a la condición`);
+        setPageNumber('1')
+      }
+      console.log(`new PageNumber ${pageNumber}`);
       
-      fetch(`http://localhost:8080/api/products?sortprice=${dataSort}&category=${category}`)
+      fetch(`http://localhost:8080/api/products?sortprice=${dataSort}&category=${category}&page=${pageNumber}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
 
           setProducts(data.products.docs);
+          setPageNumber(data.products.page)
           const pageOptions: PageOptions = {
             prevPage: data.products.prevPage,
             nextPage: data.products.nextPage,
@@ -303,6 +314,9 @@ const ProductListContainer = () => {
             <PaginateProductsList
               PageOptions={pageOptions}
               setProducts={setProducts}
+              Sort={sortProducts}
+              pageNumber={pageNumber}
+              setPageNumber={setPageNumber}
             />
           )}
         </div>
