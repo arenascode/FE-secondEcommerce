@@ -8,7 +8,6 @@ const ItemCount = () => {
     const action = event.currentTarget.textContent
     
     if (action === '+') {
-      
       setCount(count + 1)
     } else if (action === '-') {
       if (count >= 1) {

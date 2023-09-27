@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Product } from "./ProductListContainer";
-import ItemCount from "./itemCount";
+import ItemCount from "./ItemCount";
+import { useCart } from "../context/cartContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
-  console.log(id);
+
+  const {setCategory}= useCart()
   const CLIENT_URL = useRef(null);
   const [product, setProduct] = useState<Product>();
+
   useEffect(() => {
     fetch(`http://localhost:8080/api/products/${id}`)
       .then((res) => res.json())
@@ -15,18 +18,25 @@ const ProductDetail = () => {
         console.log(data);
 
         setProduct(data.productById);
+        // *To be able to show correctly the imgs
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
   }, [id]);
 
+
+  //* Function to back to category in breadcrumbs
+  const backToCategory = (event: React.MouseEvent<HTMLElement>) => {
+    const category: string | null = event.currentTarget.textContent;
+    console.log(category);
+    setCategory(category)
+  };
   //** ProductCard Component */
   const ProductCard = ({
     productData,
   }: {
     productData: Product | undefined;
   }) => {
-    console.log(productData?.thumbnails[0]);
 
     return (
       <div className="card w-97 bg-stone-600 shadow-xl flow-root text-stone-200">
@@ -43,10 +53,10 @@ const ProductDetail = () => {
               <Link to={'/'}>Home</Link>
             </li>
             <li>
-              <Link to={'/products'}>Motos</Link>
+              <Link onClick={() => setCategory('')} to={'/products'}>Motos</Link>
             </li>
             <li>
-              <a>{productData?.category}</a>
+              <Link to={"/products"} onClick={backToCategory}>{productData?.category}</Link>
             </li>
             <li>
               <a>{productData?.title}</a>

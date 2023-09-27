@@ -7,6 +7,7 @@ import {
   AiOutlineArrowDown,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { useCart } from "../context/cartContext";
 
 export type Product = {
   id: string;
@@ -33,18 +34,21 @@ export type PageNumber = string;
 const ProductListContainer = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [pageOptions, setPageOptions] = useState<PageOptions>();
-  const [category, setCategory] = useState<Category>();
+  // const [category, setCategory] = useState<Category>();
   const [sortProducts, setSortProducts] = useState<SortProducts>("1");
   const [pageNumber, setPageNumber] = useState("1");
   const CLIENT_URL = useRef(null);
 
+  const {category, setCategory} = useCart()
+  
   useEffect(() => {
     getProducts()
   }, []);
 
   //** Get Products */
   const getProducts = () => {
-    fetch("http://localhost:8080/api/products/")
+
+    fetch(`http://localhost:8080/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
@@ -59,7 +63,9 @@ const ProductListContainer = () => {
         console.log(pageOptions);
 
         setPageOptions(pageOptions);
-        setCategory("");
+        // setCategory("");
+        console.log(category);
+        
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));

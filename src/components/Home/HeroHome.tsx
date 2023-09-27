@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
+import { useCart } from "../context/cartContext";
 const HeroHome = () => {
+
+  const {setCategory} = useCart()
   return (
     <div
       className="hero min-h-screen"
@@ -18,7 +21,7 @@ const HeroHome = () => {
             motocicletas de lujo. Bienvenido al lugar donde tus sueños de
             aventura toman forma."
           </p>
-          <Link to={'/products'} className="btn text-lg">Conoce Nuestras Motos </Link>
+          <Link onClick={() => setCategory('')} to={'/products'} className="btn text-lg">Conoce Nuestras Motos </Link>
         </div>
       </div>
     </div>
