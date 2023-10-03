@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../context/cartContext";
 
 export type Product = {
-  id: string;
+  _id: string;
   title: string;
   description: string;
   price: number;
@@ -297,7 +297,7 @@ const ProductListContainer = () => {
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
-      <div key={p.id} className="card w-96 glass flex m-auto mt-10">
+      <div key={p._id} className="card w-96 glass flex m-auto mt-10">
         <figure>
           <img
             src={`http://${CLIENT_URL.current}${p.thumbnails[0]}`}
@@ -310,8 +310,8 @@ const ProductListContainer = () => {
           <p>Price: ${p.price} USD</p>
           <p>Stock: {p.stock}</p>
           <div className="card-actions justify-end">
-            <Link to={`/products/${p.id}`}>
-              <button data-pid={p.id} className="btn btn-success text-lg">
+            <Link to={`/products/${p._id}`}>
+              <button data-pid={p._id} className="btn btn-success text-lg">
                 View Details!
               </button>
             </Link>

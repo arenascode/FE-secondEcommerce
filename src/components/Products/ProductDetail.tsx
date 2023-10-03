@@ -7,7 +7,7 @@ import { useCart } from "../context/cartContext";
 const ProductDetail = () => {
   const { id } = useParams();
 
-  const {setCategory}= useCart()
+  const {setCategory, cartId, cartIdStorage}= useCart()
   const CLIENT_URL = useRef(null);
   const [product, setProduct] = useState<Product>();
 
@@ -32,12 +32,14 @@ const ProductDetail = () => {
     setCategory(category)
   };
   //** ProductCard Component */
-  const ProductCard = ({
-    productData,
-  }: {
-    productData: Product | undefined;
-  }) => {
+  const ProductCard = ({ productData }: { productData: Product | undefined }) => {
 
+    // const pid: string | undefined = productData?._id
+    const goToCart = ():void => {
+      console.log(cartId);
+      console.log(cartIdStorage);
+      
+    }
     return (
       <div className="card w-97 bg-stone-600 shadow-xl flow-root text-stone-200">
         <figure className="px-3 pt-1 mt-3 overflow-hidden rounded-t-lg">
@@ -94,10 +96,12 @@ const ProductDetail = () => {
           <p className="tracking-wider ">Animate a la aventura con la {productData?.title}   {productData?.description}</p>
           <div className="card-actions flex justify-between w-full items-center">
             <div className="itemCountCountainer flex items-center gap-2">
-              <ItemCount />
-              <button className="btn btn-sm rounded-xl mt-2 active:bg-success active:text-whit active:border-success">Add To Cart</button>
+              <ItemCount productId={productData?._id ?? ''} />
             </div>
-            <button className="btn btn-sm btn-success rounded-full tracking-wider mt-1">Buy Now</button>
+            <Link to={`/cartDetail/${cartIdStorage}`}>
+            <button onClick={goToCart} className="btn btn-sm btn-success rounded-full tracking-wider mt-1">Buy Now</button>
+            </Link>
+            
           </div>
         </div>
       </div>
@@ -106,7 +110,7 @@ const ProductDetail = () => {
 
   return (
     <div className="py-20 flex justify-center px-2">
-      <ProductCard productData={product} />
+      <ProductCard productData={product ? product : undefined} />
     </div>
   );
 };
