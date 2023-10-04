@@ -1,26 +1,12 @@
 import axios from "axios";
-import { useCart } from "../context/cartContext";
-import { useEffect, useRef, useState } from "react";
+import { useCart } from "../context/CartContext";
+import { useEffect, useRef } from "react";
 import ProductInCart from "./ProductCart";
 
-export type ProductCart = {
-  _id: {
-    _id: string;
-    title: string;
-    description: string;
-    price: number;
-    code: string;
-    stock: number;
-    status: boolean;
-    category: string;
-    thumbnails: (string | undefined)[];
-  };
-  quantity: number;
-};
+
 
 const CartDetail = () => {
-  const { cartIdStorage } = useCart();
-  const [cartList, setCartList] = useState<ProductCart[]>([]);
+  const { cartIdStorage, setCartList, cartList, cartQuantity, subTotalProducts, subTotal } = useCart();
   console.log(cartIdStorage);
 
   const CLIENT_URL = useRef<string>("");
@@ -85,9 +71,9 @@ const CartDetail = () => {
               <td className="pl-10 py-3 text-base rounded-bl-xl">
                 Total Of Products
               </td>
-              <td className="pl-12 py-3">3</td>
+              <td className="pl-12 py-3">{cartQuantity()}</td>
               <td colSpan={1}></td>
-              <td className="pl-1 py-3 ">21,000</td>
+              <td className="pl-1 py-3 ">${subTotalProducts()}</td>
               <td colSpan={1} className="rounded-br-xl"></td>
             </tr>
           </tfoot>
@@ -99,7 +85,7 @@ const CartDetail = () => {
           {/*  Subtotal */}
           <div className="flex justify-between items-center mb-2">
             <span className="text-gray-600">Subtotal:</span>
-            <span className="font-semibold text-gray-900">$5000</span>
+            <span className="font-semibold text-gray-900">${subTotal}</span>
           </div>
           {/* Discount Code */}
           <div className="flex justify-between items-center mb-2">
