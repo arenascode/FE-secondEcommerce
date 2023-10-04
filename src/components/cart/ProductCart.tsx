@@ -37,10 +37,10 @@ const ProductInCart: React.FC<ProductCartProps> = ({product, CLIENT_URL}) => {
           </div>
         </div>
       </td>
-      <td className="qty pl-10 py-4">{product.quantity}</td>
-      <td className="price py-4">${product._id.price}</td>
-      <td className="total py-4">{product.quantity * product._id.price}</td>
-      <td className="deleteProduct pl-2 py-4"><img src="../src/assets/icons/borrar.png" alt="deleteIcon" width={'24px'} /></td>
+      <td className="qty pl-12 py-4 text-lg">{product.quantity}</td>
+      <td className="price py-4 text-lg">${product._id.price}</td>
+      <td className="total py-4 text-lg">{product.quantity * product._id.price}</td>
+      <td className="deleteProduct pl-3 py-4"><img src="../src/assets/icons/borrar.png" alt="deleteIcon" width={'24px'} /></td>
     </tr>
   );
 }
