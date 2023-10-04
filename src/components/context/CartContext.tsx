@@ -34,6 +34,7 @@ type CartContextType = {
   deleteProductInCart: (e: React.MouseEvent<HTMLButtonElement>) => void;
   setCartQty: React.Dispatch<React.SetStateAction<number>>;
   emptyCart: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  confirmPurchase: () => void
 };
 
 const CartContext = createContext<CartContextType>({
@@ -50,7 +51,8 @@ const CartContext = createContext<CartContextType>({
   subTotal: 0,
   deleteProductInCart: () => { },
   setCartQty: () => { },
-  emptyCart: () => {}
+  emptyCart: () => { },
+  confirmPurchase: () => {}
 });
 
 export const useCart = () => {
@@ -132,6 +134,17 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     })
   };
 
+  //* Confirm Purchase 
+  const confirmPurchase = () => {
+
+    axios.get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
+      .then(res => {
+        console.log(res);
+        if (res.status === 200)
+          alert(`Thank you for your purchase. Please check your email`)
+        setCartList([])
+    })
+  }
   const contextValue: CartContextType = {
     category: category,
     setCategory: setCategory,
@@ -146,7 +159,8 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     subTotal: subTotal,
     deleteProductInCart: deleteProductInCart,
     setCartQty: setCartQty,
-    emptyCart: emptyCart
+    emptyCart: emptyCart,
+    confirmPurchase: confirmPurchase
   }
 
   return (

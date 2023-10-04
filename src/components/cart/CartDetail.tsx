@@ -13,6 +13,7 @@ const CartDetail = () => {
     subTotalProducts,
     subTotal,
     emptyCart,
+    confirmPurchase
   } = useCart();
   console.log(cartIdStorage);
 
@@ -142,7 +143,7 @@ const CartDetail = () => {
             >
               Empty Cart
             </button>
-            <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-green">
+            <button onClick={confirmPurchase} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-green">
               Confirm Purchase
             </button>
           </div>
