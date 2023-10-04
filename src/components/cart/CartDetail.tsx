@@ -2,11 +2,18 @@ import axios from "axios";
 import { useCart } from "../context/CartContext";
 import { useEffect, useRef } from "react";
 import ProductInCart from "./ProductCart";
-
-
+import { Link } from "react-router-dom";
 
 const CartDetail = () => {
-  const { cartIdStorage, setCartList, cartList, cartQuantity, subTotalProducts, subTotal } = useCart();
+  const {
+    cartIdStorage,
+    setCartList,
+    cartList,
+    cartQuantity,
+    subTotalProducts,
+    subTotal,
+    emptyCart,
+  } = useCart();
   console.log(cartIdStorage);
 
   const CLIENT_URL = useRef<string>("");
@@ -21,93 +28,127 @@ const CartDetail = () => {
       });
   }, [cartIdStorage]);
 
-  
+  const EmptyCart = () => {
+    return (
+      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28">
+        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto">
+          <figure className="px-10 pt-10">
+            {/* <img
+            src=""
+            className="rounded-xl"
+          /> */}
+          </figure>
+          <div className="card-body items-center text-center">
+            <h1 className="card-title">Your Cart is Empty!</h1>
+            <p className="text-lg">
+              We invite you to get to know all of our Motorcycles!
+            </p>
+            <div className="card-actions">
+              <Link to={"/products"}>
+                <button className="btn btn-success btn-sm mt-3 text-lg tracking-widest">Go</button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className=" cardDetailsContainer pt-24 bg-color-white">
-      <div className="relative overflow-x-auto">
-        <table className="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-            <tr className="tracking-wider text-lg text-zinc-800 font-extrabold">
-              <th scope="col" className="pl-10 py-3 rounded-tl-xl w-1/5">
-                Product name
-              </th>
-              <th scope="col" className="pl-7 py-3">
-                Cantidad
-              </th>
-              <th scope="col" className="pr-5 py-3">
-                Price
-              </th>
-              <th scope="col" className="py-3">
-                Total
-              </th>
-              <th scope="col" className="py-3 rounded-tr-xl">
-                Delete
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {/* <tr className="bg-white dark:bg-gray-800">
-              <td className="px-4 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col items-center gap-2 w-max">
-                <img src="../src/assets/user.png" alt="" />
-                <p>Apple MacBook Pro 17"</p>
-              </td>
-              <td className="qty pl-4 py-4">1</td>
-              <td className="price py-4">$2999</td>
-              <td className="total py-4">$2999</td>
-              <td className="deleteProduct py-4">X</td>
-            </tr> */}
-            {cartList.map((product) => (
-              <ProductInCart
-                product={product}
-                CLIENT_URL={CLIENT_URL.current}
-                key={product._id._id}
-              />
-            ))}
-            {/* ... (otras filas) */}
-          </tbody>
-          <tfoot className="bg-slate-400 text-lg">
-            <tr className="font-semibold text-gray-900 dark:text-white bg-zinc-300 w-full rounded-b-lg">
-              <td className="pl-10 py-3 text-base rounded-bl-xl">
-                Total Of Products
-              </td>
-              <td className="pl-12 py-3">{cartQuantity()}</td>
-              <td colSpan={1}></td>
-              <td className="pl-1 py-3 ">${subTotalProducts()}</td>
-              <td colSpan={1} className="rounded-br-xl"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <div className="cartDetails ">
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
-          <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
-          {/*  Subtotal */}
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600">Subtotal:</span>
-            <span className="font-semibold text-gray-900">${subTotal}</span>
+    <>
+      {cartList.length === 0 ? (
+        <EmptyCart />
+      ) : (
+        <div className=" cardDetailsContainer pt-24 bg-color-white">
+          <div className="tableContainer relative overflow-x-auto">
+            <table className="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                <tr className="tracking-wider text-lg text-zinc-800 font-extrabold">
+                  <th scope="col" className="pl-10 py-3 rounded-tl-xl w-1/5">
+                    Product name
+                  </th>
+                  <th scope="col" className="pl-7 py-3">
+                    Quantity
+                  </th>
+                  <th scope="col" className="pr-5 py-3">
+                    Price
+                  </th>
+                  <th scope="col" className="py-3">
+                    Total
+                  </th>
+                  <th scope="col" className="py-3 rounded-tr-xl">
+                    Delete
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {cartList.map((product) => (
+                  <ProductInCart
+                    product={product}
+                    CLIENT_URL={CLIENT_URL.current}
+                    key={product._id._id}
+                  />
+                ))}
+                {/* ... (otras filas) */}
+              </tbody>
+              <tfoot className="bg-slate-400 text-lg">
+                <tr className="font-semibold text-gray-900 dark:text-white bg-zinc-300 w-full rounded-b-lg">
+                  <td className="pl-10 py-3 text-base rounded-bl-xl">
+                    Total Of Products
+                  </td>
+                  <td className="pl-12 py-3">{cartQuantity()}</td>
+                  <td colSpan={1}></td>
+                  <td className="pl-1 py-3 ">${subTotalProducts()}</td>
+                  <td colSpan={1} className="rounded-br-xl"></td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
-          {/* Discount Code */}
-          <div className="flex justify-between items-center mb-2">
+          <div className="purchaseDetails">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-md">
+              <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+              {/*  Subtotal */}
+              <div className="flex justify-between items-center mb-2 text-lg">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="font-semibold text-gray-900">${subTotal}</span>
+              </div>
+              {/* Discount Code */}
+              {/* <div className="flex justify-between items-center mb-2">
             <span className="text-gray-600">Discount Code:</span>
             <span className="font-semibold text-green-500">
               - $500 (SAVE10)
             </span>
+          </div> */}
+              {/* //* Shipping */}
+              <div className="flex justify-between items-center mb-2">
+                <span className="text-gray-600">Shipping:</span>
+                <span className="font-semibold text-green-500">Free</span>
+              </div>
+              <hr className="my-2 border-t border-gray-300" />
+              {/* //* Total */}
+              <div className="flex justify-between items-center mt-2">
+                <span className="text-xl font-bold">Total:</span>
+                <span className="text-xl font-bold text-blue-500">
+                  ${subTotal}
+                </span>
+              </div>
+            </div>
           </div>
-          {/* //* Shipping */}
-          <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600">Shipping:</span>
-            <span className="font-semibold text-gray-900">$50</span>
-          </div>
-          <hr className="my-2 border-t border-gray-300" />
-          {/* //* Total */}
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-xl font-bold">Total:</span>
-            <span className="text-xl font-bold text-blue-500">$4550</span>
+          <div className="ContainerBtns flex justify-between items-center p-3">
+            <button
+              data-cid={cartIdStorage}
+              onClick={emptyCart}
+              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red"
+            >
+              Empty Cart
+            </button>
+            <button className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-green">
+              Confirm Purchase
+            </button>
           </div>
         </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 export default CartDetail;

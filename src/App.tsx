@@ -3,7 +3,7 @@ import NavBar from "./components/NavBar"
 import Home from "./components/Home/Home"
 import Products from "./components/Products/Products"
 import ProductDetail from "./components/Products/ProductDetail"
-import CartContextProvider from "./components/context/cartContext"
+import CartContextProvider from "./components/context/CartContext"
 import Login from "./components/sessions/Login"
 import CartDetail from "./components/cart/CartDetail"
 

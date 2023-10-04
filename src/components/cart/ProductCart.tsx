@@ -1,3 +1,4 @@
+import { useCart } from "../context/CartContext";
 
 type ProductCartProps = {
   product: {
@@ -19,6 +20,7 @@ type ProductCartProps = {
 
 const ProductInCart: React.FC<ProductCartProps> = ({product, CLIENT_URL}) => {
 
+  const {deleteProductInCart} = useCart()
 
   return (
     <tr className="bg-white dark:bg-gray-800 items-center rounded-sm border border-s-2">
@@ -26,7 +28,7 @@ const ProductInCart: React.FC<ProductCartProps> = ({product, CLIENT_URL}) => {
         <div className="rounded-md shadow-lg">
           <div className="imgContainer h-[120px] w-[120px] items-center">
             <img
-              src={`http://${CLIENT_URL}${product._id.thumbnails[0]}`}
+              src={`http://${CLIENT_URL}${product._id.thumbnails}`}
               alt="productPhoto"
               className="w-max object-cover h-max rounded-md shadow-lg"
             />
@@ -40,7 +42,10 @@ const ProductInCart: React.FC<ProductCartProps> = ({product, CLIENT_URL}) => {
       <td className="qty pl-12 py-4 text-lg">{product.quantity}</td>
       <td className="price py-4 text-lg">${product._id.price}</td>
       <td className="total py-4 text-lg">{product.quantity * product._id.price}</td>
-      <td className="deleteProduct pl-3 py-4"><img src="../src/assets/icons/borrar.png" alt="deleteIcon" width={'24px'} /></td>
+      <td className="deleteProduct pl-3 py-4">
+        <button onClick={deleteProductInCart} data-pid={product._id._id}>
+          <img src="../src/assets/icons/borrar.png" alt="deleteIcon" width={'24px'} />
+        </button></td>
     </tr>
   );
 }
