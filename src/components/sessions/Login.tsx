@@ -1,5 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
@@ -41,12 +43,12 @@ const Login: React.FC = () => {
       <div className="max-w-md w-full space-y-8">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign In
+            Welcome !
           </h2>
         </div>
         <div className="mt-8 space-y-6 text-white">
           <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm">
+          <form className="rounded-md shadow-sm">
             <div>
               <input
                 type="text"
@@ -67,7 +69,7 @@ const Login: React.FC = () => {
                 placeholder="Password"
               />
             </div>
-          </div>
+          </form>
           <div className="flex items-end justify-end">
             <button
               onClick={userLogin}
@@ -79,12 +81,22 @@ const Login: React.FC = () => {
         </div>
         <div className="signWithGH flex flex-col justify-center gap-2 m-auto items-center ">
           <h3>Or Sign With Github</h3>
-          <button
+          <div
             onClick={githubLogin}
-            className="w-1/3 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider"
+            className=" flex justify-center text-4xl text-black tracking-wider shadow-lg rounded-full"
           >
-            Github Login
+            <AiOutlineGithub />
+          </div>
+        </div>
+        <div className="linkToRegister flex justify-center gap-4 m-auto items-center ">
+          <h3>Be member of our comunity</h3>
+          <AiOutlineArrowRight />
+          <Link to={"/register"}>
+            <button className=" flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider">
+            Create Your Account
           </button>
+          </Link>
+          
         </div>
       </div>
     </div>
