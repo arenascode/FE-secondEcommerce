@@ -1,61 +1,83 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Register = () => {
-
-  const formRegister = document.getElementById('registerForm')
-  // const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
-  const [firstPassword, setFirstPassword] = useState<string>('')
-  const [repeatPassword, setRepeatPassword] = useState<string>('')
-
+  const formRegister = document.getElementById("registerForm");
+  const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
+  const [firstPassword, setFirstPassword] = useState<string>("");
+  const [repeatPassword, setRepeatPassword] = useState<string>("")
+  console.log(passwordMatch);
+  
+  useEffect(() => {
+    if (
+      firstPassword.length >= 6 &&
+      repeatPassword.length >= 6
+    ) {
+      console.log(`first condition`);
+      
+      console.log(firstPassword, repeatPassword);
+      setPasswordMatch(true)
+    } else {
+      setPasswordMatch(false)
+      console.log(`second condition`);
+      
+      console.log(firstPassword, repeatPassword);
+      
+    }
+  }, [firstPassword, repeatPassword]);
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (formRegister instanceof HTMLFormElement) {
-      formRegister.addEventListener("submit", (e) => {
-        e.preventDefault();
-        const dataUser = new FormData(formRegister);
-        const userName = dataUser.get("name");
-        const userLastName = dataUser.get("lastName");
-        const userEmail = dataUser.get("email");
-        const userAge = dataUser.get("age");
-        const userPass = dataUser.get("loginPassword");
-        const repeatUserPass = dataUser.get("repeatPassword");
+      e.preventDefault();
+      const dataUser = new FormData(formRegister);
+      const userName = dataUser.get("name");
+      const userLastName = dataUser.get("lastName");
+      const userEmail = dataUser.get("email");
+      const userAge = dataUser.get("age");
+      const userPass = dataUser.get("loginPassword");
+      // const repeatUserPass = dataUser.get("repeatPassword");
+      console.log(firstPassword);
+      console.log(repeatPassword);
 
-        if (userPass === repeatUserPass) {
-          const objDataUser = {
-            name: userName,
-            lastName: userLastName,
-            email: userEmail,
-            age: userAge,
-            password: userPass,
-          };
+      if (firstPassword === repeatPassword) {
+        const objDataUser = {
+          first_name: userName,
+          last_name: userLastName,
+          email: userEmail,
+          age: userAge,
+          password: userPass,
+        };
+        console.log(objDataUser);
 
-          fetch("/api/sessions/register", {
-            method: "POST",
-            body: JSON.stringify(objDataUser),
-            headers: {
-              "Content-Type": "application/json",
-            },
+        fetch("http://127.0.0.1:8080/api/sessions/register", {
+          method: "POST",
+          body: JSON.stringify(objDataUser),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+          .then((response) => {
+            if (response.ok) {
+              alert("We are glad that you are part");
+              window.location.href = "/login";
+            } else if (response.status === 400) {
+              const data = response.json();
+              data.then((res) => alert(res.error));
+            }
           })
-            .then((response) => {
-              if (response.ok) {
-                alert("We are glad that you are part");
-                window.location.href = "/login";
-              }
-            })
-            .catch((error) => console.error(error.message));
-        } else {
-          alert(`The passwords don't match`);
-        }
-        formRegister.reset();
-      });
+          .catch((error) => console.error(error.message));
+      } else {
+        alert(`The passwords don't match`);
+      }
+      // formRegister.reset();
     }
   };
-
 
   return (
     <div className="RegisterFormContainer pt-20 pb-4 px-5">
       <form
+        onSubmit={handleSubmit}
         id="registerForm"
         className="max-w-md mx-auto mt-4 p-4 border rounded-lg shadow-lg"
       >
@@ -125,12 +147,26 @@ const Register = () => {
           <span className="text-red-500">Passwords do not match</span>
         )}
         <br />
-
+        {passwordMatch ? '' : (
+          <span className="text-red-500">
+            Password Must be at least Six characters long
+          </span>
+        )}
+        <br />
         <div className="flex flex-col items-center">
           <button
+            disabled={!passwordMatch}
             type="submit"
             name="submit"
-            className=" flex justify-center py-2 mt-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider"
+            className={`flex justify-center py-2 mt-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
+              !(
+                (firstPassword === "" || repeatPassword === "") &&
+                firstPassword.length >= 6 &&
+                repeatPassword.length >= 6
+              )
+                ? "bg-gray-300"
+                : "bg-gray-700 hover:bg-gray-800"
+            }  tracking-wider`}
           >
             Register Me
           </button>
