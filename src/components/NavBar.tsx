@@ -45,19 +45,19 @@ const NavBar = () => {
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
               <li>
-                <a>Home</a>
+                <Link to={"/"}>Home</Link>
               </li>
               <li>
-                <a>Conoce Nuestras Motos</a>
+                <Link to={'/products'}>Meet our motorcycles</Link>
               </li>
               <li>
-                <a>Ofertas</a>
+                <a>Offers</a>
               </li>
               <li>
-                <a>Perfil</a>
+                <Link to={"/profile"}>Profile</Link>
               </li>
               <li>
-                <a>Cart</a>
+                <Link to={`/cartDetail/${cartIdStorage}`}>Cart</Link>
               </li>
             </ul>
           </div>

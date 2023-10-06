@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
 const Register = () => {
   const formRegister = document.getElementById("registerForm");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
-  const [firstPassword, setFirstPassword] = useState<string>("");
+  const [firstPassword, setFirstPassword] = useState("");
+  const [minLengthPass, setMinLengthPass] = useState(true)
   const [repeatPassword, setRepeatPassword] = useState<string>("")
-  console.log(passwordMatch);
-  
+ 
   useEffect(() => {
+    console.log(`useEffec activado`);
+    
     if (
       firstPassword.length >= 6 &&
       repeatPassword.length >= 6
@@ -25,6 +27,18 @@ const Register = () => {
     }
   }, [firstPassword, repeatPassword]);
   
+  const handleWarningPass = (e: ChangeEvent<HTMLInputElement>) => {
+    setFirstPassword(e.currentTarget.value);
+    
+    if (firstPassword.length < 5) {
+      console.log(firstPassword.length)
+      setMinLengthPass(false)
+    } else {
+      setMinLengthPass(true)
+    }
+}
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -128,7 +142,7 @@ const Register = () => {
           type="password"
           id="loginPassword"
           name="loginPassword"
-          onInput={(e) => setFirstPassword(e.currentTarget.value)}
+          onInput={handleWarningPass}
           className="w-full p-2 mb-2 border rounded"
           required
         />
@@ -147,7 +161,7 @@ const Register = () => {
           <span className="text-red-500">Passwords do not match</span>
         )}
         <br />
-        {passwordMatch ? '' : (
+        {minLengthPass ? '' : (
           <span className="text-red-500">
             Password Must be at least Six characters long
           </span>
@@ -160,7 +174,7 @@ const Register = () => {
             name="submit"
             className={`flex justify-center py-2 mt-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${
               !(
-                (firstPassword === "" || repeatPassword === "") &&
+                (firstPassword !== "" || repeatPassword !== "") &&
                 firstPassword.length >= 6 &&
                 repeatPassword.length >= 6
               )

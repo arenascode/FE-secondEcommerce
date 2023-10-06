@@ -30,7 +30,7 @@ const Login: React.FC = () => {
       console.log(result);
       if (result.status === 200) {
         alert(`Welcome to Luxury Motorcycles`);
-        // window.location.replace("/");
+        window.location.replace("/");
       } else if (result.status === 401) {
         alert("invalid password. Try Again");
       } else if (result.status === 404) {
