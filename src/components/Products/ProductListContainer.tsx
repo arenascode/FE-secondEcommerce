@@ -7,7 +7,7 @@ import {
   AiOutlineArrowDown,
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext";
 
 export type Product = {
   _id: string;

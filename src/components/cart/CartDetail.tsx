@@ -16,7 +16,8 @@ const CartDetail = () => {
     confirmPurchase
   } = useCart();
   console.log(cartIdStorage);
-
+  console.log(cartList);
+  
   const CLIENT_URL = useRef<string>("");
 
   useEffect(() => {
@@ -57,7 +58,7 @@ const CartDetail = () => {
 
   return (
     <>
-      {cartList.length === 0 ? (
+      {cartList.length === 0  || cartIdStorage === undefined ? (
         <EmptyCart />
       ) : (
         <div className=" cardDetailsContainer pt-24 bg-color-white">

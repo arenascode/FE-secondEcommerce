@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { useCart } from "./context/CartContext";
 import { useState } from "react";
+import { useSessions } from "./context/SessionsContext";
 
 const NavBar = () => {
 
   const { cartQuantity, subTotalProducts, cartIdStorage } = useCart()
-
+  const {profilePhotoUrl} = useSessions()
+  console.log(cartIdStorage);
+  console.log(profilePhotoUrl);
+  
   const [isDropdownVisible, setIsDropDownVisible] = useState(false)
 
   const toggleDropdown = () => {
@@ -48,7 +52,7 @@ const NavBar = () => {
                 <Link to={"/"}>Home</Link>
               </li>
               <li>
-                <Link to={'/products'}>Meet our motorcycles</Link>
+                <Link to={"/products"}>Meet our motorcycles</Link>
               </li>
               <li>
                 <a>Offers</a>
@@ -57,7 +61,7 @@ const NavBar = () => {
                 <Link to={"/profile"}>Profile</Link>
               </li>
               <li>
-                <Link to={`/cartDetail/${cartIdStorage}`}>Cart</Link>
+                <Link to={`/cartDetail/`}>Cart</Link>
               </li>
             </ul>
           </div>
@@ -108,7 +112,7 @@ const NavBar = () => {
                     Subtotal: ${subTotalProducts()}
                   </span>
                   <div className="card-actions">
-                    <Link to={`/cartDetail/${cartIdStorage}`}>
+                    <Link to={`/cartDetail/`}>
                       <button
                         onClick={closeDropdown}
                         className="btn btn-primary btn-block"
@@ -125,7 +129,10 @@ const NavBar = () => {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-8 rounded-full">
-                <img src="../src/assets/user.png" />
+                {
+                  profilePhotoUrl &&
+                  typeof profilePhotoUrl ===
+                    "string" && (<img src={`http://localhost:8080/${profilePhotoUrl}`} />)}
               </div>
             </label>
             <ul

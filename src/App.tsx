@@ -8,25 +8,28 @@ import Login from "./components/sessions/Login"
 import CartDetail from "./components/cart/CartDetail"
 import Register from "./components/sessions/Register"
 import Profile from "./components/sessions/Profile"
+import SessionsContextProvider from "./components/context/SessionsContext"
 
 function App() {
   
   return (
-    <CartContextProvider>
-  <BrowserRouter>
-      <NavBar />
-      <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/register" element={<Register/>}/>
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile/>} />
-          <Route path={"/products"} element={<Products />} />
-          <Route path={"/products/:id"} element={<ProductDetail />} />
-          <Route path="/cartDetail/:id" element={<CartDetail/>} />
-      </Routes>
-      </BrowserRouter>
-    </CartContextProvider>
-  )
+    <SessionsContextProvider>
+      <CartContextProvider>
+        <BrowserRouter>
+          <NavBar />
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path={"/products"} element={<Products />} />
+            <Route path={"/products/:id"} element={<ProductDetail />} />
+            <Route path="/cartDetail/" element={<CartDetail />} />
+          </Routes>
+        </BrowserRouter>
+      </CartContextProvider>
+    </SessionsContextProvider>
+  );
 }
 
 export default App

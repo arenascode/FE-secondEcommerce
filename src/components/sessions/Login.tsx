@@ -2,15 +2,19 @@ import axios from "axios";
 import React, { useState } from "react";
 import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import { useSessions } from "../context/SessionsContext";
 
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const { setProfilePhotoUrl } = useSessions()
+  
   const githubLogin = () => {
     const clientID = `<YOUR_CLIENT_ID>`;
     window.location.href = `https://github.com/login/oauth/authorize?scope=user&client_id=${clientID}`;
   };
+
   const userCredentials = {
     email,
     password,
@@ -30,7 +34,15 @@ const Login: React.FC = () => {
       console.log(result);
       if (result.status === 200) {
         alert(`Welcome to Luxury Motorcycles`);
-        window.location.replace("/");
+        const photoPath = result.data.profilePhoto;
+
+        const staticWord = "static";
+        const trimmingPath = photoPath.slice(6);
+        const newPath = staticWord + trimmingPath;
+        console.log(`new path ${newPath}`);
+        setProfilePhotoUrl(newPath)
+
+        // window.location.replace("/");
       } else if (result.status === 401) {
         alert("invalid password. Try Again");
       } else if (result.status === 404) {

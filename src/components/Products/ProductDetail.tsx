@@ -98,7 +98,7 @@ const ProductDetail = () => {
             <div className="itemCountCountainer flex items-center gap-2">
               <ItemCount productId={productData?._id ?? ''} />
             </div>
-            <Link to={`/cartDetail/${cartIdStorage}`}>
+            <Link to={`/cartDetail/`}>
             <button onClick={goToCart} className="btn btn-sm btn-success rounded-full tracking-wider mt-1">Buy Now</button>
             </Link>
             
