@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
-// import { useSessions } from "../context/SessionsContext";
+import { useSessions } from "../context/SessionsContext";
+import { Link } from "react-router-dom";
 
 type ProfileData = {
   email: string;
@@ -12,15 +13,12 @@ type ProfileData = {
 export type PhotoFile = File | null | string;
 
 const Profile = () => {
-  // const { setProfilePhotoUrl, profilePhotoUrl } = useSessions();
+  const { isUserLogged, setIsUserLogged, setPathPhoto, pathPhoto, logOut } = useSessions();
 
   const [profileData, setProfileData] = useState<ProfileData>();
 
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<PhotoFile>(null);
-
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
 
-  const [pathPhoto, setPathPhoto] = useState<string>('')
 
   const CLIENT_URL = useRef<string | null>(null);
 
@@ -43,14 +41,21 @@ const Profile = () => {
               CLIENT_URL.current = res.data.CLIENT_URL;
           const newPath = `http://${CLIENT_URL.current}/${staticWord }${trimmingPath}`;
           console.log(`new path ${newPath}`);
-          setPathPhoto(newPath);
+              setPathPhoto(newPath);
+              setIsUserLogged(true)
             }
           )
           
-        } else {
-          alert(`Loading data error. Try again`);
+        } else if(res.status === 401) {
+          alert(`Please Login`);
         }
-      });
+      }).catch(err => {
+        console.log(err.response.status)
+        if (err.response.status === 401) {
+          // setIsUserLogged(false)
+        }
+          
+      })
   }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,9 +64,9 @@ const Profile = () => {
     if (photoFile) {
       const url = URL.createObjectURL(photoFile);
       console.log(url);
-      setProfilePhotoUrl(url);
+      // setProfilePhotoUrl(url);
       setPathPhoto(url)
-      console.log(profilePhotoUrl);
+      // console.log(profilePhotoUrl);
 
       setIsPhotoUploaded(true);
     }
@@ -78,10 +83,6 @@ const Profile = () => {
     const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
       console.log(e.currentTarget.dataset.userid);
       const uid = e.currentTarget.dataset.userid;
-      console.log(profilePhotoUrl);
-      // const newPhoto = {
-      //   profilePhoto: profilePhotoUrl
-      // }
 
       const formProfilePic = document.getElementById(
         "formProfilePhoto"
@@ -104,7 +105,9 @@ const Profile = () => {
           
           setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
 
-          console.log(profilePhotoUrl);
+          console.log(pathPhoto);
+          
+          // console.log(profilePhotoUrl);
           setIsPhotoUploaded(false)
         })
         .catch(err => console.log(err)
@@ -123,9 +126,57 @@ const Profile = () => {
       </div>
     );
   };
+console.log(isUserLogged);
+
+  //** Function To handle Log Out */
+  const handleLogOut = () => {
+    console.log(`handling log out`);
+    logOut()
+    // axios.get(`http://127.0.0.1:8080/api/sessions/logout`, {
+    //   withCredentials: true
+    // })
+    //   .then(res => {
+    //     if (res.status === 200) {
+    //       alert(`Te esperamos pronto!`)
+    //       setIsUserLogged(false)
+    //       setPathPhoto('')
+    //     } else {
+    //       alert('some error ocurred. Try Again')
+    //     }
+    // }) 
+  }
+  
+  //**Component go to Log In */
+  const GoToLogin = () => {
+    return (
+      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28">
+        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto">
+          <figure className="px-10 pt-10">
+            {/* <img
+            src=""
+            className="rounded-xl"
+          /> */}
+          </figure>
+          <div className="card-body items-center text-center">
+            <h1 className="card-title">Please Log in!</h1>
+            <p className="text-lg">
+              We invite you to get to know all of our Motorcycles!
+            </p>
+            <div className="card-actions">
+              <Link to={"/login"}>
+                <button className="btn btn-success btn-sm mt-3 text-lg tracking-widest">
+                  Go
+                </button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <div className="profileContainer pt-24 pb-8 ml-10">
+    isUserLogged ? (<div className="profileContainer pt-24 pb-8 ml-10">
       {profileData ? (
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="editOptions flex justify-end px-4 pt-4">
@@ -231,25 +282,24 @@ const Profile = () => {
               </span>
             </div>
             <div className="flex mt-4 space-x-3 md:mt-6">
-              <a
+              {/* <a
                 href="#"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
               >
                 Add friend
-              </a>
-              <a
-                href="#"
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
+              </a> */}
+              <button onClick={handleLogOut}
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-error hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
               >
-                Message
-              </a>
+                Log Out
+              </button>
             </div>
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <p>Loading Data...</p>
       )}
-    </div>
+    </div>) : (<GoToLogin/>)
   );
 };
 export default Profile;

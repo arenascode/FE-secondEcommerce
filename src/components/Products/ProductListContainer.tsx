@@ -48,7 +48,7 @@ const ProductListContainer = () => {
   //** Get Products */
   const getProducts = () => {
 
-    fetch(`http://localhost:8080/api/products?category=${category}`)
+    fetch(`http://127.0.0.1:8080/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
         console.log(data);

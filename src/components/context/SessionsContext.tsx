@@ -1,5 +1,7 @@
 // import axios from "axios";
 import { ReactNode, createContext, useContext, useState } from "react";
+import useLocalStorage from "../../hooks/useLocalStorage";
+import axios from "axios";
 
 export type PhotoFile = File | null | string | undefined
 export type ProfileData = {
@@ -10,21 +12,33 @@ export type ProfileData = {
 };
 
 type SessionsContextType = {
-  profilePhotoUrl: PhotoFile;
-  setProfilePhotoUrl: React.Dispatch<React.SetStateAction<PhotoFile>>;
   handleConfirmPhoto: (e: React.MouseEvent<HTMLButtonElement>) => void;
   setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>;
   profileData: ProfileData | null;
+  setIsUserLogged: React.Dispatch<React.SetStateAction<boolean>>;
+  isUserLogged: boolean;
+  pathPhoto: string;
+  setPathPhoto: React.Dispatch<React.SetStateAction<string>>;
+  CLIENT_URL: string | null;
+  setCLIENT_URL: React.Dispatch<React.SetStateAction<string>>;
+  logOut: () => void
+  
 };
 
 const SessionsContext = createContext<SessionsContextType>({
-  setProfilePhotoUrl: () => { },
-  profilePhotoUrl: null,
+  /* setProfilePhotoUrl: () => { },
+  profilePhotoUrl: null, */
   handleConfirmPhoto: () => { },
   setProfileData: () => { },
-  profileData: null
+  profileData: null,
+  setIsUserLogged: () => { },
+  isUserLogged: false,
+  pathPhoto: '',
+  setPathPhoto: () => { },
+  setCLIENT_URL: () => { },
+  CLIENT_URL: null,
+  logOut: () => {}
 })
-
 
 export const useSessions = () => {
   return useContext(SessionsContext)
@@ -40,14 +54,16 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
   //**Register Session */
 
   //**Login Session */
-
-
+  const [isUserLogged, setIsUserLogged] = useLocalStorage<boolean>('userLogged', false)
+  console.log(isUserLogged);
+  
+  const [CLIENT_URL, setCLIENT_URL] = useLocalStorage<string>('CLIENT_URL','')
   //* Current Session */
   
 
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
 
-  const [profilePhotoUrl, setProfilePhotoUrl] = useState<File | null | string | undefined>(null);
+  const [pathPhoto, setPathPhoto] = useLocalStorage<string>('profilePic', 'notRefresh');
 
   const handleConfirmPhoto = (e:React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.dataset.userId);
@@ -61,15 +77,38 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
     // })
   };
 
+
+  //**Log Out function */
+
+  const logOut = () => {
+    axios
+      .get(`http://127.0.0.1:8080/api/sessions/logout`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          alert(`Te esperamos pronto!`);
+          setIsUserLogged(false);
+          setPathPhoto("");
+        } else {
+          alert("some error ocurred. Try Again");
+        }
+      }); 
+  }
   //*Context Values
 
   const contextValue: SessionsContextType = {
-    profilePhotoUrl: profilePhotoUrl,
-    setProfilePhotoUrl: setProfilePhotoUrl,
+    pathPhoto: pathPhoto,
+    setPathPhoto: setPathPhoto,
+    // setProfilePhotoUrl:setProfilePhotoUrl, 
     handleConfirmPhoto: handleConfirmPhoto,
     setProfileData: setProfileData,
-    profileData: profileData
-    
+    profileData: profileData,
+    isUserLogged: isUserLogged,
+    setIsUserLogged: setIsUserLogged,
+    setCLIENT_URL: setCLIENT_URL,
+    CLIENT_URL: CLIENT_URL,
+    logOut: logOut
   };
   return (
 

@@ -6,9 +6,12 @@ import { useSessions } from "./context/SessionsContext";
 const NavBar = () => {
 
   const { cartQuantity, subTotalProducts, cartIdStorage } = useCart()
-  const {profilePhotoUrl} = useSessions()
+  const { pathPhoto, isUserLogged, CLIENT_URL, logOut } = useSessions()
+    console.log(CLIENT_URL);
+    
   console.log(cartIdStorage);
-  console.log(profilePhotoUrl);
+  console.log(pathPhoto);
+  
   
   const [isDropdownVisible, setIsDropDownVisible] = useState(false)
 
@@ -27,8 +30,12 @@ const NavBar = () => {
     <>
       <div className="navbar bg-base-100 shadow-xl fixed z-10">
         <div className="navbar-start">
-          <div className="dropdown">
-            <label tabIndex={0} className="btn btn-ghost btn-circle">
+          <div className="dropdown" onBlur={closeDropdown}>
+            <label
+              onClick={toggleDropdown}
+              tabIndex={0}
+              className="btn btn-ghost btn-circle"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -44,26 +51,31 @@ const NavBar = () => {
                 />
               </svg>
             </label>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <Link to={"/"}>Home</Link>
-              </li>
-              <li>
-                <Link to={"/products"}>Meet our motorcycles</Link>
-              </li>
-              <li>
+            {/* from here */}
+            {isDropdownVisible && (
+              <ul
+                tabIndex={0}
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <Link to={"/"}>Home</Link>
+                </li>
+                <li>
+                  <Link to={"/products"}>Meet our motorcycles</Link>
+                </li>
+                {/* <li>
                 <a>Offers</a>
-              </li>
-              <li>
-                <Link to={"/profile"}>Profile</Link>
-              </li>
-              <li>
-                <Link to={`/cartDetail/`}>Cart</Link>
-              </li>
-            </ul>
+              </li> */}
+                <li>
+                  <Link to={"/profile"}>Profile</Link>
+                </li>
+                <li>
+                  <Link to={`/cartDetail/`}>Cart</Link>
+                </li>
+              </ul>
+            )}
+
+            {/* to here */}
           </div>
         </div>
         <div className="navbar-center">
@@ -129,28 +141,38 @@ const NavBar = () => {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-8 rounded-full">
-                {
-                  profilePhotoUrl &&
-                  typeof profilePhotoUrl ===
-                    "string" && (<img src={`http://localhost:8080/${profilePhotoUrl}`} />)}
+                {pathPhoto && typeof pathPhoto === "string" && (
+                  <img
+                    src={isUserLogged ? `${pathPhoto}` : "src/assets/user.png"}
+                  />
+                )}
               </div>
             </label>
             <ul
               tabIndex={0}
               className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
             >
-              <li>
-                <Link to={"/login"} className="justify-between">
-                  Login
-                  {/* <span className="badge">New</span> */}
-                </Link>
-              </li>
+              {isUserLogged ? (
+                ""
+              ) : (
+                <li>
+                  <Link to={"/login"} className="justify-between">
+                    Login
+                    {/* <span className="badge">New</span> */}
+                  </Link>
+                </li>
+              )}
+
               <li>
                 <a>Settings</a>
               </li>
-              <li>
-                <a>Logout</a>
-              </li>
+              {isUserLogged ? (
+                <li>
+                  <a onClick={() => logOut()}>Logout</a>
+                </li>
+              ) : (
+                ""
+              )}
             </ul>
           </div>
           {/* <div className="logo">
