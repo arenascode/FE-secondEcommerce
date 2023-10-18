@@ -141,9 +141,17 @@ const NavBar = () => {
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
               <div className="w-8 rounded-full">
-                {pathPhoto && typeof pathPhoto === "string" && (
+                {pathPhoto && typeof pathPhoto === "string" ? (
                   <img
                     src={isUserLogged ? `${pathPhoto}` : "src/assets/user.png"}
+                  />
+                ) : (
+                  <img
+                    src={
+                      isUserLogged
+                        ? `${pathPhoto}`
+                        : "/src/assets/user.png"
+                    }
                   />
                 )}
               </div>

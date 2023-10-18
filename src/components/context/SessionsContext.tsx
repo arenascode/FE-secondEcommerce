@@ -90,6 +90,7 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
           alert(`Te esperamos pronto!`);
           setIsUserLogged(false);
           setPathPhoto("");
+          
         } else {
           alert("some error ocurred. Try Again");
         }

@@ -3,6 +3,7 @@ import { useCart } from "../context/CartContext";
 import { useEffect, useRef } from "react";
 import ProductInCart from "./ProductCart";
 import { Link } from "react-router-dom";
+import { useSessions } from "../context/SessionsContext";
 
 const CartDetail = () => {
   const {
@@ -15,20 +16,21 @@ const CartDetail = () => {
     emptyCart,
     confirmPurchase
   } = useCart();
-  console.log(cartIdStorage);
+  // console.log(cartIdStorage);
   console.log(cartList);
-  
+   const {  isUserLogged  } = useSessions()
   const CLIENT_URL = useRef<string>("");
 
   useEffect(() => {
-    axios
+    isUserLogged ? (axios
       .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
       .then((res) => {
         console.log(res.data);
         setCartList(res.data.cartById.products);
         CLIENT_URL.current = res.data.CLIENT_URL;
-      });
-  }, [cartIdStorage]);
+      })) : (setCartList([]))
+    
+  }, [isUserLogged]);
 
   const EmptyCart = () => {
     return (
