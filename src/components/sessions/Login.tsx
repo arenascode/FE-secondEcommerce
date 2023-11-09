@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSessions } from "../context/SessionsContext";
-import { useCart } from "../context/CartContext";
+import { ProductCart, useCart } from "../context/CartContext";
 
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
@@ -11,7 +11,7 @@ const Login: React.FC = () => {
 
   const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect } = useSessions()
   
-  const {getCartById, setCartList} = useCart()
+  const {getCartById, setCartList, subTotalProducts} = useCart()
   
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
@@ -38,24 +38,35 @@ const Login: React.FC = () => {
     ).then(async (result) => {
       console.log(result);
       if (result.status === 200) {
-        alert(`Welcome to Luxury Motorcycles`);
+        
         const photoPath = result.data.loggedUserDto.profilePhoto;
 
         const staticWord = "static";
         const trimmingPath = photoPath.slice(6);
         const newPath = staticWord + trimmingPath;
         console.log(`new path ${newPath}`);
-        CLIENT_URL.current= result.data.CLIENT_URL
+        CLIENT_URL.current = result.data.CLIENT_URL
         setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
         console.log(CLIENT_URL);
         
         setIsUserLogged(true)
         console.log(`currentLocation in Login ${pathToRedirect}`);
-        
+        const cartSaved: ProductCart[] | string | unknown = await getCartById()
+        console.log(cartSaved)
+        if (Array.isArray(cartSaved)) {
+          setCartList(cartSaved);
+          subTotalProducts(cartSaved);
+        } else if (typeof cartSaved === "string") {
+          // Handle the case where there's an error message
+          console.error("Error fetching cart:", cartSaved);
+        } else {
+          // Handle other cases (unknown type)
+          console.error("Unexpected type for cartSaved:", cartSaved);
+        }
+        alert(`Welcome to Luxury Motorcycles`);
         window.location.replace(pathToRedirect);
         setPathToRedirect('/')
-        const cartSaved = await getCartById()
-        setCartList(cartSaved)
+        
       }
     })
       .catch((err) => {

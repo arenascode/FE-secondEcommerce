@@ -1,7 +1,12 @@
-import { createContext, ReactNode, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import axios from "axios";
 import useLocalStorage from "../../hooks/useLocalStorage";
-
 
 export type Category = string | null;
 export type CartId = string;
@@ -55,11 +60,10 @@ const CartContext = createContext<CartContextType>({
   deleteProductInCart: () => {},
   setCartQty: () => {},
   emptyCart: () => {},
-  confirmPurchase: () => { },
-  getCartById: () => { },
-  setSubTotal: () => { },
+  confirmPurchase: () => {},
+  getCartById: () => {},
+  setSubTotal: () => {},
 });
-
 
 export const useCart = () => {
   return useContext(CartContext);
@@ -77,16 +81,15 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     "productsInCart",
     []
   );
-  const [subTotal, setSubTotal] = useLocalStorage('subtotal', 0);
+  const [subTotal, setSubTotal] = useLocalStorage("subtotal", 0);
 
   const [cartIdStorage, setCartIdStorage] = useLocalStorage("cid", cartId);
 
   useEffect(() => {
     // if (isUserLogged) {
-        
     //   }
-    },[])
- 
+  }, []);
+
   //* To add to cart *//
   const addToCart = (pid: string | undefined, qty: number): void => {
     console.log(pid, qty);
@@ -110,21 +113,25 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
         setCartIdStorage(res.data._id);
         setCartList(res.data.products);
         cartQuantity();
-        subTotalProducts(res.data.products)
-        const cart = res.data.products
-        setSubTotal(cart.reduce((sub: number, p: ProductCart) => sub += (p.quantity * p._id.price), 0))
+        subTotalProducts(res.data.products);
+        const cart = res.data.products;
+        setSubTotal(
+          cart.reduce(
+            (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
+            0
+          )
+        );
       })
       .catch((err) => {
         console.log(err);
-        
+
         if (err.response.statusText === "Unauthorized") {
           alert(`Login To Add Products to your cart`);
-          
-            // setPathToRedirect()
-          window.location.href = '/login'
+
+          // setPathToRedirect()
+          window.location.href = "/login";
         }
       });
-    
   };
 
   //* calculate Cart Qty */
@@ -135,15 +142,15 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   };
 
   //* subtotal Products */
-  const subTotalProducts = (cartList:ProductCart[]): number => {
+  const subTotalProducts = (cartList: ProductCart[]): number => {
     console.log(cartList);
-    
+
     const subTotalCart = cartList.reduce(
-      (sub, p) => sub += (p._id.price * p.quantity),
+      (sub, p) => (sub += p._id.price * p.quantity),
       0
     );
     console.log(subTotalCart);
-    
+
     setSubTotal(subTotalCart);
     return subTotalCart;
   };
@@ -161,7 +168,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
       .then((res) => {
         console.log(res.data);
         setCartList(res.data.products);
-        subTotalProducts(res.data.products)
+        subTotalProducts(res.data.products);
       });
   };
 
@@ -172,6 +179,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`).then((res) => {
       console.log(res);
       setCartList(res.data.products);
+      setSubTotal(0)
     });
   };
 
@@ -188,31 +196,39 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   };
 
   //* Get Cart By Id
-  const getCartById = async () => {
+  const getCartById = async (): Promise<
+    ProductCart[] | { message: string }
+  > => {
     try {
-      
       const response = await axios.get(
         `http://127.0.0.1:8080/api/carts/${cartIdStorage}`
       );
-
       console.log(response);
 
-      // Assuming the response has a 'products' property
-      const newProducts = response.data.cartById.products;
+      if (
+        response.data &&
+        response.data.cartById &&
+        response.data.cartById.products
+      ) {
+        // Assuming the response has a 'products' property
+        const newProducts = response.data.cartById.products;
         console.log(newProducts);
-        
-      // Merge the existing cart with the new products
-      const updatedCart = [...newProducts];
 
-      // You might want to update the state or do something else with the updatedCart here
+        // Merge the existing cart with the new products
+        const updatedCart = [...newProducts];
 
-      return updatedCart;
+        // You might want to update the state or do something else with the updatedCart here
+        return updatedCart;
+      } else {
+        return { message: "Invalid response format" };
+      }
     } catch (error) {
       console.error("Error fetching cart:", error);
-       // Return the current cart if there's an error
+
+      // Return an error object
+      return { message: (error as Error).message || "An error occurred" };
     }
   };
-
 
   const contextValue: CartContextType = {
     category: category,
