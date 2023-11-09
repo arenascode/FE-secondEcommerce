@@ -1,10 +1,4 @@
-import {
-  createContext,
-  ReactNode,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { createContext, ReactNode, useContext, useState } from "react";
 import axios from "axios";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
@@ -85,10 +79,8 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
 
   const [cartIdStorage, setCartIdStorage] = useLocalStorage("cid", cartId);
 
-  useEffect(() => {
-    // if (isUserLogged) {
-    //   }
-  }, []);
+  const [outOfStock, setOutOfStock] = useState<boolean>(false);
+  console.log(outOfStock);
 
   //* To add to cart *//
   const addToCart = (pid: string | undefined, qty: number): void => {
@@ -98,40 +90,67 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
       pid: pid,
       quantity: qty,
     };
+    let actualStockProduct = 0;
 
-    axios
-      .post("http://127.0.0.1:8080/api/carts", cartData, {
-        withCredentials: true,
-      })
-      .then(function (res) {
-        if (res.status === 200) {
-          alert(`you added new product`);
-        }
+    if (cartIdStorage !== "") {
+      axios
+        .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
+        .then((res) => {
+          console.log(res);
+          const productInCart = res.data.cartById.products.find(
+            (p: ProductCart) => p._id._id === cartData.pid
+          );
+          console.log(productInCart);
 
-        console.log(res.data);
-        setCartId(res.data._id);
-        setCartIdStorage(res.data._id);
-        setCartList(res.data.products);
-        cartQuantity();
-        subTotalProducts(res.data.products);
-        const cart = res.data.products;
-        setSubTotal(
-          cart.reduce(
-            (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
-            0
-          )
-        );
-      })
-      .catch((err) => {
-        console.log(err);
+          if (productInCart) {
+            actualStockProduct = productInCart._id.stock;
+            console.log(actualStockProduct);
+            if (actualStockProduct <= productInCart.quantity) {
+              alert("The cart has all the stock available of this product");
+              setOutOfStock(true);
+              console.log(outOfStock);
+              return;
+            }
+          }
+          setOutOfStock(false);
 
-        if (err.response.statusText === "Unauthorized") {
-          alert(`Login To Add Products to your cart`);
+          axios
+            .post("http://127.0.0.1:8080/api/carts", cartData, {
+              withCredentials: true,
+            })
+            .then(function (res) {
+              if (res.status === 200) {
+                alert(`you added new product`);
+                console.log(res.data);
+              setCartId(res.data._id);
+              setCartIdStorage(res.data._id);
+              setCartList(res.data.products);
+              cartQuantity();
+              subTotalProducts(res.data.products);
+              const cart = res.data.products;
+              setSubTotal(
+                cart.reduce(
+                  (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
+                  0
+                )
+              );
+              }
+            })
+            .catch((err) => {
+              console.log(err);
+              if (err.response.status === 400) {
+                alert(`${err.response.data.errorMsg}`);
+              }
 
-          // setPathToRedirect()
-          window.location.href = "/login";
-        }
-      });
+              if (err.response.statusText === "Unauthorized") {
+                alert(`Login To Add Products to your cart`);
+
+                // setPathToRedirect()
+                window.location.href = "/login";
+              }
+            });
+        });
+    }
   };
 
   //* calculate Cart Qty */
@@ -179,7 +198,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`).then((res) => {
       console.log(res);
       setCartList(res.data.products);
-      setSubTotal(0)
+      setSubTotal(0);
     });
   };
 
@@ -192,6 +211,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
         if (res.status === 200)
           alert(`Thank you for your purchase. Please check your email`);
         setCartList([]);
+        setSubTotal(0);
       });
   };
 

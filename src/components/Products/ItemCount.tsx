@@ -4,10 +4,15 @@ import { useLocation } from "react-router-dom"
 import { useSessions } from "../context/SessionsContext"
 useLocation
 
-type ProductId = string
+interface ItemCountProps {
+productId: string
+productStock: number
+}
 
-const ItemCount = ({productId}: {productId: ProductId}) => {
 
+const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
+  console.log(productStock);
+  
   const [count, setCount] = useState(1)
 
   const { addToCart } = useCart()
@@ -18,9 +23,14 @@ const ItemCount = ({productId}: {productId: ProductId}) => {
     const action = event.currentTarget.textContent
     
     if (action === '+') {
-      setCount(count + 1)
+      if (count < productStock) {
+        console.log(count);
+        setCount(count + 1)
+      } else {
+        alert(`no more stock available`)
+      }
     } else if (action === '-') {
-      if (count >= 1) {
+      if (count > 1) {
         setCount(count - 1)
       }
     }

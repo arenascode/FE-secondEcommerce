@@ -96,7 +96,7 @@ const ProductDetail = () => {
           <p className="tracking-wider ">Animate a la aventura con la {productData?.title}   {productData?.description}</p>
           <div className="card-actions flex justify-between w-full items-center">
             <div className="itemCountCountainer flex items-center gap-2">
-              <ItemCount productId={productData?._id ?? ''} />
+              <ItemCount productId={productData?._id ?? ''} productStock={productData?.stock ?? 0} />
             </div>
             <Link to={`/cartDetail/`}>
             <button onClick={goToCart} className="btn btn-sm btn-success rounded-full tracking-wider mt-1">Buy Now</button>
