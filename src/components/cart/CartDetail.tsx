@@ -18,7 +18,7 @@ const CartDetail = () => {
   } = useCart();
   // console.log(cartIdStorage);
   console.log(cartList);
-   const {  isUserLogged  } = useSessions()
+  const {  isUserLogged  } = useSessions()
   const CLIENT_URL = useRef<string>("");
 
   useEffect(() => {
@@ -102,7 +102,7 @@ const CartDetail = () => {
                   </td>
                   <td className="pl-12 py-3">{cartQuantity()}</td>
                   <td colSpan={1}></td>
-                  <td className="pl-1 py-3 ">${subTotalProducts()}</td>
+                  <td className="pl-1 py-3 ">${subTotalProducts(cartList)}</td>
                   <td colSpan={1} className="rounded-br-xl"></td>
                 </tr>
               </tfoot>

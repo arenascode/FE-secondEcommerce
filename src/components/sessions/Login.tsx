@@ -3,12 +3,15 @@ import React, { useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSessions } from "../context/SessionsContext";
+import { useCart } from "../context/CartContext";
 
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setPathPhoto, setIsUserLogged} = useSessions()
+  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect } = useSessions()
+  
+  const {getCartById, setCartList} = useCart()
   
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
@@ -32,7 +35,7 @@ const Login: React.FC = () => {
           "Content-Type": "application/json",
           }
       }
-    ).then((result) => {
+    ).then(async (result) => {
       console.log(result);
       if (result.status === 200) {
         alert(`Welcome to Luxury Motorcycles`);
@@ -47,13 +50,22 @@ const Login: React.FC = () => {
         console.log(CLIENT_URL);
         
         setIsUserLogged(true)
-        window.location.replace("/");
-      } else if (result.status === 401) {
-        alert("invalid password. Try Again");
-      } else if (result.status === 404) {
-        alert("invalid credentials. Try Again");
+        console.log(`currentLocation in Login ${pathToRedirect}`);
+        
+        window.location.replace(pathToRedirect);
+        setPathToRedirect('/')
+        const cartSaved = await getCartById()
+        setCartList(cartSaved)
       }
-    });
+    })
+      .catch((err) => {
+        console.log(err.response);
+        if (err.response.status === 401) {
+          alert("invalid Data. Try Again");
+        } else if (err.response.status === 404) {
+          alert("invalid credentials. Try Again");
+        }
+      });
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

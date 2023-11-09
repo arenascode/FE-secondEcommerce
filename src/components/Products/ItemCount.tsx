@@ -1,5 +1,8 @@
 import { useState } from "react"
 import { useCart } from "../context/CartContext"
+import { useLocation } from "react-router-dom"
+import { useSessions } from "../context/SessionsContext"
+useLocation
 
 type ProductId = string
 
@@ -8,7 +11,9 @@ const ItemCount = ({productId}: {productId: ProductId}) => {
   const [count, setCount] = useState(1)
 
   const { addToCart } = useCart()
-  
+  const {setPathToRedirect, pathToRedirect} = useSessions()
+  const location = useLocation()
+
   const productQuantity = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const action = event.currentTarget.textContent
     
@@ -21,6 +26,10 @@ const ItemCount = ({productId}: {productId: ProductId}) => {
     }
   }
   const addToCartHandler = () => {
+    
+    setPathToRedirect(location.pathname)
+    console.log(pathToRedirect);
+    
     addToCart(productId, count)
   }
   

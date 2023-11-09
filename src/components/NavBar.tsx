@@ -1,21 +1,50 @@
 import { Link } from "react-router-dom";
-import { useCart } from "./context/CartContext";
-import { useState } from "react";
+import { useCart, ProductCart } from "./context/CartContext";
+import { useEffect, useState } from "react";
 import { useSessions } from "./context/SessionsContext";
 
 const NavBar = () => {
 
-  const { cartQuantity, subTotalProducts, cartIdStorage } = useCart()
+  const { cartQuantity, cartIdStorage, cartList, subTotal, getCartById, setSubTotal, setCartQty, setCartList } = useCart()
   const { pathPhoto, isUserLogged, CLIENT_URL, logOut } = useSessions()
     console.log(CLIENT_URL);
     
   console.log(cartIdStorage);
-  console.log(pathPhoto);
+  console.log(cartList);
   
-  
+  useEffect(() => {
+    const fetchData = async () => {
+      if (isUserLogged) {
+      const cartSaved = await getCartById();
+        console.log(cartSaved);
+        if (typeof cartSaved) {
+    
+        }
+        setCartList(cartSaved)
+      setSubTotal(
+        cartSaved.reduce(
+          (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
+          0
+        )
+      );
+      setCartQty(cartQuantity())
+    }
+    }
+    fetchData()
+  },[])
   const [isDropdownVisible, setIsDropDownVisible] = useState(false)
 
-  const toggleDropdown = () => {
+  const toggleDropdown = async () => { 
+    if (isUserLogged) {
+    //   const cartSaved = await getCartById()
+    // console.log(cartSaved);
+    
+      
+      
+    } else {
+      setSubTotal(0)
+    }
+    
     setIsDropDownVisible(!isDropdownVisible)
   }
 
@@ -106,7 +135,7 @@ const NavBar = () => {
                   />
                 </svg>
                 <span className="badge badge-m indicator-item">
-                  {cartQuantity()}
+                  {isUserLogged ? cartQuantity(): 0}
                 </span>
               </div>
             </label>
@@ -121,7 +150,7 @@ const NavBar = () => {
                     {cartQuantity()} Items
                   </span>
                   <span className="text-info">
-                    Subtotal: ${subTotalProducts()}
+                    Subtotal: ${subTotal}
                   </span>
                   <div className="card-actions">
                     <Link to={`/cartDetail/`}>

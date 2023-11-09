@@ -1,9 +1,10 @@
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import useLocalStorage from "../../hooks/useLocalStorage";
 
+
 export type Category = string | null;
-export type CartId = string
+export type CartId = string;
 export type ProductCart = {
   _id: {
     _id: string;
@@ -29,31 +30,36 @@ type CartContextType = {
   setCartList: React.Dispatch<React.SetStateAction<ProductCart[]>>;
   cartList: ProductCart[];
   cartQty: number;
-  subTotalProducts: () => number;
+  subTotalProducts: (cartList: ProductCart[]) => number;
   subTotal: number;
   deleteProductInCart: (e: React.MouseEvent<HTMLButtonElement>) => void;
   setCartQty: React.Dispatch<React.SetStateAction<number>>;
   emptyCart: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  confirmPurchase: () => void
+  confirmPurchase: () => void;
+  getCartById: () => void;
+  setSubTotal: React.Dispatch<React.SetStateAction<number>>;
 };
 
 const CartContext = createContext<CartContextType>({
   setCategory: () => {},
   category: null,
-  addToCart: () => { },
-  cartId: '',
-  cartIdStorage: '',
+  addToCart: () => {},
+  cartId: "",
+  cartIdStorage: "",
   cartQuantity: () => 0,
-  setCartList: () => { }, 
+  setCartList: () => {},
   cartList: [],
   cartQty: 0,
   subTotalProducts: () => 0,
   subTotal: 0,
-  deleteProductInCart: () => { },
-  setCartQty: () => { },
-  emptyCart: () => { },
-  confirmPurchase: () => {}
+  deleteProductInCart: () => {},
+  setCartQty: () => {},
+  emptyCart: () => {},
+  confirmPurchase: () => { },
+  getCartById: () => { },
+  setSubTotal: () => { },
 });
+
 
 export const useCart = () => {
   return useContext(CartContext);
@@ -65,14 +71,22 @@ type CartContextProviderProps = {
 const CartContextProvider = ({ children }: CartContextProviderProps) => {
   //* To manage filter by Category
   const [category, setCategory] = useState<Category>("");
-  const [cartId, setCartId] = useState<CartId>('')
+  const [cartId, setCartId] = useState<CartId>("");
   const [cartQty, setCartQty] = useState<number>(0);
-  const [cartList, setCartList] = useLocalStorage<ProductCart[]>('productsInCart',[]);
-  const [subTotal, setSubTotal] = useState<number>(0)
+  const [cartList, setCartList] = useLocalStorage<ProductCart[]>(
+    "productsInCart",
+    []
+  );
+  const [subTotal, setSubTotal] = useLocalStorage('subtotal', 0);
 
+  const [cartIdStorage, setCartIdStorage] = useLocalStorage("cid", cartId);
 
-  const [cartIdStorage, setCartIdStorage] = useLocalStorage('cid', cartId)
-
+  useEffect(() => {
+    // if (isUserLogged) {
+        
+    //   }
+    },[])
+ 
   //* To add to cart *//
   const addToCart = (pid: string | undefined, qty: number): void => {
     console.log(pid, qty);
@@ -85,66 +99,121 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     axios
       .post("http://127.0.0.1:8080/api/carts", cartData, {
         withCredentials: true,
-        
       })
       .then(function (res) {
+        if (res.status === 200) {
+          alert(`you added new product`);
+        }
+
         console.log(res.data);
-        setCartId(res.data._id)
-        setCartIdStorage(res.data._id)
-        setCartList(res.data.products)
+        setCartId(res.data._id);
+        setCartIdStorage(res.data._id);
+        setCartList(res.data.products);
+        cartQuantity();
+        subTotalProducts(res.data.products)
+        const cart = res.data.products
+        setSubTotal(cart.reduce((sub: number, p: ProductCart) => sub += (p.quantity * p._id.price), 0))
       })
-      .catch((err) => console.log(err));
-      cartQuantity()
+      .catch((err) => {
+        console.log(err);
+        
+        if (err.response.statusText === "Unauthorized") {
+          alert(`Login To Add Products to your cart`);
+          
+            // setPathToRedirect()
+          window.location.href = '/login'
+        }
+      });
+    
   };
 
   //* calculate Cart Qty */
   const cartQuantity = () => {
     const cartQty = cartList.reduce((qty, p) => qty + p.quantity, 0);
     // setCartQty(cartQty);
-    return cartQty
+    return cartQty;
   };
 
   //* subtotal Products */
-  const subTotalProducts = () => {
-    const subtotalProd = cartList.reduce((sub, p) => sub + (p._id.price * p.quantity), 0)
-    setSubTotal(subtotalProd)
-    return subtotalProd
-  }
+  const subTotalProducts = (cartList:ProductCart[]): number => {
+    console.log(cartList);
+    
+    const subTotalCart = cartList.reduce(
+      (sub, p) => sub += (p._id.price * p.quantity),
+      0
+    );
+    console.log(subTotalCart);
+    
+    setSubTotal(subTotalCart);
+    return subTotalCart;
+  };
 
-  //* Delete Product in cart 
-  const deleteProductInCart = (e: React.MouseEvent<HTMLButtonElement>): void => {
+  //* Delete Product in cart
+  const deleteProductInCart = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => {
     console.log(e.currentTarget.dataset.pid);
-    const pid = e.currentTarget.dataset.pid
-    axios.delete(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/products/${pid}`)
-      .then(res => {
+    const pid = e.currentTarget.dataset.pid;
+    axios
+      .delete(
+        `http://127.0.0.1:8080/api/carts/${cartIdStorage}/products/${pid}`
+      )
+      .then((res) => {
         console.log(res.data);
-        setCartList(res.data.products)
-    })
-  }
-  
+        setCartList(res.data.products);
+        subTotalProducts(res.data.products)
+      });
+  };
+
   //*Empty Cart */
   const emptyCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.dataset.cid);
-    const cid = e.currentTarget.dataset.cid
-    axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`)
-      .then(res => {
-        console.log(res);
-        setCartList(res.data.products)
-        
-    })
+    const cid = e.currentTarget.dataset.cid;
+    axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`).then((res) => {
+      console.log(res);
+      setCartList(res.data.products);
+    });
   };
 
-  //* Confirm Purchase 
+  //* Confirm Purchase
   const confirmPurchase = () => {
-
-    axios.get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
-      .then(res => {
+    axios
+      .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
+      .then((res) => {
         console.log(res);
         if (res.status === 200)
-          alert(`Thank you for your purchase. Please check your email`)
-        setCartList([])
-    })
-  }
+          alert(`Thank you for your purchase. Please check your email`);
+        setCartList([]);
+      });
+  };
+
+  //* Get Cart By Id
+  const getCartById = async () => {
+    try {
+      
+      const response = await axios.get(
+        `http://127.0.0.1:8080/api/carts/${cartIdStorage}`
+      );
+
+      console.log(response);
+
+      // Assuming the response has a 'products' property
+      const newProducts = response.data.cartById.products;
+        console.log(newProducts);
+        
+      // Merge the existing cart with the new products
+      const updatedCart = [...newProducts];
+
+      // You might want to update the state or do something else with the updatedCart here
+
+      return updatedCart;
+    } catch (error) {
+      console.error("Error fetching cart:", error);
+       // Return the current cart if there's an error
+    }
+  };
+
+
   const contextValue: CartContextType = {
     category: category,
     setCategory: setCategory,
@@ -160,8 +229,10 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     deleteProductInCart: deleteProductInCart,
     setCartQty: setCartQty,
     emptyCart: emptyCart,
-    confirmPurchase: confirmPurchase
-  }
+    confirmPurchase: confirmPurchase,
+    getCartById: getCartById,
+    setSubTotal: setSubTotal,
+  };
 
   return (
     <CartContext.Provider value={contextValue}>{children}</CartContext.Provider>
