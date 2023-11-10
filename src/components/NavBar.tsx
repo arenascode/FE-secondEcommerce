@@ -6,8 +6,9 @@ import { useSessions } from "./context/SessionsContext";
 const NavBar = () => {
 
   const { cartQuantity, cartIdStorage, cartList, subTotal } = useCart()
-  const { pathPhoto, isUserLogged, CLIENT_URL, logOut } = useSessions()
+  const { pathPhoto, isUserLogged, CLIENT_URL, logOut, userHasPhoto } = useSessions()
     console.log(CLIENT_URL);
+    console.log(isUserLogged && userHasPhoto);
     
   console.log(cartIdStorage);
   console.log(cartList);
@@ -127,7 +128,7 @@ const NavBar = () => {
                   />
                 </svg>
                 <span className="badge badge-m indicator-item">
-                  {isUserLogged ? cartQuantity(): 0}
+                  {isUserLogged ? cartQuantity() : 0}
                 </span>
               </div>
             </label>
@@ -139,7 +140,7 @@ const NavBar = () => {
               >
                 <div className="card-body">
                   <span className="font-bold text-lg">
-                    {isUserLogged ?cartQuantity(): 0} Items
+                    {isUserLogged ? cartQuantity() : 0} Items
                   </span>
                   <span className="text-info">
                     Subtotal: ${isUserLogged ? subTotal : 0}
@@ -164,12 +165,16 @@ const NavBar = () => {
               <div className="w-8 rounded-full">
                 {pathPhoto && typeof pathPhoto === "string" ? (
                   <img
-                    src={isUserLogged ? `${pathPhoto}` : "src/assets/user.png"}
+                    src={
+                      isUserLogged && userHasPhoto
+                        ? `${pathPhoto}`
+                        : "src/assets/user.png"
+                    }
                   />
                 ) : (
                   <img
                     src={
-                      isUserLogged
+                      isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
                         : "/src/assets/user.png"
                     }

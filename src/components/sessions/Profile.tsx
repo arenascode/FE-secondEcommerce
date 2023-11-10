@@ -13,16 +13,18 @@ type ProfileData = {
 export type PhotoFile = File | null | string;
 
 const Profile = () => {
-  const { isUserLogged, setIsUserLogged, setPathPhoto, pathPhoto, logOut } = useSessions();
+  const { isUserLogged, setIsUserLogged, setPathPhoto, pathPhoto, logOut, userHasPhoto, setUserHasPhoto } =
+    useSessions();
 
   const [profileData, setProfileData] = useState<ProfileData>();
 
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
 
-
   const CLIENT_URL = useRef<string | null>(null);
 
   useEffect(() => {
+    console.log(`useEffect in action!`);
+    setUserHasPhoto(false)
     axios
       .get("http://127.0.0.1:8080/api/sessions/current", {
         withCredentials: true,
@@ -32,30 +34,35 @@ const Profile = () => {
         if (res.status === 200) {
           setProfileData(res.data.currentUserDTO);
           console.log(profileData);
-          
-          axios(`http://127.0.0.1:8080/api/users/${res.data.currentUserDTO.id}`)
-            .then(user => {
-              const photoPath = user.data.profilePhoto
-          const staticWord = "static";
+
+          axios(
+            `http://127.0.0.1:8080/api/users/${res.data.currentUserDTO.id}`
+          ).then((user) => {
+            const photoPath = user.data.profilePhoto;
+            console.log(photoPath);
+            
+            if (photoPath) {
+              const staticWord = "static";
               const trimmingPath = photoPath.slice(6);
               CLIENT_URL.current = res.data.CLIENT_URL;
-          const newPath = `http://${CLIENT_URL.current}/${staticWord }${trimmingPath}`;
-          console.log(`new path ${newPath}`);
+              const newPath = `http://${CLIENT_URL.current}/${staticWord}${trimmingPath}`;
+              console.log(`new path ${newPath}`);
               setPathPhoto(newPath);
-              setIsUserLogged(true)
+              setUserHasPhoto(true)
             }
-          )
-          
-        } else if(res.status === 401) {
+
+            setIsUserLogged(true);
+          });
+        } else if (res.status === 401) {
           alert(`Please Login`);
         }
-      }).catch(err => {
-        console.log(err.response.status)
+      })
+      .catch((err) => {
+        console.log(err.response.status);
         if (err.response.status === 401) {
           // setIsUserLogged(false)
         }
-          
-      })
+      });
   }, []);
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,10 +72,13 @@ const Profile = () => {
       const url = URL.createObjectURL(photoFile);
       console.log(url);
       // setProfilePhotoUrl(url);
-      setPathPhoto(url)
+      setPathPhoto(url);
       // console.log(profilePhotoUrl);
 
       setIsPhotoUploaded(true);
+      setUserHasPhoto(true)
+      console.log(pathPhoto);
+      
     }
   };
 
@@ -76,6 +86,7 @@ const Profile = () => {
   interface ChildComponentProps {
     userId: string;
   }
+
   const ConfirmProfilePhotoBtn: React.FC<ChildComponentProps> = (props) => {
     console.log(props.userId);
     const { userId } = props;
@@ -92,26 +103,27 @@ const Profile = () => {
       const filesInput = formData.get("profilePhoto");
       console.log(filesInput);
 
-      axios.put(`http://127.0.0.1:8080/api/users/${uid}`, formData)
+      axios
+        .put(`http://127.0.0.1:8080/api/users/${uid}`, formData)
         .then((res) => {
           console.log(res);
-          const photoPath = res.data.userPhotoUpdated.profilePhoto
-          
-          const staticWord = 'static'
-          const trimmingPath = photoPath.slice(6)
-          const newPath = staticWord + trimmingPath
+          const photoPath = res.data.userPhotoUpdated.profilePhoto;
+
+          const staticWord = "static";
+          const trimmingPath = photoPath.slice(6);
+          const newPath = staticWord + trimmingPath;
           console.log(`new path ${newPath}`);
           CLIENT_URL.current = res.data.CLIENT_URL;
-          
+
           setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
 
           console.log(pathPhoto);
-          
+
           // console.log(profilePhotoUrl);
-          setIsPhotoUploaded(false)
+          setIsPhotoUploaded(false);
+          setUserHasPhoto(true)
         })
-        .catch(err => console.log(err)
-        )
+        .catch((err) => console.log(err));
     };
 
     return (
@@ -126,26 +138,15 @@ const Profile = () => {
       </div>
     );
   };
-console.log(isUserLogged);
-
+  console.log(isUserLogged);
+  console.log(userHasPhoto);
+  
   //** Function To handle Log Out */
   const handleLogOut = () => {
     console.log(`handling log out`);
-    logOut()
-    // axios.get(`http://127.0.0.1:8080/api/sessions/logout`, {
-    //   withCredentials: true
-    // })
-    //   .then(res => {
-    //     if (res.status === 200) {
-    //       alert(`Te esperamos pronto!`)
-    //       setIsUserLogged(false)
-    //       setPathPhoto('')
-    //     } else {
-    //       alert('some error ocurred. Try Again')
-    //     }
-    // }) 
-  }
-  
+    logOut();
+  };
+
   //**Component go to Log In */
   const GoToLogin = () => {
     return (
@@ -175,8 +176,8 @@ console.log(isUserLogged);
     );
   };
 
-  return (
-    isUserLogged ? (<div className="profileContainer pt-24 pb-8 ml-10">
+  return isUserLogged ? (
+    <div className="profileContainer pt-24 pb-8 ml-10">
       {profileData ? (
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
           <div className="editOptions flex justify-end px-4 pt-4">
@@ -232,12 +233,24 @@ console.log(isUserLogged);
           </div>
           <div className="flex flex-col items-center pb-10 gap-3">
             <div className="imgContainer w-24 h-24 group inline-block relative rounded-full">
-              {}
-              {pathPhoto && typeof pathPhoto === "string" && (
+              {pathPhoto && typeof pathPhoto === "string" ? (
                 <img
                   className="w-full h-full rounded-full"
-                  src={`${pathPhoto}`}
+                  src={
+                    isUserLogged && userHasPhoto
+                      ? `${pathPhoto}`
+                      : "src/assets/user.png"
+                  }
                   alt="Profile Picture"
+                />
+              ) : (
+                <img
+                  src={
+                    isUserLogged && userHasPhoto
+                      ? `${pathPhoto}`
+                      : "/src/assets/user.png"
+                  }
+                  className="w-full h-full rounded-full"
                 />
               )}
               <div className="opacity-0 group-hover:opacity-60 absolute inset-0 bg-black transition-opacity flex flex-col rounded-full items-center justify-center">
@@ -288,7 +301,8 @@ console.log(isUserLogged);
               >
                 Add friend
               </a> */}
-              <button onClick={handleLogOut}
+              <button
+                onClick={handleLogOut}
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-error hover:text-white focus:ring-4 focus:outline-none focus:ring-gray-200 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-700 dark:focus:ring-gray-700"
               >
                 Log Out
@@ -299,7 +313,9 @@ console.log(isUserLogged);
       ) : (
         <p>Loading Data...</p>
       )}
-    </div>) : (<GoToLogin/>)
+    </div>
+  ) : (
+    <GoToLogin />
   );
 };
 export default Profile;

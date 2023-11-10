@@ -25,6 +25,8 @@ type SessionsContextType = {
   logOut: () => void;
   pathToRedirect: string;
   setPathToRedirect: React.Dispatch<React.SetStateAction<string>>;
+  setUserHasPhoto: React.Dispatch<React.SetStateAction<boolean>>
+  userHasPhoto: boolean
 };
 
 const SessionsContext = createContext<SessionsContextType>({
@@ -41,7 +43,9 @@ const SessionsContext = createContext<SessionsContextType>({
   CLIENT_URL: null,
   logOut: () => { },
   pathToRedirect: '/',
-  setPathToRedirect: () => {}
+  setPathToRedirect: () => { },
+  setUserHasPhoto: () => { },
+  userHasPhoto: false
 })
 
 export const useSessions = () => {
@@ -77,7 +81,7 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
     "profilePic",
     "notRefresh"
   );
-
+  const [userHasPhoto, setUserHasPhoto] = useLocalStorage<boolean>('userHasPhoto', false)
   const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.dataset.userId);
     console.log(`hii!!`);
@@ -101,6 +105,7 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
         if (res.status === 200) {
           alert(`Te esperamos pronto!`);
           setIsUserLogged(false);
+          setUserHasPhoto(false)
           setPathPhoto("");
           setPathToRedirect('/')
           window.location.href = '/'
@@ -124,7 +129,9 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
     CLIENT_URL: CLIENT_URL,
     logOut: logOut,
     pathToRedirect: pathToRedirect,
-    setPathToRedirect: setPathToRedirect
+    setPathToRedirect: setPathToRedirect,
+    setUserHasPhoto: setUserHasPhoto,
+    userHasPhoto: userHasPhoto
   };
   return (
     <SessionsContext.Provider value={contextValue}>

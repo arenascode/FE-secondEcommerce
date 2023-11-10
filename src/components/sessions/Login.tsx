@@ -9,10 +9,11 @@ const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect } = useSessions()
-  
-  const {getCartById, setCartList, subTotalProducts} = useCart()
-  
+  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect, setUserHasPhoto } =
+    useSessions();
+
+  const { getCartById, setCartList, subTotalProducts } = useCart();
+
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
   const githubLogin = () => {
@@ -28,49 +29,54 @@ const Login: React.FC = () => {
   const userLogin = async () => {
     console.log(userCredentials);
 
-    await axios.post(
-      "http://127.0.0.1:8080/api/sessions/login", userCredentials, {
+    await axios
+      .post("http://127.0.0.1:8080/api/sessions/login", userCredentials, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
-          }
-      }
-    ).then(async (result) => {
-      console.log(result);
-      if (result.status === 200) {
-        
-        const photoPath = result.data.loggedUserDto.profilePhoto;
+        },
+      })
+      .then(async (result) => {
+        console.log(result);
+        if (result.status === 200) {
+          const photoPath = result.data.loggedUserDto.profilePhoto;
+          console.log(photoPath);
 
-        const staticWord = "static";
-        const trimmingPath = photoPath.slice(6);
-        const newPath = staticWord + trimmingPath;
-        console.log(`new path ${newPath}`);
-        CLIENT_URL.current = result.data.CLIENT_URL
-        setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
-        console.log(CLIENT_URL);
-        
-        setIsUserLogged(true)
-        console.log(`currentLocation in Login ${pathToRedirect}`);
-        const cartSaved: ProductCart[] | string | unknown = await getCartById()
-        console.log(cartSaved)
-        if (Array.isArray(cartSaved)) {
-          setCartList(cartSaved);
-          subTotalProducts(cartSaved);
-        } else if (typeof cartSaved === "string") {
-          // Handle the case where there's an error message
-          console.error("Error fetching cart:", cartSaved);
-        } else {
-          // Handle other cases (unknown type)
-          console.error("Unexpected type for cartSaved:", cartSaved);
+          if (photoPath) {
+            console.log(`The user has have profilePicture`);
+            const staticWord = "static";
+            const trimmingPath = photoPath.slice(6);
+            const newPath = staticWord + trimmingPath;
+            console.log(`new path ${newPath}`);
+            CLIENT_URL.current = result.data.CLIENT_URL;
+            setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
+            console.log(CLIENT_URL);
+            setUserHasPhoto(true)
+          }
+
+          setIsUserLogged(true);
+          console.log(`currentLocation in Login ${pathToRedirect}`);
+          const cartSaved: ProductCart[] | string | unknown =
+            await getCartById();
+          console.log(cartSaved);
+          if (Array.isArray(cartSaved)) {
+            setCartList(cartSaved);
+            subTotalProducts(cartSaved);
+          } else if (typeof cartSaved === "string") {
+            // Handle the case where there's an error message
+            console.error("Error fetching cart:", cartSaved);
+          } else {
+            // Handle other cases (unknown type)
+            console.error("Unexpected type for cartSaved:", cartSaved);
+          }
+
+          alert(`Welcome to Luxury Motorcycles`);
+          window.location.replace(pathToRedirect);
+          setPathToRedirect("/");
         }
-        alert(`Welcome to Luxury Motorcycles`);
-        window.location.replace(pathToRedirect);
-        setPathToRedirect('/')
-        
-      }
-    })
+      })
       .catch((err) => {
-        console.log(err.response);
+        console.log(err);
         if (err.response.status === 401) {
           alert("invalid Data. Try Again");
         } else if (err.response.status === 404) {
@@ -133,10 +139,9 @@ const Login: React.FC = () => {
           <AiOutlineArrowRight />
           <Link to={"/register"}>
             <button className=" flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider">
-            Create Your Account
-          </button>
+              Create Your Account
+            </button>
           </Link>
-          
         </div>
       </div>
     </div>
