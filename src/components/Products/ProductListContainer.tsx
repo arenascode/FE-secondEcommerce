@@ -83,7 +83,7 @@ const ProductListContainer = () => {
         if (miRef.current && !miRef.current.contains(e.target as Node)) {
           // El clic se realizó fuera del componente, puedes realizar alguna acción aquí
           setIsOpen(false);
-          console.log("Clic fuera del componente");
+          // console.log("Clic fuera del componente");
           // Aquí puedes ocultar el componente, actualizar el estado, etc.
         }
       };
@@ -327,6 +327,9 @@ const ProductListContainer = () => {
         <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1">
           {products.length !== 0 && <SortProducts />}
           {products.length !== 0 && <FilterProducts />}
+        </div>
+        <div className="flex m-auto tracking-widest">
+          <h3>{category}</h3>
         </div>
         <hr />
         <div className="productsContainer">

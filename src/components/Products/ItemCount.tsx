@@ -2,6 +2,7 @@ import { useState } from "react"
 import { useCart } from "../context/CartContext"
 import { useLocation } from "react-router-dom"
 import { useSessions } from "../context/SessionsContext"
+import Swal from "sweetalert2"
 useLocation
 
 interface ItemCountProps {
@@ -19,6 +20,17 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
   const {setPathToRedirect, pathToRedirect} = useSessions()
   const location = useLocation()
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
   const productQuantity = (event: React.MouseEvent<HTMLButtonElement>): void => {
     const action = event.currentTarget.textContent
     
@@ -27,7 +39,10 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
         console.log(count);
         setCount(count + 1)
       } else {
-        alert(`no more stock available`)
+        Toast.fire({
+          icon: "warning",
+          title: `no more stock available`,
+        });
       }
     } else if (action === '-') {
       if (count > 1) {

@@ -2,6 +2,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSessions } from "../context/SessionsContext";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 type ProfileData = {
   email: string;
@@ -21,7 +22,15 @@ const Profile = () => {
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
 
   const CLIENT_URL = useRef<string | null>(null);
-
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
   useEffect(() => {
     console.log(`useEffect in action!`);
     setUserHasPhoto(false)
@@ -54,7 +63,10 @@ const Profile = () => {
             setIsUserLogged(true);
           });
         } else if (res.status === 401) {
-          alert(`Please Login`);
+          Toast.fire({
+            icon: "success",
+            title: `Please Log In`,
+          });
         }
       })
       .catch((err) => {

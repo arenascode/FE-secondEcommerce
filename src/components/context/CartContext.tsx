@@ -1,6 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import axios from "axios";
 import useLocalStorage from "../../hooks/useLocalStorage";
+import Swal from "sweetalert2";
 
 export type Category = string | null;
 export type CartId = string;
@@ -91,6 +92,17 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
       quantity: qty,
     };
     let actualStockProduct = 0;
+    const Toast = Swal.mixin({
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
 
     if (cartIdStorage !== "") {
       axios
@@ -106,7 +118,10 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
             actualStockProduct = productInCart._id.stock;
             console.log(actualStockProduct);
             if (actualStockProduct <= productInCart.quantity) {
-              alert("The cart has all the stock available of this product");
+              Toast.fire({
+                icon: "warning",
+                title: `The cart has all the stock available of this product`,
+              });
               setOutOfStock(true);
               console.log(outOfStock);
               return;
@@ -120,33 +135,48 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
             })
             .then(function (res) {
               if (res.status === 200) {
-                alert(`you added new product`);
+                Toast.fire({
+                  icon: "success",
+                  title: `Añadiste ${cartData.quantity} ${
+                    cartData.quantity > 1 ? "unidades" : "unidad"
+                  } a tu carrito`,
+                });
                 console.log(res.data);
-              setCartId(res.data._id);
-              setCartIdStorage(res.data._id);
-              setCartList(res.data.products);
-              cartQuantity();
-              subTotalProducts(res.data.products);
-              const cart = res.data.products;
-              setSubTotal(
-                cart.reduce(
-                  (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
-                  0
-                )
-              );
+                setCartId(res.data._id);
+                setCartIdStorage(res.data._id);
+                setCartList(res.data.products);
+                cartQuantity();
+                subTotalProducts(res.data.products);
+                const cart = res.data.products;
+                setSubTotal(
+                  cart.reduce(
+                    (sub: number, p: ProductCart) =>
+                      (sub += p.quantity * p._id.price),
+                    0
+                  )
+                );
               }
             })
             .catch((err) => {
               console.log(err);
               if (err.response.status === 400) {
-                alert(`${err.response.data.errorMsg}`);
+                Toast.fire({
+                  icon: "error",
+                  title: `${err.response.data.errorMsg}`,
+                  showConfirmButton: true
+                });
               }
 
               if (err.response.statusText === "Unauthorized") {
-                alert(`Login To Add Products to your cart`);
+                Toast.fire({
+                  icon: "error",
+                  title: `Login To Add Products`,
+                  showConfirmButton: true,
+                });
 
-                // setPathToRedirect()
-                window.location.href = "/login";
+                setTimeout(() => {
+                  window.location.href = "/login";
+                }, 2000);
               }
             });
         });
@@ -208,8 +238,22 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
       .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
       .then((res) => {
         console.log(res);
+        const Toast = Swal.mixin({
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 2000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener("mouseenter", Swal.stopTimer);
+            toast.addEventListener("mouseleave", Swal.resumeTimer);
+          },
+        });
         if (res.status === 200)
-          alert(`Thank you for your purchase. Please check your email`);
+          Toast.fire({
+            icon: "success",
+            title: `Thank you for your purchase. Please check your email`,
+          });
         setCartList([]);
         setSubTotal(0);
       });

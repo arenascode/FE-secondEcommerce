@@ -4,6 +4,7 @@ import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSessions } from "../context/SessionsContext";
 import { ProductCart, useCart } from "../context/CartContext";
+import Swal from "sweetalert2";
 
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
@@ -25,6 +26,18 @@ const Login: React.FC = () => {
     email,
     password,
   };
+  /**Sweet Alert */
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const userLogin = async () => {
     console.log(userCredentials);
@@ -70,17 +83,29 @@ const Login: React.FC = () => {
             console.error("Unexpected type for cartSaved:", cartSaved);
           }
 
-          alert(`Welcome to Luxury Motorcycles`);
-          window.location.replace(pathToRedirect);
-          setPathToRedirect("/");
+          Toast.fire({
+            icon: "success",
+            title: `Welcome to Luxury Motorcycles`,
+          });
+
+          setTimeout(() => {
+            window.location.replace(pathToRedirect);
+            setPathToRedirect("/");
+          }, 2000);
         }
       })
       .catch((err) => {
         console.log(err);
         if (err.response.status === 401) {
-          alert("invalid Data. Try Again");
+          Toast.fire({
+            icon: "error",
+            title:`invalid Data. Try Again`,
+          });
         } else if (err.response.status === 404) {
-          alert("invalid credentials. Try Again");
+          Toast.fire({
+            icon: "error",
+            title: `invalid credentials. Try Again`,
+          });
         }
       });
   };

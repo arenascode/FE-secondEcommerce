@@ -85,9 +85,6 @@ const NavBar = () => {
                 <li>
                   <Link to={"/products"}>Meet our motorcycles</Link>
                 </li>
-                {/* <li>
-                <a>Offers</a>
-              </li> */}
                 <li>
                   <Link to={"/profile"}>Profile</Link>
                 </li>
@@ -149,7 +146,7 @@ const NavBar = () => {
                     <Link to={`/cartDetail/`}>
                       <button
                         onClick={closeDropdown}
-                        className="btn btn-primary btn-block"
+                        className="btn btn-success text-md tracking-widest"
                       >
                         View cart
                       </button>
@@ -198,7 +195,7 @@ const NavBar = () => {
               )}
 
               <li>
-                <a>Settings</a>
+                <Link to={'/profile'}>Profile</Link>
               </li>
               {isUserLogged ? (
                 <li>
@@ -209,9 +206,6 @@ const NavBar = () => {
               )}
             </ul>
           </div>
-          {/* <div className="logo">
-            <img src="../src/assets/logo.png" alt="" />
-          </div> */}
         </div>
       </div>
     </>

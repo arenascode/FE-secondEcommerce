@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
 const Register = () => {
   const formRegister = document.getElementById("registerForm");
@@ -38,6 +39,17 @@ const Register = () => {
     }
 }
 
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 2000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,16 +85,30 @@ const Register = () => {
         })
           .then((response) => {
             if (response.ok) {
-              alert("We are glad that you are part");
-              window.location.href = "/login";
+              Toast.fire({
+                icon: "success",
+                title: `We are glad that you are part`,
+              });
+
+              setTimeout(() => {
+                window.location.href = "/login";
+              }, 2000);
+
             } else if (response.status === 400) {
               const data = response.json();
-              data.then((res) => alert(res.error));
+              data.then((res) => Toast.fire({
+                icon: "error",
+                title: res.error
+              })
+              );
             }
           })
           .catch((error) => console.error(error.message));
       } else {
-        alert(`The passwords don't match`);
+        Toast.fire({
+          icon: "error",
+          title: `The passwords don't match`,
+        });
       }
       // formRegister.reset();
     }

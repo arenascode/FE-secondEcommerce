@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
+import Swal from "sweetalert2";
 useLocation;
 
 export type PhotoFile = File | null | string | undefined
@@ -57,7 +58,20 @@ export const useSessions = () => {
 type SessionsContextProviderProps = {
   children: ReactNode
 }
-const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
+const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => {
+  
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 1500,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.addEventListener("mouseenter", Swal.stopTimer);
+      toast.addEventListener("mouseleave", Swal.resumeTimer);
+    },
+  });
+
   //**Register Session */
 
   //**Login Session */
@@ -103,14 +117,25 @@ const SessionsContextProvider = ({children}: SessionsContextProviderProps) => {
       })
       .then((res) => {
         if (res.status === 200) {
-          alert(`Te esperamos pronto!`);
+          Toast.fire({
+            icon: "success",
+            title: `Te esperamos pronto!`,
+            timer: 1500
+          });
+
           setIsUserLogged(false);
           setUserHasPhoto(false)
-          setPathPhoto("");
-          setPathToRedirect('/')
-          window.location.href = '/'
+          setPathPhoto("")
+          setTimeout(() => {
+            setPathToRedirect('/')
+            window.location.href = '/'
+          }, 1500);
+
         } else {
-          alert("some error ocurred. Try Again");
+          Toast.fire({
+            icon: "error",
+            title: "Some error ocurred. Try Again"
+          })
         }
       });
   };
