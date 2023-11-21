@@ -60,7 +60,7 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
   
   return (
     <div className=" flex gap-2 justify-start items-center border-2 border-spacing-2 rounded-lg border-zinc-400 mt-2 p-2 pb-3">
-      <div className="counterBtns flex gap-2 justify-start items-center border-2 border-spacing-2 rounded-full border-grey-800 mt-2">
+      <div className="counterBtns flex gap-2 justify-start items-center border-2 border-spacing-2 rounded-full border-grey-800 mt-2 sm:text-2xl">
         <button
           onClick={productQuantity}
           className="btn btn-sm btn-circle active:bg-slate-600 active:text-white active:border-slate-600 text-xl"
@@ -75,7 +75,7 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
           +
         </button>
       </div>
-      <button onClick={addToCartHandler} className="btn btn-sm rounded-xl mt-2 active:bg-success active:text-whit active:border-success">
+      <button onClick={addToCartHandler} className="btn btn-sm rounded-xl mt-2 active:bg-success active:text-whit active:border-success sm:text-lg">
         Add To Cart
       </button>
     </div>

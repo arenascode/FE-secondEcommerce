@@ -3,7 +3,6 @@ import { PageNumber, Product } from "./ProductListContainer";
 
 interface ChildComponentProps {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
-  // Products: Product[];
   PageOptions: {
     nextPage: number | null;
     prevPage: number | null;
@@ -20,10 +19,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   useEffect(() => {
     setArrowLeft(false)
   }, []) 
-  
-  console.log(PageOptions);
-  console.log(`sort in paginate ${Sort}`);
-  
+   
   const [arrowRight, setArrowRight] = useState(true);
   const [arrowLeft, setArrowLeft] = useState(true);
   const [btnColor1, setBtnColor1] = useState(false);
@@ -31,8 +27,6 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   const [btnColor3, setBtnColor3] = useState(false);
   const [nextPage, setNextPage] = useState(PageOptions.nextPage);
   const [previousPage, setPreviousPage] = useState(PageOptions.prevPage);
-
-  // console.log(Products);
 
   const CLIENT_URL = useRef<string | null>(null);
 
@@ -161,7 +155,9 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         <img
           src="src/assets/icons/left-arrow.png"
           alt=""
-          className={`${arrowLeft ? "block" : "hidden"} w-5 h-5 mt-1`}
+          className={`${
+            arrowLeft ? "block" : "hidden"
+          } w-5 h-5 mt-1 lg:w-8 lg:h-8`}
         />
       </button>
 
@@ -169,7 +165,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         onClick={pageOne}
         className={`btn btn-circle btn-sm ${
           btnColor1 ? "bg-slate-700 text-white border-none" : ""
-        }`}
+        } lg:text-xl`}
       >
         1
       </button>
@@ -177,7 +173,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         onClick={pageTwo}
         className={`btn btn-circle btn-sm ${
           btnColor2 ? "bg-slate-700 text-white border-none" : ""
-        }`}
+        } lg:text-xl`}
       >
         2
       </button>
@@ -185,7 +181,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         onClick={pageThree}
         className={`btn btn-circle btn-sm ${
           btnColor3 ? "bg-slate-700 text-white border-none" : ""
-        }`}
+        } lg:text-xl`}
       >
         3
       </button>
@@ -193,7 +189,9 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         <img
           src="src/assets/icons/right-arrow.png"
           alt=""
-          className={` ${arrowRight ? "block" : "hidden"} w-5 h-5 mt-1`}
+          className={` ${
+            arrowRight ? "block" : "hidden"
+          } w-5 h-5 mt-1 lg:w-8 lg:h-8`}
         />
       </button>
     </div>

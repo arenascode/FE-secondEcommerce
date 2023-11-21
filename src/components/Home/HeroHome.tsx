@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { useCart } from "../context/cartContext";
+import { useCart } from "../context/CartContext.tsx";
 const HeroHome = () => {
 
-  const {setCategory} = useCart()
+  const { setCategory } = useCart()
+  
   return (
     <div
       className="hero min-h-screen"
@@ -15,7 +16,7 @@ const HeroHome = () => {
       <div className="hero-content text-center text-white">
         <div className="max-w-md">
           <h1 className="mb-8 text-5xl font-bold">Welcome To Luxury Motorcycles</h1>
-          <p className="mb-10 text-lg">
+          <p className="mb-10 text-lg lg:text-xl lg:tracking-wider">
             "Adéntrate en un mundo de emoción y velocidad. Descubre la
             excelencia en cada detalle mientras exploras nuestras exclusivas
             motocicletas de lujo. Bienvenido al lugar donde tus sueños de

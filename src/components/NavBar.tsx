@@ -17,23 +17,6 @@ const NavBar = () => {
     logOut()
     
   }
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     if (isUserLogged) {
-  //     const cartSaved = await getCartById();
-  //       // console.log(cartSaved);
-  //       // setCartList(cartSaved)
-  //     setSubTotal(
-  //       cartSaved.reduce(
-  //         (sub: number, p: ProductCart) => (sub += p.quantity * p._id.price),
-  //         0
-  //       )
-  //     );
-  //     setCartQty(cartQuantity())
-  //   }
-  //   }
-  //   fetchData()
-  // },[])
 
   const [isDropdownVisible, setIsDropDownVisible] = useState(false)
 
@@ -50,7 +33,7 @@ const NavBar = () => {
   
   return (
     <>
-      <div className="navbar bg-base-100 shadow-xl fixed z-10">
+      <div className="navbar bg-base-100 shadow-xl fixed z-10 sm:text-2xl">
         <div className="navbar-start">
           <div className="dropdown" onBlur={closeDropdown}>
             <label
@@ -60,7 +43,7 @@ const NavBar = () => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
+                className="h-5 w-5 md:h-8 md:w-8"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -77,19 +60,27 @@ const NavBar = () => {
             {isDropdownVisible && (
               <ul
                 tabIndex={0}
-                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
+                className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 md:text-lg"
               >
                 <li>
-                  <Link to={"/"}>Home</Link>
+                  <Link to={"/"} className="md:text-lg">
+                    Home
+                  </Link>
                 </li>
                 <li>
-                  <Link to={"/products"}>Meet our motorcycles</Link>
+                  <Link to={"/products"} className="md:text-lg">
+                    Meet our motorcycles
+                  </Link>
                 </li>
                 <li>
-                  <Link to={"/profile"}>Profile</Link>
+                  <Link to={"/profile"} className="md:text-lg">
+                    Profile
+                  </Link>
                 </li>
                 <li>
-                  <Link to={`/cartDetail/`}>Cart</Link>
+                  <Link to={`/cartDetail/`} className="md:text-lg">
+                    Cart
+                  </Link>
                 </li>
               </ul>
             )}
@@ -98,11 +89,14 @@ const NavBar = () => {
           </div>
         </div>
         <div className="navbar-center">
-          <Link to={"/"} className="btn btn-ghost normal-case text-xl">
+          <Link
+            to={"/"}
+            className="btn btn-ghost normal-case text-xl md:text-2xl"
+          >
             Luxury Motorcycles
           </Link>
         </div>
-        <div className="navbar-end gap-3">
+        <div className="navbar-end gap-3 md:gap-5">
           <div onBlur={closeDropdown} className="dropdown dropdown-end ">
             <label
               onClick={toggleDropdown}
@@ -159,7 +153,7 @@ const NavBar = () => {
           </div>
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-              <div className="w-8 rounded-full">
+              <div className="w-8 rounded-full md:w-10">
                 {pathPhoto && typeof pathPhoto === "string" ? (
                   <img
                     src={
@@ -187,7 +181,7 @@ const NavBar = () => {
                 ""
               ) : (
                 <li>
-                  <Link to={"/login"} className="justify-between">
+                  <Link to={"/login"} className="justify-between md:text-lg">
                     Login
                     {/* <span className="badge">New</span> */}
                   </Link>
@@ -195,11 +189,15 @@ const NavBar = () => {
               )}
 
               <li>
-                <Link to={'/profile'}>Profile</Link>
+                <Link to={"/profile"} className="md:text-lg">
+                  Profile
+                </Link>
               </li>
               {isUserLogged ? (
                 <li>
-                  <a onClick={() => handleLogOut()}>Logout</a>
+                  <a onClick={() => handleLogOut()} className="md:text-lg">
+                    Logout
+                  </a>
                 </li>
               ) : (
                 ""

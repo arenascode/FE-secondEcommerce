@@ -134,7 +134,7 @@ const ProductListContainer = () => {
         >
           <button
             onClick={() => setIsOpen((prev: boolean) => !prev)}
-            className="bg-zinc-200 p-2 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500"
+            className="bg-zinc-200 p-2 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500 md:text-lg"
           >
             Selecciona la categoría
             {!isOpen ? (
@@ -145,7 +145,7 @@ const ProductListContainer = () => {
           </button>
           {isOpen && (
             <div className="bg-zinc-300 absolute top-14 flex flex-col items-start rounded-lg p-2 w-full z-10 text-black text-sm">
-              <ul className="flex flex-col w-full justify-between p-2 ">
+              <ul className="flex flex-col w-full justify-between p-2 md:text-lg">
                 <li
                   onClick={filterProducts}
                   className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest"
@@ -240,14 +240,14 @@ const ProductListContainer = () => {
     };
 
     return (
-      <div className="filterContainer border-lg border-solid">
+      <div className="filterContainer border-lg border-solid md:flex md:gap-3">
         <div
           ref={miRef}
           className="relative flex flex-col items-center roundend-lg width-max"
         >
           <button
             onClick={() => setIsSortOpen((prev: boolean) => !prev)}
-            className="bg-zinc-200 p-2 px-3 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500"
+            className="bg-zinc-200 p-2 px-3 w-full flex items-center justify-between font-bold text-sm rounded-lg tracking-wider border-2 border-transparent text-black active:border-white duration-300 active:text-white active:bg-zinc-500 gap-1 md:text-lg md:gap-1"
           >
             <AiOutlineArrowUp />
             <AiOutlineArrowDown /> Ordenar
@@ -263,14 +263,14 @@ const ProductListContainer = () => {
                 <li
                   onClick={sortProducts}
                   data-sort="-1"
-                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest"
+                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest md:text-lg"
                 >
                   Mayor
                 </li>
                 <li
                   onClick={sortProducts}
                   data-sort="1"
-                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest"
+                  className="hover:bg-blue-300 cursor-pointer rounded-r-lg border-l-transparent hover:border-l-white border-l-4 p-2 tracking-widest md:text-lg"
                 >
                   Menor
                 </li>
@@ -294,15 +294,16 @@ const ProductListContainer = () => {
       </div>
     );
   };
+
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
-      <div key={p._id} className="card w-96 glass flex m-auto mt-10">
+      <div key={p._id} className="card w-96 glass flex m-auto mt-10 sm:w-72 sm:max-h-[450px] xl:w-96 xl:max-h-[500px]">
         <figure>
           <img
             src={`http://${CLIENT_URL.current}${p.thumbnails[0]}`}
             alt={p.title}
-          />
+           className="object-cover"/>
         </figure>
         <div className="card-body">
           <h2 className="card-title">{p.title}</h2>
@@ -324,15 +325,15 @@ const ProductListContainer = () => {
   return (
     <div>
       <div className="mt-7 pb-6 flex flex-col gap-1">
-        <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1">
+        <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1 sm:gap-20 sm:justify-center md:gap-44">
           {products.length !== 0 && <SortProducts />}
           {products.length !== 0 && <FilterProducts />}
         </div>
-        <div className="flex m-auto tracking-widest">
+        <div className="flex m-auto tracking-widest sm:mt-5 sm:text-2xl">
           <h3>{category}</h3>
         </div>
         <hr />
-        <div className="productsContainer">
+        <div className="productsContainer sm:flex sm:gap-10 sm:flex-wrap sm:p-3">
           {products.length == 0 ? <LoadingProducts /> : renderProducts}
         </div>
         <div className="PaginateOptions mt-4">

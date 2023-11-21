@@ -126,6 +126,7 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
           setIsUserLogged(false);
           setUserHasPhoto(false)
           setPathPhoto("")
+          localStorage.removeItem("accessToken");
           setTimeout(() => {
             setPathToRedirect('/')
             window.location.href = '/'

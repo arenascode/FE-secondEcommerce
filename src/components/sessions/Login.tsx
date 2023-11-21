@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useSessions } from "../context/SessionsContext";
@@ -9,17 +9,97 @@ import Swal from "sweetalert2";
 const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [rerender, setRerender] = useState(false);
 
-  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect, setUserHasPhoto } =
+  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect, setUserHasPhoto, isUserLogged } =
     useSessions();
 
   const { getCartById, setCartList, subTotalProducts } = useCart();
 
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
-  const githubLogin = () => {
-    const clientID = `<YOUR_CLIENT_ID>`;
+
+  // type DataResponse = {
+  //   access_token?: string;
+  //   expires_in?: number;
+  //   refresh_token?: number;
+  //   refresh_token_expires_in?: number;
+  //   scope?: string;
+  //   token_type?: string;
+  // }
+
+  interface ResponseType {
+    access_token?: string;
+    expires_in?: number;
+    refresh_token?: number;
+    refresh_token_expires_in?: number;
+    scope?: string;
+    token_type?: string;
+  }
+
+  async function getAccessToken(codeParam: string) {
+    const response = await axios.get<ResponseType>(`http://127.0.0.1:8080/api/sessions/getGhToken?code=${codeParam}`)
+    const data = response.data
+    console.log(data);
+    if (data?.access_token) {
+      localStorage.setItem("accessToken", data?.access_token)
+      setRerender(!rerender)
+      Toast.fire({
+        icon: "success",
+        title: "Welcome to Luxury Motorcycles",
+      });
+    }
+
+    setTimeout(() => {
+      getUserData();
+    }, 2000);
+  }
+  
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString)
+    const codeParam = urlParams.get('code');
+    console.log(codeParam);
+    console.log(Boolean(localStorage.getItem("accessToken")));
+    
+    if (codeParam && (localStorage.getItem("accessToken") === null)) {
+      
+      getAccessToken(codeParam)
+    }
+  }, [isUserLogged])
+
+  async function getUserData() {
+    await fetch(`http://127.0.0.1:8080/api/sessions/getGhUser`, {
+      method: "GET",
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem('accessToken')
+      }
+    }).then((response) => {
+      return response.json()
+    }).then((data) => {
+      console.log(data)
+      const photoPath = data.profilePhoto
+      console.log(photoPath);
+
+      if (photoPath) {
+        console.log(`The user has have profilePicture`);
+        
+        console.log(`new path ${photoPath}`);
+        // CLIENT_URL.current = result.data.CLIENT_URL;
+        setUserHasPhoto(true);
+        setPathPhoto(photoPath);
+        setIsUserLogged(true);
+      }
+
+      setIsUserLogged(true);
+    })
+  }
+  
+
+  const githubLogin = async () => {
+    const clientID = "Iv1.ed2c377f76d4b2ca"; 
     window.location.href = `https://github.com/login/oauth/authorize?scope=user&client_id=${clientID}`;
+
   };
 
   const userCredentials = {
@@ -70,7 +150,7 @@ const Login: React.FC = () => {
           setIsUserLogged(true);
           console.log(`currentLocation in Login ${pathToRedirect}`);
           const cartSaved: ProductCart[] | string | unknown =
-            await getCartById();
+          await getCartById();
           console.log(cartSaved);
           if (Array.isArray(cartSaved)) {
             setCartList(cartSaved);
@@ -154,7 +234,7 @@ const Login: React.FC = () => {
           <h3>Or Sign With Github</h3>
           <div
             onClick={githubLogin}
-            className=" flex justify-center text-4xl text-black tracking-wider shadow-lg rounded-full"
+            className=" flex justify-center text-4xl text-black tracking-wider shadow-lg rounded-full hover:cursor-pointer"
           >
             <AiOutlineGithub />
           </div>
