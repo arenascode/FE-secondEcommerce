@@ -51,7 +51,7 @@ const ProductDetail = () => {
     // const pid: string | undefined = productData?._id
     const handleAlertCartEmpty = (): void => {
       Toast.fire({
-        title: "Select a quantity",
+        title: "Add To Cart First",
         icon: "warning"
       })
       console.log(cartIdStorage);

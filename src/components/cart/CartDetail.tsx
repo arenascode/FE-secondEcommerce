@@ -60,7 +60,7 @@ const CartDetail = () => {
 
   return (
     <>
-      {cartList.length === 0  || cartIdStorage === undefined ? (
+      {cartList.length === 0 || cartIdStorage === undefined ? (
         <EmptyCart />
       ) : (
         <div className=" cardDetailsContainer pt-24 bg-color-white">
@@ -71,10 +71,10 @@ const CartDetail = () => {
                   <th scope="col" className="pl-10 py-3 rounded-tl-xl w-1/5">
                     Product name
                   </th>
-                  <th scope="col" className="pl-7 py-3">
+                  <th scope="col" className="pl-7 py-3 md:pl-12 lg:pl-10">
                     Quantity
                   </th>
-                  <th scope="col" className="pr-5 py-3">
+                  <th scope="col" className="pr-5 py-3 lg:pl-0 lg:pr-10">
                     Price
                   </th>
                   <th scope="col" className="py-3">
@@ -97,12 +97,14 @@ const CartDetail = () => {
               </tbody>
               <tfoot className="bg-slate-400 text-lg">
                 <tr className="font-semibold text-gray-900 dark:text-white bg-zinc-300 w-full rounded-b-lg">
-                  <td className="pl-10 py-3 text-base rounded-bl-xl">
+                  <td className="pl-10 py-3 text-base rounded-bl-xl lg:text-xl">
                     Total Of Products
                   </td>
-                  <td className="pl-12 py-3">{cartQuantity()}</td>
+                  <td className="pl-12 py-3 lg:text-xl md:pl-20">{cartQuantity()}</td>
                   <td colSpan={1}></td>
-                  <td className="pl-1 py-3 ">${subTotalProducts(cartList)}</td>
+                  <td className="pl-1 py-3 lg:text-xl">
+                    ${subTotalProducts(cartList)}
+                  </td>
                   <td colSpan={1} className="rounded-br-xl"></td>
                 </tr>
               </tfoot>
@@ -113,25 +115,22 @@ const CartDetail = () => {
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
               {/*  Subtotal */}
               <div className="flex justify-between items-center mb-2 text-lg">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-semibold text-gray-900">${subTotal}</span>
+                <span className="text-gray-600 lg:text-xl">Subtotal:</span>
+                <span className="font-semibold text-gray-900 lg:text-2xl">
+                  ${subTotal}
+                </span>
               </div>
-              {/* Discount Code */}
-              {/* <div className="flex justify-between items-center mb-2">
-            <span className="text-gray-600">Discount Code:</span>
-            <span className="font-semibold text-green-500">
-              - $500 (SAVE10)
-            </span>
-          </div> */}
               {/* //* Shipping */}
               <div className="flex justify-between items-center mb-2">
-                <span className="text-gray-600">Shipping:</span>
-                <span className="font-semibold text-green-500">Free</span>
+                <span className="text-gray-600 lg:text-xl">Shipping:</span>
+                <span className="font-semibold text-green-500 lg:text-xl">
+                  Free
+                </span>
               </div>
               <hr className="my-2 border-t border-gray-300" />
               {/* //* Total */}
               <div className="flex justify-between items-center mt-2">
-                <span className="text-xl font-bold">Total:</span>
+                <span className="text-xl font-bold lg:text-xl">Total:</span>
                 <span className="text-xl font-bold text-blue-500">
                   ${subTotal}
                 </span>
@@ -142,11 +141,14 @@ const CartDetail = () => {
             <button
               data-cid={cartIdStorage}
               onClick={emptyCart}
-              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red"
+              className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-red lg:text-xl lg:ml-4"
             >
               Empty Cart
             </button>
-            <button onClick={confirmPurchase} className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-green">
+            <button
+              onClick={confirmPurchase}
+              className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline-green lg:text-xl lg:mr-4 lg:my-5"
+            >
               Confirm Purchase
             </button>
           </div>
