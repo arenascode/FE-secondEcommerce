@@ -31,8 +31,6 @@ type SessionsContextType = {
 };
 
 const SessionsContext = createContext<SessionsContextType>({
-  /* setProfilePhotoUrl: () => { },
-  profilePhotoUrl: null, */
   handleConfirmPhoto: () => { },
   setProfileData: () => { },
   profileData: null,

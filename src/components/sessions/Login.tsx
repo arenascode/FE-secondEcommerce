@@ -11,8 +11,14 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState("");
   const [rerender, setRerender] = useState(false);
 
-  const { setPathPhoto, setIsUserLogged, pathToRedirect, setPathToRedirect, setUserHasPhoto, isUserLogged } =
-    useSessions();
+  const {
+    setPathPhoto,
+    setIsUserLogged,
+    pathToRedirect,
+    setPathToRedirect,
+    setUserHasPhoto,
+    isUserLogged,
+  } = useSessions();
 
   const { getCartById, setCartList, subTotalProducts } = useCart();
 
@@ -38,12 +44,14 @@ const Login: React.FC = () => {
   }
 
   async function getAccessToken(codeParam: string) {
-    const response = await axios.get<ResponseType>(`http://127.0.0.1:8080/api/sessions/getGhToken?code=${codeParam}`)
-    const data = response.data
+    const response = await axios.get<ResponseType>(
+      `http://127.0.0.1:8080/api/sessions/getGhToken?code=${codeParam}`
+    );
+    const data = response.data;
     console.log(data);
     if (data?.access_token) {
-      localStorage.setItem("accessToken", data?.access_token)
-      setRerender(!rerender)
+      localStorage.setItem("accessToken", data?.access_token);
+      setRerender(!rerender);
       Toast.fire({
         icon: "success",
         title: "Welcome to Luxury Motorcycles",
@@ -54,52 +62,51 @@ const Login: React.FC = () => {
       getUserData();
     }, 2000);
   }
-  
+
   useEffect(() => {
     const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString)
-    const codeParam = urlParams.get('code');
+    const urlParams = new URLSearchParams(queryString);
+    const codeParam = urlParams.get("code");
     console.log(codeParam);
     console.log(Boolean(localStorage.getItem("accessToken")));
-    
-    if (codeParam && (localStorage.getItem("accessToken") === null)) {
-      
-      getAccessToken(codeParam)
+
+    if (codeParam && localStorage.getItem("accessToken") === null) {
+      getAccessToken(codeParam);
     }
-  }, [isUserLogged])
+  }, [isUserLogged]);
 
   async function getUserData() {
     await fetch(`http://127.0.0.1:8080/api/sessions/getGhUser`, {
       method: "GET",
       headers: {
-        "Authorization": "Bearer " + localStorage.getItem('accessToken')
-      }
-    }).then((response) => {
-      return response.json()
-    }).then((data) => {
-      console.log(data)
-      const photoPath = data.profilePhoto
-      console.log(photoPath);
-
-      if (photoPath) {
-        console.log(`The user has have profilePicture`);
-        
-        console.log(`new path ${photoPath}`);
-        // CLIENT_URL.current = result.data.CLIENT_URL;
-        setUserHasPhoto(true);
-        setPathPhoto(photoPath);
-        setIsUserLogged(true);
-      }
-
-      setIsUserLogged(true);
+        Authorization: "Bearer " + localStorage.getItem("accessToken"),
+      },
     })
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        console.log(data);
+        const photoPath = data.profilePhoto;
+        console.log(photoPath);
+
+        if (photoPath) {
+          console.log(`The user has have profilePicture`);
+
+          console.log(`new path ${photoPath}`);
+          // CLIENT_URL.current = result.data.CLIENT_URL;
+          setUserHasPhoto(true);
+          setPathPhoto(photoPath);
+          setIsUserLogged(true);
+        }
+
+        setIsUserLogged(true);
+      });
   }
-  
 
   const githubLogin = async () => {
-    const clientID = "Iv1.ed2c377f76d4b2ca"; 
+    const clientID = "Iv1.ed2c377f76d4b2ca";
     window.location.href = `https://github.com/login/oauth/authorize?scope=user&client_id=${clientID}`;
-
   };
 
   const userCredentials = {
@@ -144,13 +151,13 @@ const Login: React.FC = () => {
             CLIENT_URL.current = result.data.CLIENT_URL;
             setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
             console.log(CLIENT_URL);
-            setUserHasPhoto(true)
+            setUserHasPhoto(true);
           }
 
           setIsUserLogged(true);
           console.log(`currentLocation in Login ${pathToRedirect}`);
           const cartSaved: ProductCart[] | string | unknown =
-          await getCartById();
+            await getCartById();
           console.log(cartSaved);
           if (Array.isArray(cartSaved)) {
             setCartList(cartSaved);
@@ -179,7 +186,7 @@ const Login: React.FC = () => {
         if (err.response.status === 401) {
           Toast.fire({
             icon: "error",
-            title:`invalid Data. Try Again`,
+            title: `invalid Data. Try Again`,
           });
         } else if (err.response.status === 404) {
           Toast.fire({
@@ -189,6 +196,9 @@ const Login: React.FC = () => {
         }
       });
   };
+
+  
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
@@ -221,7 +231,19 @@ const Login: React.FC = () => {
               />
             </div>
           </form>
-          <div className="flex items-end justify-end">
+          <div className="flex items-end justify-between">
+            <div className="text-black self-start flex flex-col">
+              <span className="text-sm self-start">
+                Forgot your password?
+              </span>
+              <Link to={"/restorePass"}>
+                <button className="btn btn-xs">
+                Restore it!
+              </button>
+              </Link>
+              
+            </div>
+
             <button
               onClick={userLogin}
               className="w-1/3 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider"

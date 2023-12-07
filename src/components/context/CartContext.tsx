@@ -103,8 +103,9 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
         toast.addEventListener("mouseleave", Swal.resumeTimer);
       },
     });
-
+    console.log(typeof cartIdStorage);
     if (cartIdStorage !== "") {
+      
       axios
         .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
         .then((res) => {
@@ -179,6 +180,70 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
                 }, 2000);
               }
             });
+        });
+    } else {
+      console.error('Failed, does not exist CID in storage');
+      axios
+        .post("http://127.0.0.1:8080/api/carts", cartData, {
+          withCredentials: true,
+        })
+        .then(function (res) {
+          if (res.status === 200) {
+            Toast.fire({
+              icon: "success",
+              title: `Añadiste ${cartData.quantity} ${
+                cartData.quantity > 1 ? "unidades" : "unidad"
+              } a tu carrito`,
+            });
+            console.log(res.data);
+            setCartId(res.data._id);
+            setCartIdStorage(res.data._id);
+            setCartList(res.data.products);
+            cartQuantity();
+            subTotalProducts(res.data.products);
+            const cart = res.data.products;
+            setSubTotal(
+              cart.reduce(
+                (sub: number, p: ProductCart) =>
+                  (sub += p.quantity * p._id.price),
+                0
+              )
+            );
+          } else {
+            if (res.status == 401) {
+              Toast.fire({
+                icon: "error",
+                title: `Login To Add Products`,
+                showConfirmButton: true,
+              });
+
+              setTimeout(() => {
+                window.location.href = "/login";
+              }, 2000);
+            }
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          if (err.response.status === 401) {
+            Toast.fire({
+              icon: "error",
+              title: `${err.response.data.errorMsg}`,
+              showConfirmButton: true,
+            });
+          }
+
+          if (err.response.statusText == "Unauthorized") {
+            Toast.fire({
+              icon: "error",
+              title: `Login To Add Products`,
+              showConfirmButton: true,
+            });
+
+            setTimeout(() => {
+              window.location.href = "/login";
+            }, 2000);
+          }
         });
     }
   };

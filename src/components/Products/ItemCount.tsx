@@ -17,7 +17,7 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
   const [count, setCount] = useState(1)
 
   const { addToCart } = useCart()
-  const {setPathToRedirect, pathToRedirect} = useSessions()
+  const {setPathToRedirect, pathToRedirect, isUserLogged} = useSessions()
   const location = useLocation()
 
   const Toast = Swal.mixin({
@@ -56,6 +56,13 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
     console.log(pathToRedirect);
     
     addToCart(productId, count)
+    // if (isUserLogged) {
+    // } else {
+    //   Toast.fire({
+    //     icon: "warning",
+    //     title: `Please login first to add product`,
+    //   });
+    // }
   }
   
   return (

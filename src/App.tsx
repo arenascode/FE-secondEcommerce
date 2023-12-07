@@ -9,6 +9,8 @@ import CartDetail from "./components/cart/CartDetail"
 import Register from "./components/sessions/Register"
 import Profile from "./components/sessions/Profile"
 import SessionsContextProvider from "./components/context/SessionsContext"
+import RestorePass from "./components/sessions/RestorePass"
+import ManageStore from "./components/manageStore/ManageStore"
 
 function App() {
   
@@ -21,7 +23,9 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/restorePass" element={<RestorePass />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/manageStore" element={<ManageStore />} />
             <Route path={"/products"} element={<Products />} />
             <Route path={"/products/:id"} element={<ProductDetail />} />
             <Route path="/cartDetail/" element={<CartDetail />} />

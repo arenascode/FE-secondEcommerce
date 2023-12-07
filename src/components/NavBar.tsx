@@ -67,8 +67,9 @@ const NavBar = () => {
                     Home
                   </Link>
                 </li>
-                <li>
-                  <Link to={"/products"} className="md:text-lg">
+                
+                <li className="md:text-lg">
+                  <Link to={"/products"} >
                     Meet our motorcycles
                   </Link>
                 </li>
