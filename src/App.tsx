@@ -11,11 +11,16 @@ import Profile from "./components/sessions/Profile"
 import SessionsContextProvider from "./components/context/SessionsContext"
 import RestorePass from "./components/sessions/RestorePass"
 import ManageStore from "./components/manageStore/ManageStore"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+
 
 function App() {
   
+  const queryClient = new QueryClient()
+  
   return (
-    <SessionsContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionsContextProvider>
       <CartContextProvider>
         <BrowserRouter>
           <NavBar />
@@ -33,6 +38,8 @@ function App() {
         </BrowserRouter>
       </CartContextProvider>
     </SessionsContextProvider>
+    </QueryClientProvider>
+    
   );
 }
 
