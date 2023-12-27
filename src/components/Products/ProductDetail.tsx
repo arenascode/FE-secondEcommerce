@@ -1,16 +1,28 @@
 import { useEffect, useRef, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { Product } from "./ProductListContainer";
 import ItemCount from "./ItemCount";
 import { useCart } from "../context/CartContext";
 import Swal from "sweetalert2";
+import { useSessions } from "../context/SessionsContext";
 
 const ProductDetail = () => {
   const { id } = useParams();
 
-  const {setCategory, cartIdStorage, cartQty, subTotal}= useCart()
+  const { setCategory, cartIdStorage, cartQty, subTotal } = useCart();
+
+  const { profileData } = useSessions();
+  
+  const location = useLocation()
+  console.log(location.pathname);
+  const firstPartPath: string = ((location.pathname).split('/'))[1]
+  console.log(typeof firstPartPath);
+  
+  
+
   const CLIENT_URL = useRef(null);
   const [product, setProduct] = useState<Product>();
+
 
   useEffect(() => {
     fetch(`http://localhost:8080/api/products/${id}`)
@@ -25,39 +37,40 @@ const ProductDetail = () => {
       .catch((err) => console.log(err));
   }, [id]);
 
-
   //* Function to back to category in breadcrumbs
   const backToCategory = (event: React.MouseEvent<HTMLElement>) => {
     const category: string | null = event.currentTarget.textContent;
 
     console.log(category);
-    setCategory(category)
+    setCategory(category);
   };
 
   //** ProductCard Component */
-  const ProductCard = ({ productData }: { productData: Product | undefined }) => {
-
+  const ProductCard = ({
+    productData,
+  }: {
+    productData: Product | undefined;
+  }) => {
     const Toast = Swal.mixin({
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 2000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-      });
+      toast: true,
+      position: "top-end",
+      showConfirmButton: false,
+      timer: 2000,
+      timerProgressBar: true,
+      didOpen: (toast) => {
+        toast.addEventListener("mouseenter", Swal.stopTimer);
+        toast.addEventListener("mouseleave", Swal.resumeTimer);
+      },
+    });
     // const pid: string | undefined = productData?._id
     const handleAlertCartEmpty = (): void => {
       Toast.fire({
         title: "Add To Cart First",
-        icon: "warning"
-      })
+        icon: "warning",
+      });
       console.log(cartIdStorage);
       console.log(cartQty);
-      
-    }
+    };
 
     return (
       <div className="card w-97 bg-stone-600 shadow-xl text-stone-200 md:flex-row lg:w-full">
@@ -91,7 +104,7 @@ const ProductDetail = () => {
                 <a>{productData?.title}</a>
               </li>
             </ul>
-        </div>
+          </div>
           <div className="productTitle flex justify-center">
             <h2 className="card-title tracking-widest sm:text-2xl lg:text-3xl xl:text-4xl">
               {productData?.title} {productData?.description}
@@ -125,28 +138,35 @@ const ProductDetail = () => {
             Animate a la aventura con la {productData?.title}{" "}
             {productData?.description}
           </p>
-          <div className="card-actions flex justify-between w-full items-center">
-            <div className="itemCountCountainer flex items-center gap-2">
-              <ItemCount
-                productId={productData?._id ?? ""}
-                productStock={productData?.stock ?? 0}
-              />
-            </div>
-            {subTotal >= 1 ? (
-              <Link to={`/cartDetail/`}>
-                <button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white">
+          {profileData?.role === "admin" ? (firstPartPath == "editproduct" ? "" :
+            (<button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white justify-end">
+              <Link to={`/editproduct/${product?._id}`}>Edit Product</Link>
+            </button>)
+            
+          ) : (
+            <div className="card-actions flex justify-between w-full items-center">
+              <div className="itemCountCountainer flex items-center gap-2">
+                <ItemCount
+                  productId={productData?._id ?? ""}
+                  productStock={productData?.stock ?? 0}
+                />
+              </div>
+              {subTotal >= 1 ? (
+                <Link to={`/cartDetail/`}>
+                  <button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white">
+                    Buy Now
+                  </button>{" "}
+                </Link>
+              ) : (
+                <button
+                  onClick={handleAlertCartEmpty}
+                  className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white"
+                >
                   Buy Now
-                </button>{" "}
-              </Link>
-            ) : (
-              <button
-                onClick={handleAlertCartEmpty}
-                className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white"
-              >
-                Buy Now
-              </button>
-            )}
-          </div>
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     );

@@ -21,7 +21,7 @@ const Login: React.FC = () => {
   } = useSessions();
 
   const { getCartById, setCartList, subTotalProducts } = useCart();
-
+  const {setProfileData} = useSessions()
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
 
@@ -155,6 +155,7 @@ const Login: React.FC = () => {
           }
 
           setIsUserLogged(true);
+          setProfileData(result.data.loggedUserDto);
           console.log(`currentLocation in Login ${pathToRedirect}`);
           const cartSaved: ProductCart[] | string | unknown =
             await getCartById();

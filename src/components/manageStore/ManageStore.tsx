@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import FolderOpenOutlinedIcon from "@mui/icons-material/FolderOpenOutlined";
 import PersonOutlineOutlinedIcon from "@mui/icons-material/PersonOutlineOutlined";
 import { useSessions } from "../context/SessionsContext";
@@ -153,7 +153,7 @@ const ManageStore = () => {
           <p>Price: ${p.price} USD</p>
           <p>Stock: {p.stock}</p>
           <div className="card-actions justify-end">
-            <Link to={`/products/${p._id}`}>
+            <Link to={`/editproduct/${p._id}`}>
               <button data-pid={p._id} className="btn btn-success text-lg">
                 Edit Product
               </button>
@@ -176,16 +176,35 @@ const ManageStore = () => {
           tabIndex={0}
           className="collapse collapse-arrow bg-base-200 rounded-none rounded-t-xl"
         >
-          <div className="collapse-title text-xl font-medium flex gap-2 ">
+          <div
+            className="collapse-title text-xl font-medium flex gap-2 "
+            style={{
+              cursor: "pointer",
+            }}
+          >
             <FolderOpenOutlinedIcon />
             <span>Products</span>
           </div>
           <div className="collapse-content text-lg">
             <li>
-              <a onClick={fetchProducts}>View All Products</a>
+              <a
+                onClick={fetchProducts}
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                View All Products
+              </a>
             </li>
             <li>
-              <a onClick={handleFormAddProduct}>Add New Product</a>
+              <a
+                onClick={handleFormAddProduct}
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                Add New Product
+              </a>
             </li>
           </div>
         </div>
@@ -193,16 +212,33 @@ const ManageStore = () => {
           tabIndex={0}
           className="collapse collapse-arrow bg-base-200 rounded-none rounded-b-xl"
         >
-          <div className="collapse-title text-xl font-medium flex gap-2">
+          <div
+            className="collapse-title text-xl font-medium flex gap-2"
+            style={{
+              cursor: "pointer",
+            }}
+          >
             <PersonOutlineOutlinedIcon />
             <span>Customers</span>
           </div>
           <div className="collapse-content text-lg">
             <li>
-              <a>See Customers</a>
+              <a
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                See Customers
+              </a>
             </li>
             <li>
-              <a>View Orders</a>
+              <a
+                style={{
+                  cursor: "pointer",
+                }}
+              >
+                View Orders
+              </a>
             </li>
           </div>
         </div>
@@ -224,7 +260,7 @@ const ManageStore = () => {
             </div>
           </div>
         )}
-        {formToAddProduct && <AddProductForm/>}
+        {formToAddProduct && <AddProductForm />}
       </div>
     </div>
   );

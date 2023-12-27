@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext } from "react";
 import useLocalStorage from "../../hooks/useLocalStorage";
 import axios from "axios";
 import { useLocation } from "react-router-dom";
@@ -83,11 +83,10 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
 
   //**To Save the Actual User Location */
   const [pathToRedirect, setPathToRedirect] = useLocalStorage<string>("lastLocation", '/');
-  console.log(pathToRedirect);
   
   //* Current Session */
 
-  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [profileData, setProfileData] = useLocalStorage<ProfileData | null>('User', null);
 
   const [pathPhoto, setPathPhoto] = useLocalStorage<string>(
     "profilePic",

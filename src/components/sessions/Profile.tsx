@@ -14,8 +14,15 @@ type ProfileData = {
 export type PhotoFile = File | null | string;
 
 const Profile = () => {
-  const { isUserLogged, setIsUserLogged, setPathPhoto, pathPhoto, logOut, userHasPhoto, setUserHasPhoto } =
-    useSessions();
+  const {
+    isUserLogged,
+    setIsUserLogged,
+    setPathPhoto,
+    pathPhoto,
+    logOut,
+    userHasPhoto,
+    setUserHasPhoto,
+  } = useSessions();
 
   const [profileData, setProfileData] = useState<ProfileData>();
 
@@ -31,9 +38,10 @@ const Profile = () => {
       toast.addEventListener("mouseleave", Swal.resumeTimer);
     },
   });
+
   useEffect(() => {
     console.log(`useEffect in action!`);
-    setUserHasPhoto(false)
+    setUserHasPhoto(false);
     axios
       .get("http://127.0.0.1:8080/api/sessions/current", {
         withCredentials: true,
@@ -49,7 +57,7 @@ const Profile = () => {
           ).then((user) => {
             const photoPath = user.data.profilePhoto;
             console.log(photoPath);
-            
+
             if (photoPath) {
               const staticWord = "static";
               const trimmingPath = photoPath.slice(6);
@@ -57,22 +65,20 @@ const Profile = () => {
               const newPath = `http://${CLIENT_URL.current}/${staticWord}${trimmingPath}`;
               console.log(`new path ${newPath}`);
               setPathPhoto(newPath);
-              setUserHasPhoto(true)
+              setUserHasPhoto(true);
             }
-
             setIsUserLogged(true);
-          });
-        } else if (res.status === 401) {
-          Toast.fire({
-            icon: "success",
-            title: `Please Log In`,
           });
         }
       })
       .catch((err) => {
         console.log(err.response.status);
         if (err.response.status === 401) {
-          // setIsUserLogged(false)
+          Toast.fire({
+            icon: "success",
+            title: `Please Log In`,
+          });
+          setIsUserLogged(false);
         }
       });
   }, []);
@@ -88,9 +94,8 @@ const Profile = () => {
       // console.log(profilePhotoUrl);
 
       setIsPhotoUploaded(true);
-      setUserHasPhoto(true)
+      setUserHasPhoto(true);
       console.log(pathPhoto);
-      
     }
   };
 
@@ -133,7 +138,7 @@ const Profile = () => {
 
           // console.log(profilePhotoUrl);
           setIsPhotoUploaded(false);
-          setUserHasPhoto(true)
+          setUserHasPhoto(true);
         })
         .catch((err) => console.log(err));
     };
@@ -152,7 +157,7 @@ const Profile = () => {
   };
   console.log(isUserLogged);
   console.log(userHasPhoto);
-  
+
   //** Function To handle Log Out */
   const handleLogOut = () => {
     console.log(`handling log out`);
@@ -161,7 +166,6 @@ const Profile = () => {
 
   //**Component go to Log In */
   const GoToLogin = () => {
-
     return (
       <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28">
         <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto">
@@ -307,11 +311,11 @@ const Profile = () => {
                 {profileData?.role}
               </span>
             </div>
-            {profileData.role === "admin" &&
+            {profileData.role === "admin" && (
               <Link to={"/manageStore"}>
-              <button className="btn btn-sm">Manage Store</button>
+                <button className="btn btn-sm">Manage Store</button>
               </Link>
-            }
+            )}
             <div className="flex mt-4 space-x-3 md:mt-6">
               <button
                 onClick={handleLogOut}

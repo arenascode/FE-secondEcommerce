@@ -4,38 +4,36 @@ import { useState } from "react";
 import { useSessions } from "./context/SessionsContext";
 
 const NavBar = () => {
+  const { cartQuantity, cartIdStorage, cartList, subTotal } = useCart();
+  const { pathPhoto, isUserLogged, CLIENT_URL, logOut, userHasPhoto } =
+    useSessions();
+  console.log(CLIENT_URL);
+  console.log(isUserLogged && userHasPhoto);
 
-  const { cartQuantity, cartIdStorage, cartList, subTotal } = useCart()
-  const { pathPhoto, isUserLogged, CLIENT_URL, logOut, userHasPhoto } = useSessions()
-    console.log(CLIENT_URL);
-    console.log(isUserLogged && userHasPhoto);
-    
   console.log(cartIdStorage);
   console.log(cartList);
-   
+
   const handleLogOut = () => {
-    logOut()
-    
-  }
+    logOut();
+  };
 
-  const [isDropdownVisible, setIsDropDownVisible] = useState(false)
+  const [isDropdownVisible, setIsDropDownVisible] = useState(false);
 
-  const toggleDropdown = async () => { 
-    setIsDropDownVisible(!isDropdownVisible)
-  }
+  const toggleDropdown = async () => {
+    setIsDropDownVisible(!isDropdownVisible);
+  };
 
   const closeDropdown = () => {
-
     setTimeout(() => {
-      setIsDropDownVisible(false)
+      setIsDropDownVisible(false);
     }, 30);
-  } 
-  
+  };
+
   return (
     <>
       <div className="navbar bg-base-100 shadow-xl fixed z-10 sm:text-2xl">
         <div className="navbar-start">
-          <div className="dropdown" onBlur={closeDropdown}>
+          <div className="dropdown" /*onBlur={closeDropdown}*/>
             <label
               onClick={toggleDropdown}
               tabIndex={0}
@@ -63,23 +61,31 @@ const NavBar = () => {
                 className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 md:text-lg"
               >
                 <li>
-                  <Link to={"/"} className="md:text-lg">
+                  <Link to={"/"} className="md:text-lg" onClick={closeDropdown}>
                     Home
                   </Link>
                 </li>
-                
+
                 <li className="md:text-lg">
-                  <Link to={"/products"} >
+                  <Link to={"/products"} onClick={closeDropdown}>
                     Meet our motorcycles
                   </Link>
                 </li>
                 <li>
-                  <Link to={"/profile"} className="md:text-lg">
+                  <Link
+                    to={"/profile"}
+                    className="md:text-lg"
+                    onClick={closeDropdown}
+                  >
                     Profile
                   </Link>
                 </li>
                 <li>
-                  <Link to={`/cartDetail/`} className="md:text-lg">
+                  <Link
+                    to={`/cartDetail/`}
+                    className="md:text-lg"
+                    onClick={closeDropdown}
+                  >
                     Cart
                   </Link>
                 </li>
@@ -98,7 +104,7 @@ const NavBar = () => {
           </Link>
         </div>
         <div className="navbar-end gap-3 md:gap-5">
-          <div onBlur={closeDropdown} className="dropdown dropdown-end ">
+          <div /*onBlur={closeDropdown}*/ className="dropdown dropdown-end">
             <label
               onClick={toggleDropdown}
               tabIndex={0}
