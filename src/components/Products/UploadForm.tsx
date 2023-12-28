@@ -60,16 +60,26 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
     
     const form = document.querySelector("form");
     
-    const UploadProductForm = new FormData(form as HTMLFormElement);
+    const uploadProductForm = new FormData(form as HTMLFormElement);
 
-    UploadProductForm.append("productImg", file as File);
+    uploadProductForm.append("productImg", file as File);
     
-    for (const [key, value] of UploadProductForm.entries()) {
+    const formToSend = new FormData()
+
+    for (const [key, value] of uploadProductForm.entries()) {
       console.log(`${key}: ${value}`);
+      if (value !== '' && value !== 'null') {
+        console.log(`The ${key} field it's empty!`);
+        formToSend.append(key, value)
+      }
+    }
+    for (const [key, value] of formToSend.entries()) {
+      console.log(`FormtSend ${key}: ${value}`);
     }
     
+    
     axios
-      .put(`http://127.0.0.1:8080/api/products/${pId}`, UploadProductForm, {
+      .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
         withCredentials: true,
       })
       .then((res) => {
@@ -110,7 +120,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             type="text"
             id="title"
             name="title"
-            value={formData.title}
+            // value={formData.title}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
@@ -127,7 +137,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
           <textarea
             id="description"
             name="description"
-            value={formData.description}
+            // value={formData.description}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
@@ -145,7 +155,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             type="text"
             id="price"
             name="price"
-            value={formData.price}
+            // value={formData.price}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
@@ -163,7 +173,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             type="text"
             id="code"
             name="code"
-            value={formData.code}
+            // value={formData.code}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
@@ -181,7 +191,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             type="text"
             id="stock"
             name="stock"
-            value={formData.stock}
+            // value={formData.stock}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
@@ -198,10 +208,11 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
           <select
             id="category"
             name="category"
-            value={formData.category}
+            // value={formData.category}
             onChange={handleChange}
             className="mt-1 p-2 w-full border rounded-md"
           >
+            <option value="" defaultValue={''}></option>
             <option value="Naked">Naked</option>
             <option value="Superbike">Superbike</option>
             <option value="Adventure">Adventure</option>
@@ -211,14 +222,14 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
         {/* Thumbnail */}
         <div className="mb-4">
           <label
-            htmlFor="thumbnail"
+            htmlFor="productImg"
             className="block text-sm font-medium text-gray-600"
           >
             Upload Image
           </label>
           <input
             type="file"
-            id="thumbnail"
+            id="productImg"
             onChange={handleFileChange}
             className="mt-1 p-2 w-full border rounded-md"
           />
