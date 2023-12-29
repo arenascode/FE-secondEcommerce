@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 interface ProductIdProps {
   productId: string 
@@ -26,7 +27,38 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
     stock: "",
     category: "",
   });
+  
+  const queryClient = useQueryClient();
 
+  const productMutation = useMutation({
+    mutationFn: async (formToSend) => {
+      return axios
+        .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res);
+          if (res.status === 200) {
+            // alert("product Updated");
+            // Reset the form
+            setFormData({
+              title: "",
+              description: "",
+              price: "",
+              code: "",
+              stock: "",
+              category: "",
+            });
+          }
+        })
+        .catch((err) => console.log(err));
+    }, 
+    onSuccess: () => {
+      queryClient.invalidateQueries(["productId"])
+    }
+  },
+)
+  
   // Handler for input changes
   const handleChange = (
     e: React.ChangeEvent<
@@ -77,27 +109,27 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
       console.log(`FormtSend ${key}: ${value}`);
     }
     
-    
-    axios
-      .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          alert("product Updated");
-          // Reset the form
-          setFormData({
-            title: "",
-            description: "",
-            price: "",
-            code: "",
-            stock: "",
-            category: "",
-          });
-        }
-      })
-      .catch((err) => console.log(err));
+    productMutation.mutate(formToSend)
+    // axios
+    //   .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
+    //     withCredentials: true,
+    //   })
+    //   .then((res) => {
+    //     console.log(res);
+    //     if (res.status === 200) {
+    //       alert("product Updated");
+    //       // Reset the form
+    //       setFormData({
+    //         title: "",
+    //         description: "",
+    //         price: "",
+    //         code: "",
+    //         stock: "",
+    //         category: "",
+    //       });
+    //     }
+    //   })
+    //   .catch((err) => console.log(err));
   };
 
   return (
@@ -105,7 +137,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
       <h2 className="text-2xl font-semibold mb-4">Upload Product</h2>
       <form
         onSubmit={handleSubmit}
-        className="w-[500px] "
+        className="w-[500px] h-max"
         name="UploadProductForm"
       >
         {/* Title */}

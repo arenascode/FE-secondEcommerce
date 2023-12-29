@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useParams, useLocation } from "react-router-dom";
 import { Product } from "./ProductListContainer";
 import ItemCount from "./ItemCount";
 import { useCart } from "../context/CartContext";
 import Swal from "sweetalert2";
 import { useSessions } from "../context/SessionsContext";
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -12,32 +14,48 @@ const ProductDetail = () => {
   const { setCategory, cartIdStorage, cartQty, subTotal } = useCart();
 
   const { profileData } = useSessions();
-  
-  const location = useLocation()
+
+  const location = useLocation();
   console.log(location.pathname);
-  const firstPartPath: string = ((location.pathname).split('/'))[1]
+  const firstPartPath: string = location.pathname.split("/")[1];
   console.log(typeof firstPartPath);
-  
-  
 
   const CLIENT_URL = useRef(null);
-  const [product, setProduct] = useState<Product>();
 
+  const [product, setProduct] = useState<Product | null>();
 
-  useEffect(() => {
-    fetch(`http://localhost:8080/api/products/${id}`)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
+  // useEffect(() => {
+  //   fetch(`http://localhost:8080/api/products/${id}`)
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       console.log(data);
 
-        setProduct(data.productById);
-        // *To be able to show correctly the imgs
-        CLIENT_URL.current = data.CLIENT_URL;
-      })
-      .catch((err) => console.log(err));
-  }, [id]);
+  //       setProduct(data.productById);
+  //       // *To be able to show correctly the imgs
+  //       CLIENT_URL.current = data.CLIENT_URL;
+  //     })
+  //     .catch((err) => console.log(err));
+  // }, [id]);
 
   //* Function to back to category in breadcrumbs
+
+  const { isLoading } = useQuery({
+    queryKey: ["productId"],
+    queryFn: () => {
+      axios
+        .get(`http://localhost:8080/api/products/${id}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          console.log(res.data);
+          CLIENT_URL.current = res.data.CLIENT_URL;
+          setProduct(res.data.productById);
+          return res.data.productById;
+        });
+    },
+  });
+  console.log(product);
+
   const backToCategory = (event: React.MouseEvent<HTMLElement>) => {
     const category: string | null = event.currentTarget.textContent;
 
@@ -45,6 +63,32 @@ const ProductDetail = () => {
     setCategory(category);
   };
 
+  axios.interceptors.request.use(
+    request => {
+      console.log(request.headers);
+      return request
+    },
+    error =>  Promise.reject(error)
+  )
+
+  const handleDelete = async () => {
+    
+    if (confirm("Are you sure you want to remove the product?")) {
+      await axios
+        .delete(`http://127.0.0.1:8080/api/products/${id}`, {
+          withCredentials: true,
+      })
+      .then((res) => {
+        console.log(res);
+        alert(`Product has been deleted`);
+        setProduct(null);
+      })
+      .catch((err) => console.error(err));
+      console.log(`product deleted`);
+    } else {
+      console.log(`deletion cancelled`);
+    }
+  };
   //** ProductCard Component */
   const ProductCard = ({
     productData,
@@ -77,7 +121,7 @@ const ProductDetail = () => {
         <div className="imgContainer md:w-1/2 p-2">
           <figure className=" overflow-hidden rounded-t-lg">
             <img
-              src={`http://${CLIENT_URL.current}${product?.thumbnails[0]}`}
+              src={`http://${CLIENT_URL.current}${productData?.thumbnails[0]}`}
               alt="Shoes"
               className="rounded-xl h-full"
             />
@@ -138,11 +182,19 @@ const ProductDetail = () => {
             Animate a la aventura con la {productData?.title}{" "}
             {productData?.description}
           </p>
-          {profileData?.role === "admin" ? (firstPartPath == "editproduct" ? "" :
-            (<button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white justify-end">
-              <Link to={`/editproduct/${product?._id}`}>Edit Product</Link>
-            </button>)
-            
+          {profileData?.role === "admin" ? (
+            firstPartPath == "editproduct" ? (
+              <button
+                onClick={handleDelete}
+                className="btn btn-sm btn-error text-white"
+              >
+                Delete Product
+              </button>
+            ) : (
+              <button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white justify-end">
+                <Link to={`/editproduct/${product?._id}`}>Edit Product</Link>
+              </button>
+            )
           ) : (
             <div className="card-actions flex justify-between w-full items-center">
               <div className="itemCountCountainer flex items-center gap-2">
@@ -173,9 +225,22 @@ const ProductDetail = () => {
   };
 
   return (
-    <div className="py-20 flex justify-center px-2">
-      <ProductCard productData={product ? product : undefined} />
-    </div>
+    <>
+      {product ? (
+        isLoading ? (
+          "Loading..."
+        ) : (
+          <div className="py-20 flex justify-center px-2">
+            <ProductCard productData={product ? product : undefined} />
+          </div>
+        )
+      ) : (
+          <div className="flex align-middle justify-center p-auto justify-items-center">
+            <h1 className="text-center">
+          "Product Does Not Exist!"</h1> </div>
+        
+      )}
+    </>
   );
 };
 export default ProductDetail;
