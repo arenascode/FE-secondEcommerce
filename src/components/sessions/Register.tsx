@@ -156,6 +156,7 @@ const Register = () => {
         <label htmlFor="age">Age:</label>
         <input
           type="number"
+          
           id="age"
           name="age"
           className="w-full p-2 mb-2 border rounded"

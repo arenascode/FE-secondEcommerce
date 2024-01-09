@@ -76,10 +76,6 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
     console.log(file);
     if (file) {
       setFile(file);
-      // You may want to handle file uploads accordingly (e.g., using FormData)
-      // setFormData((prevData) => ({
-      //   ...prevData,
-      // }));
     }
   };
   
@@ -110,26 +106,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
     }
     
     productMutation.mutate(formToSend)
-    // axios
-    //   .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
-    //     withCredentials: true,
-    //   })
-    //   .then((res) => {
-    //     console.log(res);
-    //     if (res.status === 200) {
-    //       alert("product Updated");
-    //       // Reset the form
-    //       setFormData({
-    //         title: "",
-    //         description: "",
-    //         price: "",
-    //         code: "",
-    //         stock: "",
-    //         category: "",
-    //       });
-    //     }
-    //   })
-    //   .catch((err) => console.log(err));
+
   };
 
   return (
@@ -184,7 +161,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             Price
           </label>
           <input
-            type="text"
+            type="number"
             id="price"
             name="price"
             // value={formData.price}
@@ -220,7 +197,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             Stock
           </label>
           <input
-            type="text"
+            type="number"
             id="stock"
             name="stock"
             // value={formData.stock}
