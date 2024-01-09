@@ -5,39 +5,36 @@ const Register = () => {
   const formRegister = document.getElementById("registerForm");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
   const [firstPassword, setFirstPassword] = useState("");
-  const [minLengthPass, setMinLengthPass] = useState(true)
-  const [repeatPassword, setRepeatPassword] = useState<string>("")
- 
+  const [minLengthPass, setMinLengthPass] = useState(true);
+  const [repeatPassword, setRepeatPassword] = useState<string>("");
+  const [invalidMail, setInvalidMail] = useState<boolean>(false)
+
   useEffect(() => {
     console.log(`useEffec activado`);
-    
-    if (
-      firstPassword.length >= 6 &&
-      repeatPassword.length >= 6
-    ) {
+
+    if (firstPassword.length >= 6 && repeatPassword.length >= 6) {
       console.log(`first condition`);
-      
+
       console.log(firstPassword, repeatPassword);
-      setPasswordMatch(true)
+      setPasswordMatch(true);
     } else {
-      setPasswordMatch(false)
+      setPasswordMatch(false);
       console.log(`second condition`);
-      
+
       console.log(firstPassword, repeatPassword);
-      
     }
   }, [firstPassword, repeatPassword]);
-  
+
   const handleWarningPass = (e: ChangeEvent<HTMLInputElement>) => {
     setFirstPassword(e.currentTarget.value);
-    
+
     if (firstPassword.length < 5) {
-      console.log(firstPassword.length)
-      setMinLengthPass(false)
+      console.log(firstPassword.length);
+      setMinLengthPass(false);
     } else {
-      setMinLengthPass(true)
+      setMinLengthPass(true);
     }
-}
+  };
 
   const Toast = Swal.mixin({
     toast: true,
@@ -66,6 +63,17 @@ const Register = () => {
       console.log(firstPassword);
       console.log(repeatPassword);
 
+      const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!pattern.test(userEmail as string)) {
+        setInvalidMail(true)
+        Toast.fire({
+          icon: "error",
+          title: `Invalid Email. Try again`,
+        });
+        return;
+      }
+
       if (firstPassword === repeatPassword) {
         const objDataUser = {
           first_name: userName,
@@ -90,16 +98,16 @@ const Register = () => {
                 title: `We are glad that you are part`,
               });
 
-              setTimeout(() => {
-                window.location.href = "/login";
-              }, 2000);
-
+              // setTimeout(() => {
+              //   window.location.href = "/login";
+              // }, 2000);
             } else if (response.status === 400) {
               const data = response.json();
-              data.then((res) => Toast.fire({
-                icon: "error",
-                title: res.error
-              })
+              data.then((res) =>
+                Toast.fire({
+                  icon: "error",
+                  title: res.error,
+                })
               );
             }
           })
@@ -144,27 +152,34 @@ const Register = () => {
         <br />
 
         <label htmlFor="email">Mail:</label>
-        <input
+          {/* {invalidMail && <span className="text-error text-sm">Invalid Mail!</span>} */}
+          <input
           type="email"
           id="email"
           name="email"
           className="w-full p-2 mb-2 border rounded"
           required
-        />
+          />
         <br />
 
         <label htmlFor="age">Age:</label>
         <input
           type="number"
-          
+          min={1}
           id="age"
           name="age"
           className="w-full p-2 mb-2 border rounded"
           required
         />
         <br />
-
-        <label htmlFor="password">Password:</label>
+        <div className="flex flex-col">
+          <label htmlFor="password">Password:</label>
+          {!minLengthPass && (
+            <span className="text-sm text-gray-400">
+              The Password must be at least 6 characters long
+            </span>
+          )}
+        </div>
         <input
           type="password"
           id="loginPassword"
@@ -188,12 +203,12 @@ const Register = () => {
           <span className="text-red-500">Passwords do not match</span>
         )}
         <br />
-        {minLengthPass ? '' : (
+        {/* {minLengthPass ? '' : (
           <span className="text-red-500">
             Password Must be at least Six characters long
           </span>
-        )}
-        <br />
+        )} */}
+        {/* <br /> */}
         <div className="flex flex-col items-center">
           <button
             disabled={!passwordMatch}
