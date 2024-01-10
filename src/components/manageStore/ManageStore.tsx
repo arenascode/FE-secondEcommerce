@@ -9,24 +9,14 @@ import PaginateProductsList from "../Products/PaginateProductsList";
 import AddProductForm from "../Products/AddProduct";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { AddOutlined, BikeScooter, Home, PersonOutlined, Store } from "@mui/icons-material";
+import Users from "./Users";
 // import Link from "@mui/material/Link";
 
 const ManageStore = () => {
 
-  // interface Client {
-  //   id: string;
-  //   name: string;
-  //   email: string;
-  //   orders: Order[];
-  // }
+  
 
-  // interface Order {
-  //   id: string;
-  //   date: Date;
-  //   products: Product[];
-  //   totalPrice: number;
-  //   status: string;
-  // }
+  
 
   const { setProfileData, profileData } = useSessions();
   const [products, setProducts] = useState<Product[]>([]);
@@ -35,6 +25,7 @@ const ManageStore = () => {
   const [pageOptions, setPageOptions] = useState<PageOptions>();
   const [sortProducts, setSortProducts] = useState<SortProducts>("1");
   const [pageNumber, setPageNumber] = useState("1");
+  const [showCustomers, setShowCustomers] = useState<boolean>(false)
   const CLIENT_URL = useRef(null);
 
   useEffect(() => {
@@ -65,14 +56,23 @@ const ManageStore = () => {
       };
       setPageOptions(pageOptions)
       setFormToAddProduct(false)
+      setShowCustomers(false);
     });
   };
 
   const handleFormAddProduct = () => {
     setFormToAddProduct(true)
     setShowProducts(false)
+    setShowCustomers(false);
   }
 
+  //* Fetch Customers 
+
+  const fetchCustomers = async () => {
+    setShowCustomers(true)
+    setFormToAddProduct(false);
+    setShowProducts(false);
+  }
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
@@ -169,7 +169,7 @@ const ManageStore = () => {
           </div>
           <div className="collapse-content text-lg">
             <li>
-              <a
+              <a onClick={fetchCustomers}
                 style={{
                   cursor: "pointer",
                 }}
@@ -254,6 +254,7 @@ const ManageStore = () => {
           </div>
         )}
         {formToAddProduct && <AddProductForm />}
+        {showCustomers && <Users/>}
       </div>
     </div>
   );

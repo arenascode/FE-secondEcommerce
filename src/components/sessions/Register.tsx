@@ -7,7 +7,6 @@ const Register = () => {
   const [firstPassword, setFirstPassword] = useState("");
   const [minLengthPass, setMinLengthPass] = useState(true);
   const [repeatPassword, setRepeatPassword] = useState<string>("");
-  const [invalidMail, setInvalidMail] = useState<boolean>(false)
 
   useEffect(() => {
     console.log(`useEffec activado`);
@@ -66,7 +65,6 @@ const Register = () => {
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!pattern.test(userEmail as string)) {
-        setInvalidMail(true)
         Toast.fire({
           icon: "error",
           title: `Invalid Email. Try again`,
@@ -98,9 +96,9 @@ const Register = () => {
                 title: `We are glad that you are part`,
               });
 
-              // setTimeout(() => {
-              //   window.location.href = "/login";
-              // }, 2000);
+              setTimeout(() => {
+                window.location.href = "/login";
+              }, 2000);
             } else if (response.status === 400) {
               const data = response.json();
               data.then((res) =>

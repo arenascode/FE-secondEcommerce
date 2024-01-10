@@ -24,18 +24,6 @@ const ProductDetail = () => {
 
   const [product, setProduct] = useState<Product | null>();
 
-  // useEffect(() => {
-  //   fetch(`http://localhost:8080/api/products/${id}`)
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-
-  //       setProduct(data.productById);
-  //       // *To be able to show correctly the imgs
-  //       CLIENT_URL.current = data.CLIENT_URL;
-  //     })
-  //     .catch((err) => console.log(err));
-  // }, [id]);
 
   //* Function to back to category in breadcrumbs
 

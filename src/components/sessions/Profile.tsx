@@ -59,10 +59,10 @@ const Profile = () => {
             console.log(photoPath);
 
             if (photoPath) {
-              const staticWord = "static";
-              const trimmingPath = photoPath.slice(6);
+              // const staticWord = "static";
+              // const trimmingPath = photoPath.slice(6);
               CLIENT_URL.current = res.data.CLIENT_URL;
-              const newPath = `http://${CLIENT_URL.current}/${staticWord}${trimmingPath}`;
+              const newPath = `http://${CLIENT_URL.current}/${photoPath}`;
               console.log(`new path ${newPath}`);
               setPathPhoto(newPath);
               setUserHasPhoto(true);
@@ -126,13 +126,13 @@ const Profile = () => {
           console.log(res);
           const photoPath = res.data.userPhotoUpdated.profilePhoto;
 
-          const staticWord = "static";
-          const trimmingPath = photoPath.slice(6);
-          const newPath = staticWord + trimmingPath;
-          console.log(`new path ${newPath}`);
+          // const staticWord = "static";
+          // const trimmingPath = photoPath.slice(6);
+          // const newPath = staticWord + trimmingPath;
+          // console.log(`new path ${newPath}`);
           CLIENT_URL.current = res.data.CLIENT_URL;
 
-          setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
+          setPathPhoto(`http://${CLIENT_URL.current}/${photoPath}`);
 
           console.log(pathPhoto);
 

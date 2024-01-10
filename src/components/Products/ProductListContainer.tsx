@@ -177,6 +177,7 @@ const ProductListContainer = () => {
       </div>
     );
   };
+  
   // **Sort Products Component **//
   const SortProducts = () => {
     const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
