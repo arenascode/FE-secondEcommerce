@@ -10,6 +10,7 @@ import AddProductForm from "../Products/AddProduct";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { AddOutlined, BikeScooter, Home, PersonOutlined, Store } from "@mui/icons-material";
 import Users from "./Users";
+import { AiOutlineUser, AiOutlineUserSwitch } from "react-icons/ai";
 // import Link from "@mui/material/Link";
 
 const ManageStore = () => {
@@ -169,7 +170,8 @@ const ManageStore = () => {
           </div>
           <div className="collapse-content text-lg">
             <li>
-              <a onClick={fetchCustomers}
+              <a
+                onClick={fetchCustomers}
                 style={{
                   cursor: "pointer",
                 }}
@@ -192,7 +194,7 @@ const ManageStore = () => {
       <div className="right flex flex-wrap w-full p-3">
         <div className="prevPage w-full p-2 rounded-t-md">
           <div role="presentation" onClick={handleClick}>
-            <Breadcrumbs aria-label="breadcrumb" className="p-2">
+            <Breadcrumbs aria-label="breadcrumb" className="p-2 ">
               <Link
                 color="inherit"
                 to="/"
@@ -227,10 +229,19 @@ const ManageStore = () => {
               {formToAddProduct && (
                 <Link
                   color="inherit"
-                  className="hover:underline flex gap-1"
+                  className="hover:underline flex gap-1 items-center"
                   to={""}
                 >
                   <AddOutlined /> Add New Motorbike
+                </Link>
+              )}
+              {showCustomers && (
+                <Link
+                  color="inherit"
+                  className="hover:underline flex gap-1 align-middle"
+                  to={""}
+                >
+                  <AiOutlineUser className="self-center"/> Users
                 </Link>
               )}
             </Breadcrumbs>
@@ -254,7 +265,7 @@ const ManageStore = () => {
           </div>
         )}
         {formToAddProduct && <AddProductForm />}
-        {showCustomers && <Users/>}
+        {showCustomers && <Users />}
       </div>
     </div>
   );

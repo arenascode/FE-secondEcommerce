@@ -53,7 +53,6 @@ const ProductDetail = () => {
 
   axios.interceptors.request.use(
     request => {
-      console.log(request.headers);
       return request
     },
     error =>  Promise.reject(error)

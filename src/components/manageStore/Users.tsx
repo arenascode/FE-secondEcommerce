@@ -1,7 +1,8 @@
 import axios from "axios";
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Product } from "../Products/ProductListContainer";
 import CustomerCard from "./UserCard";
+import { useQuery } from "@tanstack/react-query";
 
 export interface Order {
 
@@ -15,34 +16,52 @@ const Users = () => {
   
   interface User {
     _id: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
+    age: number;
     profilePhoto: string;
     role: string;
-    cart: Product[]
+    last_connection: string;
+    cart: {products: Product[], _id: string};
     orders: Order[];
   }
-
+  
   const [users, SetUsers] = useState<User[]>();
 
   const CLIENT_URL = useRef<string | null>(null)
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8080/api/users", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-        SetUsers(res.data.users)
-        CLIENT_URL.current = res.data.CLIENT_URL
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://127.0.0.1:8080/api/users", {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+  //       SetUsers(res.data.users)
+  //       CLIENT_URL.current = res.data.CLIENT_URL
+  //     });
+  // }, []);
 
+  const { isLoading } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => {
+      axios.get(`http://127.0.0.1:8080/api/users`, {
+        withCredentials: true
+      }).then((res) => {
+        console.log(res);
+        CLIENT_URL.current = res.data.CLIENT_URL;
+        SetUsers(res.data.users)
+        // return res.data.users
+      })
+    }
+  })
+  
   //* Render Users 
 
   const renderUsers = users?.map(user => <CustomerCard User={user} CLIENT_URL={CLIENT_URL.current} key={user._id}/>)
 
-  return <div>{renderUsers}</div>;
+  return (
+    <div className="flex gap-4">{isLoading ? "Loading Users" : renderUsers}</div>);
 }
 export default Users
