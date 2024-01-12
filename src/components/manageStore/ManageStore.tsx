@@ -10,14 +10,11 @@ import AddProductForm from "../Products/AddProduct";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import { AddOutlined, BikeScooter, Home, PersonOutlined, Store } from "@mui/icons-material";
 import Users from "./Users";
-import { AiOutlineUser, AiOutlineUserSwitch } from "react-icons/ai";
+import { AiOutlineUser } from "react-icons/ai";
+import Orders from "./Orders";
 // import Link from "@mui/material/Link";
 
 const ManageStore = () => {
-
-  
-
-  
 
   const { setProfileData, profileData } = useSessions();
   const [products, setProducts] = useState<Product[]>([]);
@@ -27,6 +24,7 @@ const ManageStore = () => {
   const [sortProducts, setSortProducts] = useState<SortProducts>("1");
   const [pageNumber, setPageNumber] = useState("1");
   const [showCustomers, setShowCustomers] = useState<boolean>(false)
+   const [showOrders, setShowOrders] = useState<boolean>(false);
   const CLIENT_URL = useRef(null);
 
   useEffect(() => {
@@ -58,6 +56,7 @@ const ManageStore = () => {
       setPageOptions(pageOptions)
       setFormToAddProduct(false)
       setShowCustomers(false);
+      setShowOrders(false)
     });
   };
 
@@ -65,6 +64,7 @@ const ManageStore = () => {
     setFormToAddProduct(true)
     setShowProducts(false)
     setShowCustomers(false);
+    setShowOrders(false)
   }
 
   //* Fetch Customers 
@@ -73,6 +73,15 @@ const ManageStore = () => {
     setShowCustomers(true)
     setFormToAddProduct(false);
     setShowProducts(false);
+    setShowOrders(false)
+  }
+
+  //*Show Orders Component 
+  const handleShowOrders = () => {
+    setShowCustomers(false);
+    setFormToAddProduct(false);
+    setShowProducts(false);
+    setShowOrders(true)
   }
   //** Render Products */
   const renderProducts = products.map((p) => {
@@ -105,11 +114,6 @@ const ManageStore = () => {
     );
   });
 
-  // Breadcrumbs
-  function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
-    event.preventDefault();
-    console.info("You clicked a breadcrumb.");
-  }
   // Render components
   return (
     <div className="admin-panel pt-20 flex h-screen">
@@ -180,7 +184,7 @@ const ManageStore = () => {
               </a>
             </li>
             <li>
-              <a
+              <a onClick={handleShowOrders}
                 style={{
                   cursor: "pointer",
                 }}
@@ -193,7 +197,7 @@ const ManageStore = () => {
       </div>
       <div className="right flex flex-wrap w-full p-3">
         <div className="prevPage w-full p-2 rounded-t-md">
-          <div role="presentation" onClick={handleClick}>
+          <div role="presentation" className="BreadCrumbs">
             <Breadcrumbs aria-label="breadcrumb" className="p-2 ">
               <Link
                 color="inherit"
@@ -266,6 +270,7 @@ const ManageStore = () => {
         )}
         {formToAddProduct && <AddProductForm />}
         {showCustomers && <Users />}
+        {showOrders && <Orders />}
       </div>
     </div>
   );

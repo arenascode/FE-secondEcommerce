@@ -53,6 +53,7 @@ const CustomerCard: React.FC<ChildComponentProps> = ({ User, CLIENT_URL }) => {
         );
     }, 
     onSuccess: () => {
+      //@ts-ignore
         queryClient.invalidateQueries(['users'])
       },
   });

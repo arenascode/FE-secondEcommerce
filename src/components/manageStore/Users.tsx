@@ -31,18 +31,6 @@ const Users = () => {
 
   const CLIENT_URL = useRef<string | null>(null)
 
-  // useEffect(() => {
-  //   axios
-  //     .get("http://127.0.0.1:8080/api/users", {
-  //       withCredentials: true,
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-  //       SetUsers(res.data.users)
-  //       CLIENT_URL.current = res.data.CLIENT_URL
-  //     });
-  // }, []);
-
   const { isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: () => {
