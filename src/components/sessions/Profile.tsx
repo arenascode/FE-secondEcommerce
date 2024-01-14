@@ -27,6 +27,7 @@ const Profile = () => {
   const [profileData, setProfileData] = useState<ProfileData>();
 
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
+  const [showEditBtn, setShowEditBtn] = useState<boolean>(false)
 
   const CLIENT_URL = useRef<string | null>(null);
   const Toast = Swal.mixin({
@@ -193,16 +194,19 @@ const Profile = () => {
     );
   };
 
+  //* Show Edit Btn
+  
   return isUserLogged ? (
     <div className="profileContainer pt-24 pb-8 ml-10">
       {profileData ? (
         <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-          <div className="editOptions flex justify-end px-4 pt-4">
+          <div className="flex px-4 pt-4 flex-col justify-end relative">
             <button
               id="dropdownButton"
               data-dropdown-toggle="dropdown"
-              className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5"
+              className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5 self-end w-max"
               type="button"
+              onClick={() => setShowEditBtn(!showEditBtn)}
             >
               <span className="sr-only">Open dropdown</span>
               <svg
@@ -216,37 +220,26 @@ const Profile = () => {
               </svg>
             </button>
             {/* <!-- Dropdown menu --> */}
-            <div
-              id="dropdown"
-              className="z-10 hidden text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
-            >
-              <ul className="py-2" aria-labelledby="dropdownButton">
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Edit
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Export Data
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                  >
-                    Delete
-                  </a>
-                </li>
-              </ul>
-            </div>
+            {showEditBtn && (
+              <div
+                id="dropdown"
+                className="z-99 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-max dark:bg-gray-700 self-end absolute top-[3.2rem] right-2 justify-end"
+              >
+                <ul
+                  className="py-2 text-right flex justify-end"
+                  aria-labelledby="dropdownButton"
+                >
+                  <li className=" flex self-end justify-end">
+                    <a
+                      href="#"
+                      className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white self-end"
+                    >
+                      Edit User
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
           <div className="flex flex-col items-center pb-10 gap-3">
             <div className="imgContainer w-24 h-24 group inline-block relative rounded-full">

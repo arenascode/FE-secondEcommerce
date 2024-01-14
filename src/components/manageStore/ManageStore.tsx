@@ -8,9 +8,9 @@ import { Link } from "react-router-dom";
 import PaginateProductsList from "../Products/PaginateProductsList";
 import AddProductForm from "../Products/AddProduct";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
-import { AddOutlined, BikeScooter, Home, PersonOutlined, Store } from "@mui/icons-material";
+import { AddOutlined, BikeScooter, Home, MonetizationOn, NotesOutlined, PersonOutlined, Store } from "@mui/icons-material";
 import Users from "./Users";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiFillMoneyCollect, AiOutlineUser } from "react-icons/ai";
 import Orders from "./Orders";
 // import Link from "@mui/material/Link";
 
@@ -184,12 +184,13 @@ const ManageStore = () => {
               </a>
             </li>
             <li>
-              <a onClick={handleShowOrders}
+              <a
+                onClick={handleShowOrders}
                 style={{
                   cursor: "pointer",
                 }}
               >
-                View Orders
+                View Sales
               </a>
             </li>
           </div>
@@ -245,7 +246,16 @@ const ManageStore = () => {
                   className="hover:underline flex gap-1 align-middle"
                   to={""}
                 >
-                  <AiOutlineUser className="self-center"/> Users
+                  <AiOutlineUser className="self-center" /> Users
+                </Link>
+              )}
+              {showOrders && (
+                <Link
+                  color="inherit"
+                  className="hover:underline flex gap-1 align-middle"
+                  to={""}
+                >
+                  <MonetizationOn fontSize="small" className="self-center" /> Sales
                 </Link>
               )}
             </Breadcrumbs>
