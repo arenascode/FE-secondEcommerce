@@ -9,7 +9,6 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState<string>("");
 
   useEffect(() => {
-    console.log(`useEffec activado`);
 
     if (firstPassword.length >= 6 && repeatPassword.length >= 6) {
       console.log(`first condition`);
@@ -201,12 +200,6 @@ const Register = () => {
           <span className="text-red-500">Passwords do not match</span>
         )}
         <br />
-        {/* {minLengthPass ? '' : (
-          <span className="text-red-500">
-            Password Must be at least Six characters long
-          </span>
-        )} */}
-        {/* <br /> */}
         <div className="flex flex-col items-center">
           <button
             disabled={!passwordMatch}

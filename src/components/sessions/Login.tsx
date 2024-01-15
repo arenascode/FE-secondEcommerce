@@ -20,7 +20,7 @@ const Login: React.FC = () => {
     isUserLogged,
   } = useSessions();
 
-  const { getCartById, setCartList, subTotalProducts } = useCart();
+  const { getCartById, setCartList, subTotalProducts, setCartIdStorage } = useCart();
   const {setProfileData} = useSessions()
   // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
   const CLIENT_URL = useRef<string | null>(null);
@@ -157,6 +157,7 @@ const Login: React.FC = () => {
           setIsUserLogged(true);
           setProfileData(result.data.loggedUserDto);
           console.log(`currentLocation in Login ${pathToRedirect}`);
+          setCartIdStorage(result.data.loggedUserDto.cartId)
           const cartSaved: ProductCart[] | string | unknown =
             await getCartById();
           console.log(cartSaved);
@@ -176,10 +177,10 @@ const Login: React.FC = () => {
             title: `Welcome to Luxury Motorcycles`,
           });
 
-          setTimeout(() => {
-            window.location.replace(pathToRedirect);
-            setPathToRedirect("/");
-          }, 2000);
+          // setTimeout(() => {
+          //   window.location.replace(pathToRedirect);
+          //   setPathToRedirect("/");
+          // }, 2000);
         }
       })
       .catch((err) => {
