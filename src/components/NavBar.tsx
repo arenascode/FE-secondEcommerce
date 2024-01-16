@@ -15,6 +15,9 @@ const NavBar = () => {
 
   const handleLogOut = () => {
     logOut();
+    const keysToRemove = ['cid', 'productsInCart']
+    
+    keysToRemove.forEach(key => localStorage.removeItem(key))
   };
 
   const [isDropdownVisible, setIsDropDownVisible] = useState(false);
@@ -66,8 +69,8 @@ const NavBar = () => {
                   </Link>
                 </li>
 
-                <li className="md:text-lg">
-                  <Link to={"/products"} onClick={closeDropdown}>
+                <li >
+                  <Link to={"/products"} className="md:text-lg" onClick={closeDropdown}>
                     Meet our motorcycles
                   </Link>
                 </li>

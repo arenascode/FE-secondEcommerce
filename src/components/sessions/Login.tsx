@@ -157,30 +157,32 @@ const Login: React.FC = () => {
           setIsUserLogged(true);
           setProfileData(result.data.loggedUserDto);
           console.log(`currentLocation in Login ${pathToRedirect}`);
-          setCartIdStorage(result.data.loggedUserDto.cartId)
+          if (result.data.loggedUserDto.cartId !== '') {
+            setCartIdStorage(result.data.loggedUserDto.cartId)
           const cartSaved: ProductCart[] | string | unknown =
-            await getCartById();
-          console.log(cartSaved);
-          if (Array.isArray(cartSaved)) {
+            await getCartById(result.data.loggedUserDto.cartId);
+            console.log(cartSaved);
+            if (Array.isArray(cartSaved)) {
             setCartList(cartSaved);
             subTotalProducts(cartSaved);
           } else if (typeof cartSaved === "string") {
             // Handle the case where there's an error message
             console.error("Error fetching cart:", cartSaved);
-          } else {
+          } else if (cartSaved == null) {
             // Handle other cases (unknown type)
             console.error("Unexpected type for cartSaved:", cartSaved);
           }
-
+          }
+          
           Toast.fire({
             icon: "success",
             title: `Welcome to Luxury Motorcycles`,
           });
 
-          // setTimeout(() => {
-          //   window.location.replace(pathToRedirect);
-          //   setPathToRedirect("/");
-          // }, 2000);
+          setTimeout(() => {
+            window.location.replace(pathToRedirect);
+            setPathToRedirect("/");
+          }, 1000);
         }
       })
       .catch((err) => {

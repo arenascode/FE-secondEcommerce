@@ -36,7 +36,7 @@ type CartContextType = {
   setCartQty: React.Dispatch<React.SetStateAction<number>>;
   emptyCart: (e: React.MouseEvent<HTMLButtonElement>) => void;
   confirmPurchase: () => void;
-  getCartById: () => void;
+  getCartById: (cid: string) => void;
   setSubTotal: React.Dispatch<React.SetStateAction<number>>;
   setCartIdStorage: React.Dispatch<React.SetStateAction<string>>
 };
@@ -327,12 +327,12 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   };
 
   //* Get Cart By Id
-  const getCartById = async (): Promise<
+  const getCartById = async (cid: string): Promise<
     ProductCart[] | { message: string }
   > => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8080/api/carts/${cartIdStorage}`, {
+        `http://127.0.0.1:8080/api/carts/${cid}`, {
           withCredentials: true
         }
       );
