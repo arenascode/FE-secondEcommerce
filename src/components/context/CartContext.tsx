@@ -38,7 +38,7 @@ type CartContextType = {
   confirmPurchase: () => void;
   getCartById: (cid: string) => void;
   setSubTotal: React.Dispatch<React.SetStateAction<number>>;
-  setCartIdStorage: React.Dispatch<React.SetStateAction<string>>
+  setCartIdStorage: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const CartContext = createContext<CartContextType>({
@@ -59,7 +59,7 @@ const CartContext = createContext<CartContextType>({
   confirmPurchase: () => {},
   getCartById: () => {},
   setSubTotal: () => { },
-  setCartIdStorage: () => {}
+  setCartIdStorage: () => { },
 });
 
 export const useCart = () => {
@@ -300,27 +300,12 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   };
 
   //* Confirm Purchase
-  const confirmPurchase = () => {
-    axios
+  const confirmPurchase = async () => {
+    await axios
       .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
       .then((res) => {
         console.log(res);
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 2000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
         if (res.status === 200)
-          Toast.fire({
-            icon: "success",
-            title: `Thank you for your purchase. Please check your email`,
-          });
         setCartList([]);
         setSubTotal(0);
       });
@@ -381,7 +366,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     confirmPurchase: confirmPurchase,
     getCartById: getCartById,
     setSubTotal: setSubTotal,
-    setCartIdStorage: setCartIdStorage
+    setCartIdStorage: setCartIdStorage,
   };
 
   return (
