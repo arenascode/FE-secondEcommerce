@@ -4,11 +4,13 @@ import { useSessions } from "../context/SessionsContext";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CloseOutlined } from "@mui/icons-material";
 
 type ProfileData = {
   email: string;
   first_name: string;
   last_name: string;
+  fullName: string;
   age: number;
   role: string;
   id: string;
@@ -28,7 +30,6 @@ const Profile = () => {
   } = useSessions();
 
   const [profileData, setProfileData] = useState<ProfileData>();
-
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
   const [showEditBtn, setShowEditBtn] = useState<boolean>(false);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
@@ -37,10 +38,11 @@ const Profile = () => {
   const [firstPassword, setFirstPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
-  console.log(firstPassword);
-  console.log(repeatPassword);
+  
 
   const CLIENT_URL = useRef<string | null>(null);
+  const targetDivRef = useRef<HTMLDivElement>(null)
+
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -51,7 +53,7 @@ const Profile = () => {
     },
   });
 
-  const { isLoading, data } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["user"],
     queryFn: () => {
       //Review this:
@@ -119,14 +121,11 @@ const Profile = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const photoFile = e.target.files?.[0];
-    // setProfilePhotoUrl(photoFile);
+
     if (photoFile) {
       const url = URL.createObjectURL(photoFile);
       console.log(url);
-      // setProfilePhotoUrl(url);
       setPathPhoto(url);
-      // console.log(profilePhotoUrl);
-
       setIsPhotoUploaded(true);
       setUserHasPhoto(true);
       console.log(pathPhoto);
@@ -189,8 +188,6 @@ const Profile = () => {
       </div>
     );
   };
-  console.log(isUserLogged);
-  console.log(userHasPhoto);
 
   //** Function To handle Log Out */
   const handleLogOut = () => {
@@ -235,6 +232,27 @@ const Profile = () => {
     }
   }, [firstPassword, repeatPassword]);
 
+  const handleShowEditFormBtn = () => {
+    setShowEditBtn(!showEditBtn)
+    
+  }
+
+  console.log(window.innerWidth);
+  
+  const handleShowEditForm = () => {
+    setShowEditForm(!showEditForm);
+    setShowEditBtn(false);
+    if (window.innerWidth <= 765) {
+      setTimeout(() => {
+      if (targetDivRef.current) {
+        targetDivRef.current.scrollIntoView({
+          behavior: "smooth",
+        });
+      }
+    }, 100);
+    }
+    
+  } 
   //* fetch to edit Profile
   const fetchEditProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -284,20 +302,19 @@ const Profile = () => {
     }
   };
 
+  
   return isUserLogged ? (
-    <div className="profileContainer pt-24 pb-8 p-10 flex">
-      <div className="left flex-1">
+    <div className="profileContainer pt-24 pb-8 p-10 md:pt-24 md:p-5 flex sm:flex-col md:flex-row sm:gap-2 md:gap-10">
+      <div className="left flex-1 sm:w-full md:w-max md:max-w-max">
         {profileData ? (
-          <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+          <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 md:w-[330px]">
             <div className="flex px-4 pt-4 flex-col justify-end relative">
               <button
                 id="dropdownButton"
                 data-dropdown-toggle="dropdown"
                 className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5 self-end w-max"
                 type="button"
-                onClick={() => {
-                  setShowEditBtn(!showEditBtn);
-                }}
+                onClick={handleShowEditFormBtn}
               >
                 <span className="sr-only">Open dropdown</span>
                 <svg
@@ -320,16 +337,11 @@ const Profile = () => {
                     className="text-right flex justify-end"
                     aria-labelledby="dropdownButton"
                   >
-                    <li className=" flex self-end justify-end">
+                    <li className="flex self-end justify-end">
                       <a
                         href="#"
                         className=" px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white self-end "
-                        onClick={() => {
-                          setShowEditForm(!showEditForm);
-                          setTimeout(() => {
-                            setShowEditBtn(false);
-                          }, 100);
-                        }}
+                        onClick={handleShowEditForm}
                       >
                         Edit User
                       </a>
@@ -338,7 +350,7 @@ const Profile = () => {
                 </div>
               )}
             </div>
-            <div className="flex flex-col items-center pb-10 gap-3">
+            <div className="flex flex-col items-center pb-10 gap-3 md:px-16">
               <div className="imgContainer w-24 h-24 group inline-block relative rounded-full">
                 {pathPhoto && typeof pathPhoto === "string" ? (
                   <img
@@ -420,10 +432,23 @@ const Profile = () => {
           <p>Loading Data...</p>
         )}
       </div>
-      <div className="right flex-1 flex-grow-3">
-        {showEditForm && (
-          <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow pt-8 dark:bg-gray-800 dark:border-gray-700">
-            <div className="flex flex-col items-center pb-4 gap-2">
+      {showEditForm && (
+        <div className="right flex-1 sm:w-full md:w-max md:max-w-max ">
+          <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow pt-4 dark:bg-gray-800 dark:border-gray-700 xl:w-[600px]">
+            <div className="flex px-4 flex-col justify-end relative">
+              <button
+                id="dropdownButton"
+                data-dropdown-toggle="dropdown"
+                className="inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:ring-4 focus:outline-none focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-1.5 self-end w-max"
+                type="button"
+              >
+                <CloseOutlined onClick={() => setShowEditForm(false)} />
+              </button>
+            </div>
+            <div
+              ref={targetDivRef}
+              className="flex flex-col items-center pb-4 gap-2 md:w-[350px] xl:w-full"
+            >
               <div className="imgContainer w-24 h-24 group inline-block relative rounded-full">
                 {pathPhoto && typeof pathPhoto === "string" ? (
                   <img
@@ -590,8 +615,8 @@ const Profile = () => {
               </form>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   ) : (
     <GoToLogin />

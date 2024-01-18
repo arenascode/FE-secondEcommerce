@@ -15,7 +15,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UploadProduct from "./components/Products/UploadProduct";
 import PaymentForm from "./components/cart/PaymentForm";
 
-
 function App() {
   const queryClient = new QueryClient();
 
@@ -36,12 +35,7 @@ function App() {
               <Route path={"/products/:id"} element={<ProductDetail />} />
               <Route path={"/editproduct/:id"} element={<UploadProduct />} />
               <Route path="/cartDetail/" element={<CartDetail />} />
-              <Route
-                path="/paymentForm"
-                element={
-                    <PaymentForm />
-                }
-              />
+              <Route path="/paymentForm" element={<PaymentForm />} />
             </Routes>
           </BrowserRouter>
         </CartContextProvider>

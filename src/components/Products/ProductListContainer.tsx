@@ -39,15 +39,14 @@ const ProductListContainer = () => {
   const [pageNumber, setPageNumber] = useState("1");
   const CLIENT_URL = useRef(null);
 
-  const {category, setCategory} = useCart()
-  
+  const { category, setCategory } = useCart();
+
   useEffect(() => {
-    getProducts()
+    getProducts();
   }, []);
 
   //** Get Products */
   const getProducts = () => {
-
     fetch(`http://127.0.0.1:8080/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
@@ -64,12 +63,11 @@ const ProductListContainer = () => {
 
         setPageOptions(pageOptions);
         // setCategory("");
-        console.log(category);
-        
+
         CLIENT_URL.current = data.CLIENT_URL;
       })
       .catch((err) => console.log(err));
-  }
+  };
   //** Filter Products Component */
   const FilterProducts = () => {
     const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -78,27 +76,20 @@ const ProductListContainer = () => {
 
     //**Cerrar menú desplegable */
     useEffect(() => {
-      // Función para manejar el clic fuera del componente
       const handleClickExterno = (e: MouseEvent) => {
         if (miRef.current && !miRef.current.contains(e.target as Node)) {
-          // El clic se realizó fuera del componente, puedes realizar alguna acción aquí
           setIsOpen(false);
-          // console.log("Clic fuera del componente");
-          // Aquí puedes ocultar el componente, actualizar el estado, etc.
         }
       };
 
-      // Agregar un controlador de eventos al elemento document.body
       document.body.addEventListener("click", handleClickExterno);
 
-      // Limpieza: eliminar el controlador de eventos cuando el componente se desmonte
       return () => {
         document.body.removeEventListener("click", handleClickExterno);
       };
     }, []);
 
     const filterProducts = (event: React.MouseEvent<HTMLLIElement>): void => {
-      // console.log(event.currentTarget.textContent);
       let category: string | null = event.currentTarget.textContent;
 
       if (category === "Todas") {
@@ -177,7 +168,7 @@ const ProductListContainer = () => {
       </div>
     );
   };
-  
+
   // **Sort Products Component **//
   const SortProducts = () => {
     const [isSortOpen, setIsSortOpen] = useState<boolean>(false);
@@ -186,13 +177,10 @@ const ProductListContainer = () => {
 
     //**Cerrar menú desplegable */
     useEffect(() => {
-      // Función para manejar el clic fuera del componente
       const handleClickExterno = (e: MouseEvent) => {
         if (miRef.current && !miRef.current.contains(e.target as Node)) {
-          // El clic se realizó fuera del componente, puedes realizar alguna acción aquí
           setIsSortOpen(false);
           console.log("Click fuera del componente");
-          // Aquí puedes ocultar el componente, actualizar el estado, etc.
         }
       };
 
@@ -206,25 +194,18 @@ const ProductListContainer = () => {
     }, []);
 
     const sortProducts = (event: React.MouseEvent<HTMLLIElement>): void => {
-      console.log(event.currentTarget.textContent);
       const dataSort: string | null = event.currentTarget.dataset.sort || null;
-      console.log(dataSort);
       setSortProducts(dataSort);
-      console.log(`sortProducts ${category}`);
-      console.log(`pageNumberInSort ${pageNumber}`);
+
       if (pageNumber != "1") {
-        console.log(`entró a la condición`);
         setPageNumber("1");
       }
-      console.log(`new PageNumber ${pageNumber}`);
 
       fetch(
         `http://localhost:8080/api/products?sortprice=${dataSort}&category=${category}&page=${pageNumber}`
       )
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-
           setProducts(data.products.docs);
           setPageNumber(data.products.page);
           const pageOptions: PageOptions = {
@@ -233,7 +214,6 @@ const ProductListContainer = () => {
             hasNextPage: data.products.hasNextPage,
             hasPrevPage: data.products.hasPrevPage,
           };
-
           setPageOptions(pageOptions);
           CLIENT_URL.current = data.CLIENT_URL;
         })
@@ -299,14 +279,18 @@ const ProductListContainer = () => {
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
-      <div key={p._id} className="card w-96 glass flex m-auto mt-10 sm:w-72 sm:max-h-[450px] xl:w-96 xl:max-h-[500px]">
+      <div
+        key={p._id}
+        className="card glass w-96 flex m-auto mt-10 sm:w-76 sm:max-h-[450px] xl:w-96 xl:max-h-[500px]"
+      >
         <figure>
           <img
             src={`http://${CLIENT_URL.current}${p.thumbnails[0]}`}
             alt={p.title}
-           className="object-cover"/>
+            className="object-cover"
+          />
         </figure>
-        <div className="card-body">
+        <div className="card-body text-black tracking-wider">
           <h2 className="card-title">{p.title}</h2>
           <p>Model: {p.description}</p>
           <p>Price: ${p.price} USD</p>
@@ -325,8 +309,11 @@ const ProductListContainer = () => {
 
   return (
     <div>
-      <div className="mt-7 pb-6 flex flex-col gap-1">
-        <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1 sm:gap-20 sm:justify-center md:gap-44">
+      <div
+        className="mt-7 pb-6 flex flex-col gap-1 bg-gradient-to-tr from-gray-400 at-center to-blue-800
+"
+      >
+        <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1 sm:gap-10 sm:justify-center md:gap-44">
           {products.length !== 0 && <SortProducts />}
           {products.length !== 0 && <FilterProducts />}
         </div>
@@ -334,7 +321,7 @@ const ProductListContainer = () => {
           <h3>{category}</h3>
         </div>
         <hr />
-        <div className="productsContainer sm:flex sm:gap-10 sm:flex-wrap sm:p-3">
+        <div className="productsContainer sm:flex sm:flex-wrap sm:p-3 lg:gap-2">
           {products.length == 0 ? <LoadingProducts /> : renderProducts}
         </div>
         <div className="PaginateOptions mt-4">

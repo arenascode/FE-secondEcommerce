@@ -10,6 +10,8 @@ const Login: React.FC = () => {
   const [email, setUserEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rerender, setRerender] = useState(false);
+  const [lockButton, setLockButton] = useState(true);
+  const [errorMail, setErrorMail] = useState(false);
 
   const {
     setPathPhoto,
@@ -20,19 +22,10 @@ const Login: React.FC = () => {
     isUserLogged,
   } = useSessions();
 
-  const { getCartById, setCartList, subTotalProducts, setCartIdStorage } = useCart();
-  const {setProfileData} = useSessions()
-  // const [CLIENT_URL, setCLIENT_URL] = useState<string>('')
+  const { getCartById, setCartList, subTotalProducts, setCartIdStorage } =
+    useCart();
+  const { setProfileData } = useSessions();
   const CLIENT_URL = useRef<string | null>(null);
-
-  // type DataResponse = {
-  //   access_token?: string;
-  //   expires_in?: number;
-  //   refresh_token?: number;
-  //   refresh_token_expires_in?: number;
-  //   scope?: string;
-  //   token_type?: string;
-  // }
 
   interface ResponseType {
     access_token?: string;
@@ -129,6 +122,12 @@ const Login: React.FC = () => {
   const userLogin = async () => {
     console.log(userCredentials);
 
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email !== null && !pattern.test(email as string)) {
+      setErrorMail(true);
+      return;
+    }
     await axios
       .post("http://127.0.0.1:8080/api/sessions/login", userCredentials, {
         withCredentials: true,
@@ -157,23 +156,21 @@ const Login: React.FC = () => {
           setIsUserLogged(true);
           setProfileData(result.data.loggedUserDto);
           console.log(`currentLocation in Login ${pathToRedirect}`);
-          if (result.data.loggedUserDto.cartId !== '') {
-            setCartIdStorage(result.data.loggedUserDto.cartId)
-          const cartSaved: ProductCart[] | string | unknown =
-            await getCartById(result.data.loggedUserDto.cartId);
+          if (result.data.loggedUserDto.cartId !== "") {
+            setCartIdStorage(result.data.loggedUserDto.cartId);
+            const cartSaved: ProductCart[] | string | unknown =
+              await getCartById(result.data.loggedUserDto.cartId);
             console.log(cartSaved);
             if (Array.isArray(cartSaved)) {
-            setCartList(cartSaved);
-            subTotalProducts(cartSaved);
-          } else if (typeof cartSaved === "string") {
-            // Handle the case where there's an error message
-            console.error("Error fetching cart:", cartSaved);
-          } else if (cartSaved == null) {
-            // Handle other cases (unknown type)
-            console.error("Unexpected type for cartSaved:", cartSaved);
+              setCartList(cartSaved);
+              subTotalProducts(cartSaved);
+            } else if (typeof cartSaved === "string") {
+              console.error("Error fetching cart:", cartSaved);
+            } else if (cartSaved == null) {
+              console.error("Unexpected type for cartSaved:", cartSaved);
+            }
           }
-          }
-          
+
           Toast.fire({
             icon: "success",
             title: `Welcome to Luxury Motorcycles`,
@@ -201,7 +198,19 @@ const Login: React.FC = () => {
       });
   };
 
-  
+  useEffect(() => {
+    const isLockedButton = (email == null || email == "") || (password == null || password == "");
+    isLockedButton ? setLockButton(true) : setLockButton(false);
+    setErrorMail(false)
+  }, [email, password]);
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    
+    if (e.key === "Enter") {
+      console.log(`user press enter key`);
+      userLogin()
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -213,12 +222,12 @@ const Login: React.FC = () => {
         </div>
         <div className="mt-8 space-y-6 text-white">
           <input type="hidden" name="remember" value="true" />
-          <form className="rounded-md shadow-sm">
+          <form className="rounded-md shadow-sm" onKeyDown={handleKeyDown}>
             <div>
               <input
                 type="text"
                 value={email}
-                onChange={(e) => setUserEmail(e.target.value)}
+                onChange={(e) => { setUserEmail(e.target.value);  setErrorMail(false)}}
                 required
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Your E-Mail"
@@ -233,24 +242,27 @@ const Login: React.FC = () => {
                 className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                 placeholder="Password"
               />
+              {errorMail && (
+                <span className="text-sm text-red-400">
+                  Invalid eMail Format
+                </span>
+              )}
             </div>
           </form>
           <div className="flex items-end justify-between">
             <div className="text-black self-start flex flex-col">
-              <span className="text-sm self-start">
-                Forgot your password?
-              </span>
-              <Link to={"/restorePass"}>
-                <button className="btn btn-xs">
-                Restore it!
-              </button>
+              <span className="text-sm self-start">Forgot your password?</span>
+              <Link to={"/restorePass"} className="w-max">
+                <button className="btn btn-xs">Restore it!</button>
               </Link>
-              
             </div>
 
             <button
               onClick={userLogin}
-              className="w-1/3 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider"
+              disabled={lockButton}
+              className={` ${
+                lockButton && "disabled:text-gray-400 disabled:bg-gray-300"
+              } w-1/3 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 tracking-wider`}
             >
               Login
             </button>

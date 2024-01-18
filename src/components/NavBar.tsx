@@ -4,14 +4,10 @@ import { useState } from "react";
 import { useSessions } from "./context/SessionsContext";
 
 const NavBar = () => {
-  const { cartQuantity, cartIdStorage, cartList, subTotal } = useCart();
-  const { pathPhoto, isUserLogged, CLIENT_URL, logOut, userHasPhoto } =
+  const { cartQuantity, subTotal } = useCart();
+  const { pathPhoto, isUserLogged, logOut, userHasPhoto } =
     useSessions();
-  console.log(CLIENT_URL);
-  console.log(isUserLogged && userHasPhoto);
-
-  console.log(cartIdStorage);
-  console.log(cartList);
+  
 
   const handleLogOut = () => {
     logOut();
@@ -34,9 +30,9 @@ const NavBar = () => {
 
   return (
     <>
-      <div className="navbar bg-base-100 shadow-xl fixed z-10 sm:text-2xl">
+      <div className="navbar bg-base-100 shadow-xl fixed z-10 sm:text-2xl bg-gradient-to-r from-gray-300 via-gray-400 to-gray-300">
         <div className="navbar-start">
-          <div className="dropdown" /*onBlur={closeDropdown}*/>
+          <div className="dropdown">
             <label
               onClick={toggleDropdown}
               tabIndex={0}
@@ -69,8 +65,12 @@ const NavBar = () => {
                   </Link>
                 </li>
 
-                <li >
-                  <Link to={"/products"} className="md:text-lg" onClick={closeDropdown}>
+                <li>
+                  <Link
+                    to={"/products"}
+                    className="md:text-lg"
+                    onClick={closeDropdown}
+                  >
                     Meet our motorcycles
                   </Link>
                 </li>
@@ -101,13 +101,13 @@ const NavBar = () => {
         <div className="navbar-center">
           <Link
             to={"/"}
-            className="btn btn-ghost normal-case text-xl md:text-2xl"
+            className="btn btn-ghost normal-case text-xl md:text-2xl tracking-wider text-black"
           >
             Luxury Motorcycles
           </Link>
         </div>
         <div className="navbar-end gap-3 md:gap-5">
-          <div /*onBlur={closeDropdown}*/ className="dropdown dropdown-end">
+          <div className="dropdown dropdown-end">
             <label
               onClick={toggleDropdown}
               tabIndex={0}
@@ -193,7 +193,6 @@ const NavBar = () => {
                 <li>
                   <Link to={"/login"} className="justify-between md:text-lg">
                     Login
-                    {/* <span className="badge">New</span> */}
                   </Link>
                 </li>
               )}

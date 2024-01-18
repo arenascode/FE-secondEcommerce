@@ -11,19 +11,16 @@ import axios from "axios";
 const ProductDetail = () => {
   const { id } = useParams();
 
-  const { setCategory, cartIdStorage, cartQty, subTotal } = useCart();
+  const { setCategory, subTotal } = useCart();
 
   const { profileData } = useSessions();
 
   const location = useLocation();
-  console.log(location.pathname);
   const firstPartPath: string = location.pathname.split("/")[1];
-  console.log(typeof firstPartPath);
 
   const CLIENT_URL = useRef(null);
 
   const [product, setProduct] = useState<Product | null>();
-
 
   //* Function to back to category in breadcrumbs
 
@@ -35,19 +32,15 @@ const ProductDetail = () => {
           withCredentials: true,
         })
         .then((res) => {
-          console.log(res.data);
           CLIENT_URL.current = res.data.CLIENT_URL;
           setProduct(res.data.productById);
           return res.data.productById;
         });
     },
   });
-  console.log(product);
 
   const backToCategory = (event: React.MouseEvent<HTMLElement>) => {
     const category: string | null = event.currentTarget.textContent;
-
-    console.log(category);
     setCategory(category);
   };
 
@@ -57,25 +50,34 @@ const ProductDetail = () => {
     },
     error =>  Promise.reject(error)
   )
-
+  const Toast = Swal.mixin({
+        toast: true,
+        position: "center",
+        showConfirmButton: true,
+        // timer: 2000,
+        // timerProgressBar: true,
+  });
+  
   const handleDelete = async () => {
     
     if (confirm("Are you sure you want to remove the product?")) {
-      await axios
-        .delete(`http://127.0.0.1:8080/api/products/${id}`, {
-          withCredentials: true,
-      })
-      .then((res) => {
-        console.log(res);
-        alert(`Product has been deleted`);
-        setProduct(null);
-      })
-      .catch((err) => console.error(err));
-      console.log(`product deleted`);
+      Toast.fire({
+        text: "For security the code to delete the product is disabled. Thank you for your understandnig!",
+      });
+      // await axios
+      //   .delete(`http://127.0.0.1:8080/api/products/${id}`, {
+      //     withCredentials: true,
+      // })
+      // .then(() => {
+      //   alert(`Product has been deleted`);
+      //   setProduct(null);
+      // })
+      // .catch((err) => console.error(err));
     } else {
       console.log(`deletion cancelled`);
     }
   };
+  
   //** ProductCard Component */
   const ProductCard = ({
     productData,
@@ -99,14 +101,12 @@ const ProductDetail = () => {
         title: "Add To Cart First",
         icon: "warning",
       });
-      console.log(cartIdStorage);
-      console.log(cartQty);
     };
 
     return (
-      <div className="card w-97 bg-stone-600 shadow-xl text-stone-200 md:flex-row lg:w-full">
+      <div className="card glass w-97 shadow-xl text-white md:flex-row lg:w-full">
         <div className="imgContainer md:w-1/2 p-2">
-          <figure className=" overflow-hidden rounded-t-lg">
+          <figure className=" overflow-hidden rounded-lg sm:max-h-72 md:max-h-96 lg:max-h-[28rem]">
             <img
               src={`http://${CLIENT_URL.current}${productData?.thumbnails[0]}`}
               alt="Shoes"
@@ -116,7 +116,7 @@ const ProductDetail = () => {
         </div>
         <div className="card-body items-center text-center lg:flex-1 px-4 pt-0">
           {/* BreadCrumbs */}
-          <div className="text-sm breadcrumbs ml-1 mt-2 tracking-wider sm:text-lg xl:text-xl self-start">
+          <div className="text-sm breadcrumbs ml-1 mt-2 tracking-wider sm:text-lg xl:text-xl self-start text-gray-300">
             <ul>
               <li>
                 <Link to={"/"}>Home</Link>
@@ -217,15 +217,14 @@ const ProductDetail = () => {
         isLoading ? (
           "Loading..."
         ) : (
-          <div className="py-20 flex justify-center px-2">
+          <div className="py-20 flex justify-center px-2 md:px-6 bg-gradient-to-tr from-gray-400 at-center to-blue-800">
             <ProductCard productData={product ? product : undefined} />
           </div>
         )
       ) : (
-          <div className="flex align-middle justify-center p-auto justify-items-center">
-            <h1 className="text-center">
-          "Product Does Not Exist!"</h1> </div>
-        
+        <div className="flex align-middle justify-center p-auto justify-items-center">
+          <h1 className="text-center">"Product Does Not Exist!"</h1>{" "}
+        </div>
       )}
     </>
   );

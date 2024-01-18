@@ -57,14 +57,8 @@ const CartDetail = () => {
   
   const EmptyCart = () => {
     return (
-      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28">
-        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto">
-          <figure className="px-10 pt-10">
-            {/* <img
-            src=""
-            className="rounded-xl"
-          /> */}
-          </figure>
+      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28 p-6 align-middle justify-center">
+        <div className="card sm:w-max sm:ml-[10rem] bg-base-100 shadow-xl lg:mt-28 md:ml-[16rem] lg:ml-[24rem] xl:mr-64">
           <div className="card-body items-center text-center">
             <h1 className="card-title">Your Cart is Empty!</h1>
             <p className="text-lg">

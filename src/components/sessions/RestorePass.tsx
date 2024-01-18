@@ -1,12 +1,13 @@
+import { ArrowBack } from "@mui/icons-material";
 import axios from "axios";
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 const RestorePass = () => {
 
   const [email, setEmail] = useState<string | null>(null)
-
+  const [errorMail, setErrorMail] = useState(false);
 
   const Toast = Swal.mixin({
     toast: true,
@@ -21,6 +22,13 @@ const RestorePass = () => {
   });
 
   const handleRestorePass = async () => {
+
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (email !== null && !pattern.test(email as string)) {
+      setErrorMail(true);
+      return;
+    }
 
     await axios.post("http://127.0.0.1:8080/api/sessions/restorePassword/sendMail", {email})
       .then(res => {
@@ -44,7 +52,13 @@ const RestorePass = () => {
   
   return (
     <div className="flex flex-col justify-center items-center min-h-screen bg-gray-100 p-8 sm:p-16 md:p-24">
-      <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
+      <div className="backToLoginContainer justify-start align-middle self-start mb-6 flex gap-1 hover:cursor-pointer">
+        <ArrowBack />
+        <Link to={'/login'} className="">Back To Login</Link>
+      </div>
+      
+      <div className="formContainter">
+        <h1 className="text-3xl font-bold text-gray-900 text-center mb-8">
         Restore your password
       </h1>
       <p className="text-base text-gray-600 text-center mb-8">
@@ -59,9 +73,12 @@ const RestorePass = () => {
             type="text"
             id="email"
             placeholder="Email address"
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setErrorMail(false)}}
             className="px-4 py-2 rounded-md shadow-sm border border-gray-300 focus:outline-none focus:ring focus:ring-blue-600 focus:ring-opacity-50 w-full"
           />
+          {errorMail && (
+            <span className="text-sm text-red-400">Invalid eMail Format</span>
+          )}
         </div>
         <button
           type="button"
@@ -71,6 +88,8 @@ const RestorePass = () => {
           Restore my password
         </button>
       </form>
+      </div>
+      
     </div>
   );
 }
