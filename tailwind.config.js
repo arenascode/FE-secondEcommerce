@@ -9,7 +9,9 @@ export default {
   theme: {
     screens: {
       sm: "375px",
-      // => @media (min-width: 640px) { ... }
+      // => @media (min-width: 375px) { ... }
+      smm: '480px',
+      smd: '600px',
 
       md: "768px",
       // => @media (min-width: 768px) { ... }

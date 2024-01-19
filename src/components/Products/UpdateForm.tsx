@@ -14,7 +14,7 @@ interface FormData {
   category: string;
 }
 
-const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
+const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   const [file, setFile] = useState(null as File | null);
   console.log(productId.productId);
   const pId = productId.productId
@@ -88,13 +88,13 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
     
     const form = document.querySelector("form");
     
-    const uploadProductForm = new FormData(form as HTMLFormElement);
+    const updateProductForm = new FormData(form as HTMLFormElement);
 
-    uploadProductForm.append("productImg", file as File);
+    updateProductForm.append("productImg", file as File);
     
     const formToSend = new FormData()
 
-    for (const [key, value] of uploadProductForm.entries()) {
+    for (const [key, value] of updateProductForm.entries()) {
       console.log(`${key}: ${value}`);
       if (value !== '' && value !== 'null') {
         console.log(`The ${key} field it's empty!`);
@@ -111,11 +111,11 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
 
   return (
     <div className="w-full m-auto p-5 bg-white shadow-lg rounded h-[100%] overflow-y-scroll bg-gradient-to-br from-blue-800 at-center to-gray-400">
-      <h2 className="text-2xl font-semibold mb-4 text-white">Upload Product</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-white">Update Product</h2>
       <form
         onSubmit={handleSubmit}
-        className="w-full h-max text-gray-200"
-        name="UploadProductForm"
+        className="w-full smd:h-[33rem] md:h-[30rem] text-gray-200"
+        name="UpdateProductForm"
       >
         {/* Title */}
         <div className="mb-4">
@@ -131,7 +131,6 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             className="mt-1 p-2 w-full border rounded-md"
           />
         </div>
-
         {/* Description */}
         <div className="mb-4">
           <label htmlFor="description" className="block text-sm font-medium">
@@ -229,7 +228,7 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
             type="submit"
             className="py-2 px-4 m-3 bg-blue-500 text-white rounded-md hover:bg-blue-600"
           >
-            Upload Product
+            Update Product
           </button>
         </div>
       </form>
@@ -237,4 +236,4 @@ const UploadProductForm: React.FC<ProductIdProps> = (productId) => {
   );
 };
 
-export default UploadProductForm;
+export default UpdateProductForm;

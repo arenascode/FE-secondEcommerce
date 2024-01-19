@@ -8,6 +8,9 @@ import { useSessions } from "../context/SessionsContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
+
+
+
 const ProductDetail = () => {
   const { id } = useParams();
 
@@ -15,8 +18,11 @@ const ProductDetail = () => {
 
   const { profileData } = useSessions();
 
+  const [layoutPicture, setLayoutPicture] = useState<boolean>(false)
+
   const location = useLocation();
   const firstPartPath: string = location.pathname.split("/")[1];
+
 
   const CLIENT_URL = useRef(null);
 
@@ -64,6 +70,7 @@ const ProductDetail = () => {
       Toast.fire({
         text: "For security the code to delete the product is disabled. Thank you for your understandnig!",
       });
+      //* Disabled for security
       // await axios
       //   .delete(`http://127.0.0.1:8080/api/products/${id}`, {
       //     withCredentials: true,
@@ -104,8 +111,8 @@ const ProductDetail = () => {
     };
 
     return (
-      <div className="card glass w-97 shadow-xl text-white md:flex-row lg:w-full">
-        <div className="imgContainer md:w-1/2 p-2">
+      <div className={`card glass w-97 shadow-xl text-white md:flex-row ${firstPartPath == "editproduct" ? 'md:flex-col md:items-center' : ""} lg:w-full`}>
+        <div className={`imgContainer ${firstPartPath == 'editproduct' ? '' : 'lg:w-1/2'} p-2`}>
           <figure className=" overflow-hidden rounded-lg sm:max-h-72 md:max-h-96 lg:max-h-[28rem]">
             <img
               src={`http://${CLIENT_URL.current}${productData?.thumbnails[0]}`}
