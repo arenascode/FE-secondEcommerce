@@ -16,7 +16,6 @@ interface FormData {
 
 const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   const [file, setFile] = useState(null as File | null);
-  console.log(productId.productId);
   const pId = productId.productId
   
   const [formData, setFormData] = useState<FormData>({
@@ -37,10 +36,8 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
           withCredentials: true,
         })
         .then((res) => {
-          console.log(res);
+          
           if (res.status === 200) {
-            // alert("product Updated");
-            // Reset the form
             setFormData({
               title: "",
               description: "",
@@ -59,7 +56,6 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   },
 )
   
-  // Handler for input changes
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
@@ -70,7 +66,6 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
     console.log(formData);
   };
 
-  // Handler for file input changes (for thumbnails)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
     console.log(file);
@@ -79,12 +74,8 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
     }
   };
   
-  
-  // Handler for form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform the action to add the product with formData
-    console.log("Form data submitted:", formData);
     
     const form = document.querySelector("form");
     
@@ -95,14 +86,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
     const formToSend = new FormData()
 
     for (const [key, value] of updateProductForm.entries()) {
-      console.log(`${key}: ${value}`);
       if (value !== '' && value !== 'null') {
         console.log(`The ${key} field it's empty!`);
         formToSend.append(key, value)
       }
-    }
-    for (const [key, value] of formToSend.entries()) {
-      console.log(`FormtSend ${key}: ${value}`);
     }
     
     productMutation.mutate(formToSend)

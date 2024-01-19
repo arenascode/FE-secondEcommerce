@@ -2,7 +2,6 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSessions } from "../context/SessionsContext";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CloseOutlined } from "@mui/icons-material";
 
@@ -34,7 +33,6 @@ const Profile = () => {
   const [showEditBtn, setShowEditBtn] = useState<boolean>(false);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
   const [errorMail, setErrorMail] = useState<boolean>(false);
-  const [newProfileInfo, setnewProfileInfo] = useState({});
   const [firstPassword, setFirstPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
@@ -43,17 +41,8 @@ const Profile = () => {
   const CLIENT_URL = useRef<string | null>(null);
   const targetDivRef = useRef<HTMLDivElement>(null)
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
 
-  const { isLoading } = useQuery({
+  const { isLoading} = useQuery({
     queryKey: ["user"],
     queryFn: () => {
       //Review this:
@@ -63,23 +52,20 @@ const Profile = () => {
           withCredentials: true,
         })
         .then((res) => {
-          console.log(res);
+
           if (res.status === 200) {
             setProfileData(res.data.currentUserDTO);
-            console.log(profileData);
 
             axios(
               `http://127.0.0.1:8080/api/users/${res.data.currentUserDTO.id}`
             ).then((user) => {
               const photoPath = user.data.profilePhoto;
-              console.log(photoPath);
 
               if (photoPath) {
                 // const staticWord = "static";
                 // const trimmingPath = photoPath.slice(6);
                 CLIENT_URL.current = res.data.CLIENT_URL;
                 const newPath = `http://${CLIENT_URL.current}/${photoPath}`;
-                console.log(`new path ${newPath}`);
                 setPathPhoto(newPath);
                 setUserHasPhoto(true);
               }
@@ -88,12 +74,7 @@ const Profile = () => {
           }
         })
         .catch((err) => {
-          console.log(err.response.status);
           if (err.response.status === 401) {
-            Toast.fire({
-              icon: "success",
-              title: `Please Log In`,
-            });
             setIsUserLogged(false);
           }
         });
@@ -108,8 +89,7 @@ const Profile = () => {
         .put(`http://127.0.0.1:8080/api/users/${profileData?.id}`, formToSend, {
           withCredentials: true,
         })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           setShowEditForm(false);
         })
         .catch((err) => console.log(err));
@@ -124,11 +104,9 @@ const Profile = () => {
 
     if (photoFile) {
       const url = URL.createObjectURL(photoFile);
-      console.log(url);
       setPathPhoto(url);
       setIsPhotoUploaded(true);
       setUserHasPhoto(true);
-      console.log(pathPhoto);
     }
   };
 
@@ -138,7 +116,6 @@ const Profile = () => {
   }
 
   const ConfirmProfilePhotoBtn: React.FC<ChildComponentProps> = (props) => {
-    console.log(props.userId);
     const { userId } = props;
 
     const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -191,21 +168,14 @@ const Profile = () => {
 
   //** Function To handle Log Out */
   const handleLogOut = () => {
-    console.log(`handling log out`);
     logOut();
   };
 
   //**Component go to Log In */
   const GoToLogin = () => {
     return (
-      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-28">
-        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto">
-          <figure className="px-10 pt-10">
-            {/* <img
-            src=""
-            className="rounded-xl"
-          /> */}
-          </figure>
+      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-40">
+        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto sm:max-w-[95%] sm:p-0">
           <div className="card-body items-center text-center">
             <h1 className="card-title">Please Log in!</h1>
             <p className="text-lg">
@@ -234,10 +204,7 @@ const Profile = () => {
 
   const handleShowEditFormBtn = () => {
     setShowEditBtn(!showEditBtn)
-    
   }
-
-  console.log(window.innerWidth);
   
   const handleShowEditForm = () => {
     setShowEditForm(!showEditForm);
@@ -267,7 +234,6 @@ const Profile = () => {
       }
     }
     const email = formToSend.get("email");
-    console.log(email);
     formToSend.delete("repeatPassword");
 
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -281,16 +247,10 @@ const Profile = () => {
   };
 
   const handleChangeInputs = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e.target.value);
-    const { name, value } = e.target;
+    const { name } = e.target;
     if (name == "email") {
       setErrorMail(false);
     }
-    setnewProfileInfo((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-    console.log(profileData?.id);
   };
 
   const handlePasswords = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -302,7 +262,6 @@ const Profile = () => {
     }
   };
 
-  
   return isUserLogged ? (
     <div className="profileContainer pt-24 pb-8 p-10 md:pt-24 md:p-5 flex sm:flex-col md:flex-row sm:gap-2 md:gap-10">
       <div className="left flex-1 sm:w-full md:w-max md:max-w-max">

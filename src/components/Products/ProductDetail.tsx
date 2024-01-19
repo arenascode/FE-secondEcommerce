@@ -8,17 +8,12 @@ import { useSessions } from "../context/SessionsContext";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-
-
-
 const ProductDetail = () => {
   const { id } = useParams();
 
   const { setCategory, subTotal } = useCart();
 
   const { profileData } = useSessions();
-
-  const [layoutPicture, setLayoutPicture] = useState<boolean>(false)
 
   const location = useLocation();
   const firstPartPath: string = location.pathname.split("/")[1];
@@ -65,25 +60,35 @@ const ProductDetail = () => {
   });
   
   const handleDelete = async () => {
-    
-    if (confirm("Are you sure you want to remove the product?")) {
-      Toast.fire({
-        text: "For security the code to delete the product is disabled. Thank you for your understandnig!",
-      });
-      //* Disabled for security
-      // await axios
-      //   .delete(`http://127.0.0.1:8080/api/products/${id}`, {
-      //     withCredentials: true,
-      // })
-      // .then(() => {
-      //   alert(`Product has been deleted`);
-      //   setProduct(null);
-      // })
-      // .catch((err) => console.error(err));
-    } else {
-      console.log(`deletion cancelled`);
-    }
-  };
+    Toast.fire({
+      title: "Are you sure you want to remove the product?",
+      showCancelButton: true,
+      cancelButtonColor: 'green',
+      confirmButtonText: 'Delete',
+      confirmButtonColor: 'red',
+    }).then((res) => {
+      console.log(res.isConfirmed);
+      if (res.isConfirmed) {
+        Toast.fire({
+          text: "For security the request to the server to delete this product is disabled.",
+        });
+        //* Disabled for security
+        // await axios
+        //   .delete(`http://127.0.0.1:8080/api/products/${id}`, {
+        //     withCredentials: true,
+        // })
+        // .then(() => {
+        //   alert(`Product has been deleted`);
+        //   setProduct(null);
+        // })
+        //   // .catch((err) => console.error(err));
+        // } else {
+        //   console.log(`deletion cancelled`);
+        // }
+        //})
+      }
+    })
+      };
   
   //** ProductCard Component */
   const ProductCard = ({
@@ -236,4 +241,5 @@ const ProductDetail = () => {
     </>
   );
 };
+
 export default ProductDetail;
