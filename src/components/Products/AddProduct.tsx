@@ -21,26 +21,21 @@ const AddProductForm: React.FC = () => {
   ) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    console.log(formData);
   };
 
   // Handler for file input changes (for thumbnails)
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files && e.target.files[0];
-    console.log(file);
+
     if (file) {
       setFile(file);
     }
   };
   const form = document.querySelector("form");
-  // console.log(form)
 
-  // Handler for form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Perform the action to add the product with formData
-    console.log("Form data submitted:", formData);
-    // Reset the form
+    
     setFormData({
       title: "",
       description: "",
@@ -58,7 +53,6 @@ const AddProductForm: React.FC = () => {
         withCredentials: true,
       })
       .then((res) => {
-        console.log(res);
         if (res.status === 200) {
           alert("Product Added");
           setFile(null);
@@ -74,12 +68,12 @@ const AddProductForm: React.FC = () => {
 
   return (
     <>
-      <div className="w-full m-auto p-10 bg-white shadow-lg rounded-b-md flex">
+      <div className="w-full m-auto p-8 bg-white shadow-lg rounded-b-md flex bg-gradient-to-tr from-gray-400 at-center to-blue-800 sm:flex-col smd:flex-row smd:justify-between">
         <div className="form">
           <h2 className="text-2xl font-semibold mb-4">Add a New Product</h2>
           <form
             onSubmit={handleSubmit}
-            className="w-[500px]"
+            className="md:w-[400px] sm:w-full smm:items-center"
             name="addProductForm"
           >
             {/* Title */}
@@ -226,11 +220,11 @@ const AddProductForm: React.FC = () => {
             </div>
           </form>
         </div>
-        <div className="productAdded p-4">
+        <div className="productAdded p-4 smm:ml-2 smm:max-w-[200px] smd:max-w-[230px] smd:p-0 md:max-w-[380px] self-start md:ml-5">
           {file && (
             <>
-              <h4 className="tracking-wider">Motorbike Photo</h4>{" "}
-              <img src={URL.createObjectURL(file)} alt="" />
+              <h4 className="tracking-wider md:text-lg md:mb-5">Motorbike Photo</h4>{" "}
+              <img src={URL.createObjectURL(file)} alt="" className="w-full"/>
             </>
           )}
         </div>

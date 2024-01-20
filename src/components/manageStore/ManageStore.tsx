@@ -31,10 +31,11 @@ const ManageStore = () => {
   const [showProducts, setShowProducts] = useState<boolean>(false);
   const [formToAddProduct, setFormToAddProduct] = useState<boolean>(false);
   const [pageOptions, setPageOptions] = useState<PageOptions>();
-  const [sortProducts, setSortProducts] = useState<SortProducts>("1");
+  const [sortProducts] = useState<SortProducts>("1");
   const [pageNumber, setPageNumber] = useState("1");
   const [showCustomers, setShowCustomers] = useState<boolean>(false);
   const [showOrders, setShowOrders] = useState<boolean>(false);
+  const [background, setBackground] = useState<boolean>(false);
   const CLIENT_URL = useRef(null);
 
   useEffect(() => {
@@ -75,7 +76,6 @@ const ManageStore = () => {
   };
 
   //* Fetch Customers
-
   const fetchCustomers = async () => {
     setShowCustomers(true);
     setFormToAddProduct(false);
@@ -90,6 +90,18 @@ const ManageStore = () => {
     setShowProducts(false);
     setShowOrders(true);
   };
+
+  useEffect(() => {
+    const isSomeComponentOpen = (showCustomers || formToAddProduct || showProducts || showOrders)
+    
+    if (isSomeComponentOpen) {
+      setBackground(true)
+    } else {
+      setBackground(false)
+    }
+
+  }, [showCustomers, formToAddProduct, showProducts, showOrders])
+  
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
@@ -125,7 +137,7 @@ const ManageStore = () => {
   return (
     <div
       className={`admin-panel pt-16 flex ${
-        showProducts ? "h-[max-content]" : "h-[100dvh]"
+        background ? "h-[max-content]" : "h-[100dvh]"
       } sm:flex-col bg-gradient-to-tr from-gray-400 at-center to-blue-800`}
     >
       <div className="left flex-2 w-1/5 p-1 sm:flex-col">
@@ -213,7 +225,7 @@ const ManageStore = () => {
           </div>
         </div>
       </div>
-      <div className="right flex flex-wrap w-full p-3">
+      <div className="right flex flex-wrap w-full p-3 justify-center">
         <div className="prevPage w-full p-2 rounded-t-md">
           <div role="presentation" className="BreadCrumbs">
             <Breadcrumbs aria-label="breadcrumb" className="p-2 xl:p-4">
@@ -303,4 +315,5 @@ const ManageStore = () => {
     </div>
   );
 };
+
 export default ManageStore;

@@ -50,6 +50,6 @@ const Users = () => {
   const renderUsers = users?.map(user => <CustomerCard User={user} CLIENT_URL={CLIENT_URL.current} key={user._id}/>)
 
   return (
-    <div className="flex gap-4">{isLoading ? "Loading Users" : renderUsers}</div>);
+    <div className="flex gap-4 sm:flex-col place-content-center sm:p-6 md:flex-row md:flex-wrap md:gap-10 lg:gap-14">{isLoading ? "Loading Users" : renderUsers}</div>);
 }
 export default Users
