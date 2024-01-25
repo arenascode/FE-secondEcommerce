@@ -152,7 +152,10 @@ const Login: React.FC = () => {
             console.log(CLIENT_URL);
             setUserHasPhoto(true);
           }
-
+          Toast.fire({
+            icon: "success",
+            title: `Welcome to Luxury Motorcycles`,
+          });
           setIsUserLogged(true);
           setProfileData(result.data.loggedUserDto);
           console.log(`currentLocation in Login ${pathToRedirect}`);
@@ -171,10 +174,7 @@ const Login: React.FC = () => {
             }
           }
 
-          Toast.fire({
-            icon: "success",
-            title: `Welcome to Luxury Motorcycles`,
-          });
+          
 
           setTimeout(() => {
             window.location.replace(pathToRedirect);
@@ -225,11 +225,14 @@ const Login: React.FC = () => {
           <form className="rounded-md shadow-sm" onKeyDown={handleKeyDown}>
             <div>
               <input
-                type="text"
+                type="email"
                 value={email}
-                onChange={(e) => { setUserEmail(e.target.value);  setErrorMail(false)}}
+                onChange={(e) => {
+                  setUserEmail(e.target.value);
+                  setErrorMail(false);
+                }}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm font-[sans-serif] md:text-md tracking-wide font-semibold placeholder:font-bebas"
                 placeholder="Your E-Mail"
               />
             </div>
@@ -239,7 +242,7 @@ const Login: React.FC = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm placeholder:tracking-wider"
                 placeholder="Password"
               />
               {errorMail && (

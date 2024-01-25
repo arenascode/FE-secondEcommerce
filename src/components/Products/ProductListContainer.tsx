@@ -310,7 +310,7 @@ const ProductListContainer = () => {
   return (
     <div>
       <div
-        className="mt-7 pb-6 flex flex-col gap-1 bg-gradient-to-tr from-gray-400 at-center to-blue-800
+        className="mt-7 pb-6 flex flex-col gap-1
 "
       >
         <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1 sm:gap-10 sm:justify-center md:gap-44">

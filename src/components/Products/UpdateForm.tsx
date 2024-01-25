@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { AddPhotoAlternateOutlined } from "@mui/icons-material";
+import { useSessions } from "../context/SessionsContext";
 
 interface ProductIdProps {
   productId: string 
@@ -18,6 +20,7 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   const [file, setFile] = useState(null as File | null);
   const pId = productId.productId
   
+  const {setIsUserLogged, setProfileData, setUserHasPhoto} = useSessions()
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
@@ -48,7 +51,12 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
             });
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+          setIsUserLogged(false)
+          setProfileData(null)
+          setUserHasPhoto(false);
+        });
     }, 
     onSuccess: () => {
       queryClient.invalidateQueries(["productId"])
@@ -97,16 +105,19 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   };
 
   return (
-    <div className="w-full m-auto p-5 bg-white shadow-lg rounded h-[100%] overflow-y-scroll bg-gradient-to-br from-blue-800 at-center to-gray-400">
-      <h2 className="text-2xl font-semibold mb-4 text-white">Update Product</h2>
+    <div className="w-full m-auto p-5 shadow-lg rounded h-[100%] overflow-y-scroll bg-gradient-to-br from-blue-800 at-center to-gray-400">
+      <h2 className="text-2xl font-semibold mb-4 text-white tracking-wider">Update Product</h2>
       <form
         onSubmit={handleSubmit}
-        className="w-full smd:h-[33rem] md:h-[30rem] text-gray-200"
+        className="w-full smd:h-[33rem] md:h-[30rem] text-gray-800"
         name="UpdateProductForm"
       >
         {/* Title */}
         <div className="mb-4">
-          <label htmlFor="title" className="block text-sm font-medium">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-200"
+          >
             Title
           </label>
           <input
@@ -120,7 +131,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
         </div>
         {/* Description */}
         <div className="mb-4">
-          <label htmlFor="description" className="block text-sm font-medium">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-200"
+          >
             Description
           </label>
           <textarea
@@ -134,7 +148,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
 
         {/* Price */}
         <div className="mb-4">
-          <label htmlFor="price" className="block text-sm font-medium">
+          <label
+            htmlFor="price"
+            className="block text-sm font-medium text-gray-200"
+          >
             Price
           </label>
           <input
@@ -149,7 +166,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
 
         {/* Code */}
         <div className="mb-4">
-          <label htmlFor="code" className="block text-sm font-medium">
+          <label
+            htmlFor="code"
+            className="block text-sm font-medium text-gray-200"
+          >
             Code
           </label>
           <input
@@ -164,7 +184,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
 
         {/* Stock */}
         <div className="mb-4">
-          <label htmlFor="stock" className="block text-sm font-medium">
+          <label
+            htmlFor="stock"
+            className="block text-sm font-medium text-gray-200"
+          >
             Stock
           </label>
           <input
@@ -179,7 +202,10 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
 
         {/* Category */}
         <div className="mb-4">
-          <label htmlFor="category" className="block text-sm font-medium">
+          <label
+            htmlFor="category"
+            className="block text-sm font-medium text-gray-200"
+          >
             Category
           </label>
           <select
@@ -197,15 +223,19 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
         </div>
 
         {/* Thumbnail */}
-        <div className="mb-4">
-          <label htmlFor="productImg" className="block text-sm font-medium ">
-            Upload Image
+        <div className="mt-8 mb-4">
+          <label
+            htmlFor="productImg"
+            className=" text-sm md:text-lg font-medium text-gray-200 flex gap-3 items-center w-max cursor-pointer tracking-wide"
+          >
+           <AddPhotoAlternateOutlined fontSize="large"/>
+            Upload Photo
           </label>
           <input
             type="file"
             id="productImg"
             onChange={handleFileChange}
-            className="mt-1 p-2 w-full border rounded-md"
+            className="mt-1 p-2 w-full border rounded-md text-gray-200 pl-7 hidden"
           />
         </div>
 

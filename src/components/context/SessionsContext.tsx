@@ -26,8 +26,8 @@ type SessionsContextType = {
   logOut: () => void;
   pathToRedirect: string;
   setPathToRedirect: React.Dispatch<React.SetStateAction<string>>;
-  setUserHasPhoto: React.Dispatch<React.SetStateAction<boolean>>
-  userHasPhoto: boolean
+  setUserHasPhoto: React.Dispatch<React.SetStateAction<boolean | null>>
+  userHasPhoto: boolean | null
 };
 
 const SessionsContext = createContext<SessionsContextType>({
@@ -44,7 +44,7 @@ const SessionsContext = createContext<SessionsContextType>({
   pathToRedirect: '/',
   setPathToRedirect: () => { },
   setUserHasPhoto: () => { },
-  userHasPhoto: false
+  userHasPhoto: false,
 })
 
 export const useSessions = () => {
@@ -93,6 +93,7 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     "notRefresh"
   );
   const [userHasPhoto, setUserHasPhoto] = useLocalStorage<boolean>('userHasPhoto', false)
+
   const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
     console.log(e.currentTarget.dataset.userId);
     console.log(`hii!!`);
@@ -101,10 +102,41 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     //   .then((res) => {
     //     console.log(res);
     //     setProfilePhotoUrl(res.data.profilePhoto)
-
     // })
   };
 
+// const GoToLogin = () => {
+//     return (
+//       <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-40">
+//         <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto sm:max-w-[95%] sm:p-0">
+//           <div className="card-body items-center text-center">
+//             <h1 className="card-title">Please Log in!</h1>
+//             <p className="text-lg">
+//               We invite you to get to know all of our Motorcycles!
+//             </p>
+//             <div className="card-actions">
+//               <Link to={"/login"}>
+//                 <button className="btn btn-success btn-sm mt-3 text-lg tracking-widest">
+//                   Go
+//                 </button>
+//               </Link>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     );
+//   };
+  //*Go to login
+  // useEffect(() => {
+
+  //   if (!isUserLogged) {
+  //     console.log(`enter in goToLogin`);
+      
+  //   <GoToLogin/>
+  // }
+  // }, [isUserLogged])
+  
+  
   //**Log Out function */
 
   const logOut = () => {
@@ -154,7 +186,7 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     pathToRedirect: pathToRedirect,
     setPathToRedirect: setPathToRedirect,
     setUserHasPhoto: setUserHasPhoto,
-    userHasPhoto: userHasPhoto
+    userHasPhoto: userHasPhoto,
   };
   return (
     <SessionsContext.Provider value={contextValue}>

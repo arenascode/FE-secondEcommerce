@@ -7,6 +7,7 @@ const Register = () => {
   const [firstPassword, setFirstPassword] = useState("");
   const [minLengthPass, setMinLengthPass] = useState(true);
   const [repeatPassword, setRepeatPassword] = useState<string>("");
+  const [errorMail, setErrorMail] = useState(false);
 
   useEffect(() => {
 
@@ -46,6 +47,9 @@ const Register = () => {
     },
   });
 
+  const handleErrorMail = () => {
+    setErrorMail(false)
+  }
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -57,17 +61,11 @@ const Register = () => {
       const userEmail = dataUser.get("email");
       const userAge = dataUser.get("age");
       const userPass = dataUser.get("loginPassword");
-      // const repeatUserPass = dataUser.get("repeatPassword");
-      console.log(firstPassword);
-      console.log(repeatPassword);
 
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!pattern.test(userEmail as string)) {
-        Toast.fire({
-          icon: "error",
-          title: `Invalid Email. Try again`,
-        });
+        setErrorMail(true)
         return;
       }
 
@@ -133,7 +131,7 @@ const Register = () => {
           type="text"
           id="name"
           name="name"
-          className="w-full p-2 mb-2 border rounded"
+          className="w-full p-2 mb-2 border rounded font-[sans-serif] font-semibold"
           required
         />
         <br />
@@ -143,20 +141,23 @@ const Register = () => {
           type="text"
           id="lastName"
           name="lastName"
-          className="w-full p-2 mb-2 border rounded"
+          className="w-full p-2 mb-2 border rounded font-[sans-serif] font-semibold"
           required
         />
         <br />
 
-        <label htmlFor="email">Mail:</label>
-          {/* {invalidMail && <span className="text-error text-sm">Invalid Mail!</span>} */}
-          <input
+        <label htmlFor="email">E-Mail:</label>
+        <input
           type="email"
           id="email"
           name="email"
-          className="w-full p-2 mb-2 border rounded"
+          className="w-full p-2 mb-1 border rounded font-[sans-serif] font-semibold"
+          onChange={handleErrorMail}
           required
-          />
+        />
+        {errorMail && (
+          <span className="text-sm text-red-400">Invalid e-Mail Format</span>
+        )}
         <br />
 
         <label htmlFor="age">Age:</label>
@@ -200,7 +201,7 @@ const Register = () => {
           <span className="text-red-500">Passwords do not match</span>
         )}
         <br />
-        <div className="flex flex-col items-center">
+        <div className="form-Btn flex flex-col items-center">
           <button
             disabled={!passwordMatch}
             type="submit"

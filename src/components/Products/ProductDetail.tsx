@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Link, useParams, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation, Navigate } from "react-router-dom";
 import { Product } from "./ProductListContainer";
 import ItemCount from "./ItemCount";
 import { useCart } from "../context/CartContext";
@@ -13,12 +13,12 @@ const ProductDetail = () => {
 
   const { setCategory, subTotal } = useCart();
 
-  const { profileData } = useSessions();
+  const { profileData, isUserLogged } = useSessions();
 
   const location = useLocation();
   const firstPartPath: string = location.pathname.split("/")[1];
-
-
+  console.log(profileData);
+  
   const CLIENT_URL = useRef(null);
 
   const [product, setProduct] = useState<Product | null>();
@@ -115,6 +115,12 @@ const ProductDetail = () => {
       });
     };
 
+    const handleEdit = () => {
+      console.log({isUserLogged});
+      
+      isUserLogged && <Navigate to={'/sessionExpired'}/>
+    }
+
     return (
       <div className={`card glass w-97 shadow-xl text-white md:flex-row ${firstPartPath == "editproduct" ? 'md:flex-col md:items-center' : ""} lg:w-full`}>
         <div className={`imgContainer ${firstPartPath == 'editproduct' ? '' : 'lg:w-1/2'} p-2`}>
@@ -191,7 +197,7 @@ const ProductDetail = () => {
               </button>
             ) : (
               <button className="btn btn-md btn-success rounded-full tracking-widest mt-1 sm:btn-lg text-white justify-end">
-                <Link to={`/editproduct/${product?._id}`}>Edit Product</Link>
+                <Link to={`/editproduct/${product?._id}`} onClick={handleEdit}>Edit Product</Link>
               </button>
             )
           ) : (

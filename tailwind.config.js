@@ -7,11 +7,14 @@ export default {
     "node_modules/flowbite-react/lib/esm/**/*.js",
   ],
   theme: {
+    fontFamily: {
+      bebas: "Bebas Neue",
+    },
     screens: {
       sm: "375px",
       // => @media (min-width: 375px) { ... }
-      smm: '480px',
-      smd: '600px',
+      smm: "480px",
+      smd: "600px",
 
       md: "768px",
       // => @media (min-width: 768px) { ... }

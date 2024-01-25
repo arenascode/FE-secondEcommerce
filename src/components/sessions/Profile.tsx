@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSessions } from "../context/SessionsContext";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CloseOutlined } from "@mui/icons-material";
+import SessionExpired from "./SessionExpired";
 
 type ProfileData = {
   email: string;
@@ -26,9 +27,11 @@ const Profile = () => {
     logOut,
     userHasPhoto,
     setUserHasPhoto,
+    setProfileData,
+    profileData,
   } = useSessions();
 
-  const [profileData, setProfileData] = useState<ProfileData>();
+  // const [profileData, setProfileData] = useState<ProfileData>();
   const [isPhotoUploaded, setIsPhotoUploaded] = useState<boolean>(false);
   const [showEditBtn, setShowEditBtn] = useState<boolean>(false);
   const [showEditForm, setShowEditForm] = useState<boolean>(false);
@@ -36,13 +39,11 @@ const Profile = () => {
   const [firstPassword, setFirstPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [passwordMatch, setPasswordMatch] = useState<boolean>(true);
-  
 
   const CLIENT_URL = useRef<string | null>(null);
-  const targetDivRef = useRef<HTMLDivElement>(null)
+  const targetDivRef = useRef<HTMLDivElement>(null);
 
-
-  const { isLoading} = useQuery({
+  const { isLoading, refetch } = useQuery({
     queryKey: ["user"],
     queryFn: () => {
       //Review this:
@@ -52,7 +53,6 @@ const Profile = () => {
           withCredentials: true,
         })
         .then((res) => {
-
           if (res.status === 200) {
             setProfileData(res.data.currentUserDTO);
 
@@ -76,6 +76,7 @@ const Profile = () => {
         .catch((err) => {
           if (err.response.status === 401) {
             setIsUserLogged(false);
+            setProfileData(null);
           }
         });
     },
@@ -95,7 +96,9 @@ const Profile = () => {
         .catch((err) => console.log(err));
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(["user"]);
+      refetch()
+        .then((res) => console.log(res))
+        .catch((err) => console.log(err));
     },
   });
 
@@ -123,11 +126,11 @@ const Profile = () => {
       const uid = e.currentTarget.dataset.userid;
 
       const formProfilePic = document.getElementById(
-        "formProfilePhoto"
+        "editFormProfilePhoto"
       ) as HTMLFormElement;
 
       const formData = new FormData(formProfilePic);
-      const filesInput = formData.get("profilePhoto");
+      const filesInput = formData.get("newProfilePhoto");
       console.log(filesInput);
 
       axios
@@ -171,29 +174,6 @@ const Profile = () => {
     logOut();
   };
 
-  //**Component go to Log In */
-  const GoToLogin = () => {
-    return (
-      <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-40">
-        <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto sm:max-w-[95%] sm:p-0">
-          <div className="card-body items-center text-center">
-            <h1 className="card-title">Please Log in!</h1>
-            <p className="text-lg">
-              We invite you to get to know all of our Motorcycles!
-            </p>
-            <div className="card-actions">
-              <Link to={"/login"}>
-                <button className="btn btn-success btn-sm mt-3 text-lg tracking-widest">
-                  Go
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   useEffect(() => {
     if (firstPassword !== repeatPassword) {
       setPasswordMatch(false);
@@ -203,23 +183,22 @@ const Profile = () => {
   }, [firstPassword, repeatPassword]);
 
   const handleShowEditFormBtn = () => {
-    setShowEditBtn(!showEditBtn)
-  }
-  
+    setShowEditBtn(!showEditBtn);
+  };
+
   const handleShowEditForm = () => {
     setShowEditForm(!showEditForm);
     setShowEditBtn(false);
     if (window.innerWidth <= 765) {
       setTimeout(() => {
-      if (targetDivRef.current) {
-        targetDivRef.current.scrollIntoView({
-          behavior: "smooth",
-        });
-      }
-    }, 100);
+        if (targetDivRef.current) {
+          targetDivRef.current.scrollIntoView({
+            behavior: "smooth",
+          });
+        }
+      }, 100);
     }
-    
-  } 
+  };
   //* fetch to edit Profile
   const fetchEditProfile = (e: React.FormEvent) => {
     e.preventDefault();
@@ -263,7 +242,7 @@ const Profile = () => {
   };
 
   return isUserLogged ? (
-    <div className="profileContainer pt-24 pb-8 p-10 md:pt-24 md:p-5 flex sm:flex-col md:flex-row sm:gap-2 md:gap-10">
+    <div className="profileContainer pt-24 pb-8 p-10 md:pt-24 md:p-5 flex place-content-center sm:flex-col md:flex-row sm:gap-2 md:gap-10">
       <div className="left flex-1 sm:w-full md:w-max md:max-w-max">
         {profileData ? (
           <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 md:w-[330px]">
@@ -374,7 +353,10 @@ const Profile = () => {
               </div>
               {profileData.role === "admin" && (
                 <Link to={"/manageStore"}>
-                  <button className="btn btn-sm">Manage Store</button>
+                
+                <button className="btn btn-sm">
+                  Manage Store
+                </button>
                 </Link>
               )}
               <div className="flex mt-4 space-x-3 md:mt-6">
@@ -430,12 +412,12 @@ const Profile = () => {
                   />
                 )}
                 <div className="opacity-0 group-hover:opacity-60 absolute inset-0 bg-black transition-opacity flex flex-col rounded-full items-center justify-center">
-                  <form id="formProfilePhoto" encType="multipart/form-data">
+                  <form id="editFormProfilePhoto" encType="multipart/form-data">
                     <input
                       onChange={handleFileChange}
                       type="file"
                       name="profilePhoto"
-                      id="profilePhoto"
+                      id="newProfilePhoto"
                       hidden
                     />
                     <label
@@ -578,7 +560,7 @@ const Profile = () => {
       )}
     </div>
   ) : (
-    <GoToLogin />
+    <SessionExpired />
   );
 };
 export default Profile;

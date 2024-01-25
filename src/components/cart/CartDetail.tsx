@@ -46,7 +46,7 @@ const CartDetail = () => {
       }).then(res => {
         console.log(res)
         if (res.status == 201) {
-           setClientSecret(res.data.payload.client_secret);
+          setClientSecret(res.data.payload.client_secret);
           setShowCart(false)
           setShowForm(true)
         }
@@ -81,15 +81,21 @@ const CartDetail = () => {
         (cartList.length === 0 || cartIdStorage === undefined ? (
           <EmptyCart />
         ) : (
-          <div className=" cardDetailsContainer pt-24 bg-color-white">
+          <div className=" cardDetailsContainer flex flex-col sm:gap-1 pt-24 bg-color-white px-1 smm:px-3">
             <div className="tableContainer relative overflow-x-auto">
               <table className="w-full table-auto text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead className="text-xs text-gray-700 uppercase bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
-                  <tr className="tracking-wider text-lg text-zinc-800 font-extrabold">
-                    <th scope="col" className="pl-10 py-3 rounded-tl-xl w-1/5">
+                <thead className=" text-gray-700 bg-gray-100 dark:bg-gray-700 dark:text-gray-400">
+                  <tr className="tracking-wider sm:text-sm md:text-lg text-zinc-800 font-extrabold">
+                    <th
+                      scope="col"
+                      className="pl-10 sm:pl-5 py-3 rounded-tl-xl w-1/5"
+                    >
                       Product name
                     </th>
-                    <th scope="col" className="pl-7 py-3 md:pl-12 lg:pl-10">
+                    <th
+                      scope="col"
+                      className="pl-7 py-3 sm:pl-0 md:pl-12 lg:pl-10"
+                    >
                       Quantity
                     </th>
                     <th scope="col" className="pr-5 py-3 lg:pl-0 lg:pr-10">
@@ -175,7 +181,10 @@ const CartDetail = () => {
           </div>
         ))}
       {showForm && (
-        <Elements stripe={stripePromise} options={{clientSecret: clientSecret ? clientSecret : ''}}>
+        <Elements
+          stripe={stripePromise}
+          options={{ clientSecret: clientSecret ? clientSecret : "" }}
+        >
           <PaymentForm setShowForm={setShowForm} setShowCart={setShowCart} />
         </Elements>
       )}

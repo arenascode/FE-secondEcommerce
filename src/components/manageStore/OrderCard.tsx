@@ -11,8 +11,8 @@ interface ChildComponentProps {
 const OrderCard:React.FC<ChildComponentProps> = ({order}) => {
 
   return (
-    <div className="card bg-gray-600 text-primary-content h-max w-max p-0">
-      <div className="card-body">
+    <div className="card bg-gray-600 text-primary-content h-max sm:w-full md:w-max p-0">
+      <div className="card-body smd:text-lg xl:text-2xl">
         <h4 className="card-title">Invoice: {order.code}</h4>
         <div className="Amount flex gap-2">
           <span>Amount: </span>

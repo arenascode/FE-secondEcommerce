@@ -26,7 +26,6 @@ import Orders from "./Orders";
 import { red } from "@mui/material/colors";
 
 const ManageStore = () => {
-  const { setProfileData, profileData } = useSessions();
   const [products, setProducts] = useState<Product[]>([]);
   const [showProducts, setShowProducts] = useState<boolean>(false);
   const [formToAddProduct, setFormToAddProduct] = useState<boolean>(false);
@@ -38,15 +37,25 @@ const ManageStore = () => {
   const [background, setBackground] = useState<boolean>(false);
   const CLIENT_URL = useRef(null);
 
-  useEffect(() => {
-    axios
-      .get("http://127.0.0.1:8080/api/sessions/current", {
-        withCredentials: true,
-      })
-      .then((res) => {
-        setProfileData(res.data.currentUserDTO);
-      });
-  }, []);
+
+  const { setIsUserLogged, setProfileData, profileData } = useSessions();
+
+  // useEffect(() => {
+  //   axios
+  //     .get("http://127.0.0.1:8080/api/sessions/current", {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => {
+  //       console.log(res);
+        
+  //       setProfileData(res.data.currentUserDTO);
+  //     }).catch((err) => {
+  //       console.log(err)
+  //       setIsUserLogged(false)
+  //       setProfileData(null)
+  //     }
+  //      );
+  // }, []);
 
   // Functions for CRUD operations
   const fetchProducts = async () => {
@@ -77,11 +86,14 @@ const ManageStore = () => {
 
   //* Fetch Customers
   const fetchCustomers = async () => {
+    console.log(`fetching customers`);
+
     setShowCustomers(true);
     setFormToAddProduct(false);
     setShowProducts(false);
     setShowOrders(false);
   };
+  console.log(showCustomers);
 
   //*Show Orders Component
   const handleShowOrders = () => {
@@ -92,16 +104,16 @@ const ManageStore = () => {
   };
 
   useEffect(() => {
-    const isSomeComponentOpen = (showCustomers || formToAddProduct || showProducts || showOrders)
-    
-    if (isSomeComponentOpen) {
-      setBackground(true)
-    } else {
-      setBackground(false)
-    }
+    const isSomeComponentOpen =
+      showCustomers || formToAddProduct || showProducts || showOrders;
 
-  }, [showCustomers, formToAddProduct, showProducts, showOrders])
-  
+    if (isSomeComponentOpen) {
+      setBackground(true);
+    } else {
+      setBackground(false);
+    }
+  }, [showCustomers, formToAddProduct, showProducts, showOrders]);
+
   //** Render Products */
   const renderProducts = products.map((p) => {
     return (
@@ -132,7 +144,7 @@ const ManageStore = () => {
       </div>
     );
   });
-  
+
   // Render components
   return (
     <div
@@ -142,11 +154,11 @@ const ManageStore = () => {
     >
       <div className="left flex-2 w-1/5 p-1 sm:flex-col">
         <div className="admData p-3 sm:w-max">
-          <span className="text-md lowercase sm:w-max md:text-lg xl:text-xl text-gray-100 tracking-wider">
+          <span className="text-md lowercase sm:w-max md:text-lg xl:text-2xl text-gray-100 tracking-wider">
             {profileData?.fullName} ({profileData?.role})
           </span>
         </div>
-        <div className="panelMenu flex sm:flex-row sm:w-max sm:gap-3 sm:px-2 smm:pl-14 smm:gap-8 smd:pl-28 smd:gap-12 md:pl-48 lg:pl-80 xl:pl-96">
+        <div className="panelMenu flex sm:flex-row sm:w-max sm:gap-3 sm:px-2 smm:pl-14 smm:gap-8 smd:pl-28 smd:gap-12 md:pl-48 lg:pl-80 xl:pl-[30rem]">
           <div className="collapseProducts">
             <div
               tabIndex={0}
@@ -228,9 +240,9 @@ const ManageStore = () => {
       <div className="right flex flex-wrap w-full p-3 justify-center">
         <div className="prevPage w-full p-2 rounded-t-md">
           <div role="presentation" className="BreadCrumbs">
-            <Breadcrumbs aria-label="breadcrumb" className="p-2 xl:p-4">
+            <Breadcrumbs aria-label="breadcrumb" className="p-2 xl:p-4" style={{color:'white'}}>
               <Link
-                color={red['50']}
+                color={red["50"]}
                 to="/"
                 className="hover:underline flex gap-1"
               >
@@ -293,8 +305,10 @@ const ManageStore = () => {
           <hr />
         </div>
         {showProducts && (
-          <div className="gap-2 flex flex-wrap justify-center ">
+          <div className="gap-2 flex justify-center flex-col">
+            <div className="products flex flex-wrap gap-2 lg:gap-10">
             {renderProducts}
+            </div>
             <div className="PaginateOptions mt-4">
               {(pageOptions?.hasPrevPage || pageOptions?.hasNextPage) && (
                 <PaginateProductsList
