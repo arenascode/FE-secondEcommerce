@@ -150,7 +150,7 @@ const ManageStore = () => {
     <div
       className={`admin-panel pt-16 flex ${
         background ? "h-[max-content]" : "h-[100dvh]"
-      } sm:flex-col bg-gradient-to-tr from-gray-400 at-center to-blue-800`}
+      } sm:flex-col bg-gradient-to-tr from-gray-400 at-center to-stone-800`}
     >
       <div className="left flex-2 w-1/5 p-1 sm:flex-col">
         <div className="admData p-3 sm:w-max">

@@ -64,7 +64,7 @@ const CustomerCard: React.FC<ChildComponentProps> = ({ User, CLIENT_URL }) => {
   };
 
   return (
-    <div className="card sm:w-80 bg-base-100 shadow-2xl p-2 bg-gradient-to-tr from-gray-400 at-center to-blue-700 glass">
+    <div className="card sm:w-80 bg-base-100 shadow-2xl p-2 bg-gradient-to-tr from-gray-400 at-center to-stone-700 glass">
       <div className="flex gap-2 align-middle Photo&Name">
         <figure className="p-2">
           <img

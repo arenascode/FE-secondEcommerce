@@ -105,7 +105,7 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
   };
 
   return (
-    <div className="w-full m-auto p-5 shadow-lg rounded h-[100%] overflow-y-scroll bg-gradient-to-br from-blue-800 at-center to-gray-400">
+    <div className="w-full m-auto p-5 shadow-lg rounded h-[100%] overflow-y-scroll bg-gradient-to-br from-stone-800 at-center to-gray-400">
       <h2 className="text-2xl font-semibold mb-4 text-white tracking-wider">Update Product</h2>
       <form
         onSubmit={handleSubmit}

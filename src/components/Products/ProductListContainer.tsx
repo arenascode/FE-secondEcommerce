@@ -8,6 +8,8 @@ import {
 } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
+import { Breadcrumbs } from "@mui/material";
+import { Home, TwoWheelerOutlined } from "@mui/icons-material";
 
 export type Product = {
   _id: string;
@@ -309,15 +311,24 @@ const ProductListContainer = () => {
 
   return (
     <div>
-      <div
-        className="mt-7 pb-6 flex flex-col gap-1
-"
-      >
+      <div className="mt-7 pb-6 flex flex-col gap-1">
+        <div role="presentation" className="pl-4 mt-2">
+          <Breadcrumbs aria-label="breadcrumb" style={{ color: "white" }}>
+            <Link to="/" className="hover:underline flex gap-1">
+              <Home fontSize="small" /> Home
+            </Link>
+            <Link className="hover:underline flex gap-1" to={"/products"}>
+              <TwoWheelerOutlined sx={{ mr: 0.5 }} fontSize="medium" />
+              Motorbikes
+            </Link>
+          </Breadcrumbs>
+        </div>
         <div className="filterProductsContainer flex gap-32 px-5 pt-4 w-screen mb-1 sm:gap-10 sm:justify-center md:gap-44">
           {products.length !== 0 && <SortProducts />}
           {products.length !== 0 && <FilterProducts />}
         </div>
-        <div className="flex m-auto tracking-widest sm:mt-5 sm:text-2xl">
+        
+        <div className="flex m-auto tracking-widest text-gray-200 sm:mt-5 sm:text-2xl">
           <h3>{category}</h3>
         </div>
         <hr />

@@ -1,14 +1,21 @@
 .checkoutFormContainer {
-  background-image: url(https://images.pexels.com/photos/2519374/pexels-photo-2519374.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
-  // height: 100dvh;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  background-color: rgba(0, 0, 0, 0.904);
+  
   .purchaseDetails {
     background-color: rgba(169, 169, 169, 0.833);
   }
   form {
     background-color: rgba(169, 169, 169, 0.792);
+  }
+  &::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-image: url(https://images.pexels.com/photos/2519374/pexels-photo-2519374.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2);
+  background-size: cover;
+  background-position: center;
+  z-index: -1; /* Place the pseudo-element behind the content */
   }
 }

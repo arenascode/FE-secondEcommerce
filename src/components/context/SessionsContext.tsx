@@ -105,42 +105,23 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     // })
   };
 
-// const GoToLogin = () => {
-//     return (
-//       <div className="bg-stone-800 h-screen glass hover:bg-stone-800 pt-40">
-//         <div className="card w-96 bg-base-100 shadow-xl lg:mt-28 lg:ml-96 m-auto sm:max-w-[95%] sm:p-0">
-//           <div className="card-body items-center text-center">
-//             <h1 className="card-title">Please Log in!</h1>
-//             <p className="text-lg">
-//               We invite you to get to know all of our Motorcycles!
-//             </p>
-//             <div className="card-actions">
-//               <Link to={"/login"}>
-//                 <button className="btn btn-success btn-sm mt-3 text-lg tracking-widest">
-//                   Go
-//                 </button>
-//               </Link>
-//             </div>
-//           </div>
-//         </div>
-//       </div>
-//     );
-//   };
-  //*Go to login
-  // useEffect(() => {
-
-  //   if (!isUserLogged) {
-  //     console.log(`enter in goToLogin`);
-      
-  //   <GoToLogin/>
-  // }
-  // }, [isUserLogged])
-  
   
   //**Log Out function */
 
-  const logOut = () => {
-    axios
+  const logOut = async () => {
+    
+    Toast.fire({
+      title: "Are you sure you want to leave?",
+      showCancelButton: true,
+      cancelButtonColor: "green",
+      showConfirmButton: true,
+      confirmButtonText: "Yes",
+      confirmButtonColor: "red",
+      timer: 0,
+      timerProgressBar: false
+    }).then(async (res) => {
+      if (res.isConfirmed) {
+        await axios
       .get(`http://127.0.0.1:8080/api/sessions/logout`, {
         withCredentials: true,
       })
@@ -168,6 +149,10 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
           })
         }
       });
+      }
+    }
+    )
+    
   };
   //*Context Values
 

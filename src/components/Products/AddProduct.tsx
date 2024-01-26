@@ -68,7 +68,7 @@ const AddProductForm: React.FC = () => {
 
   return (
     <>
-      <div className="w-full m-auto p-8 bg-white shadow-lg rounded-b-md flex bg-gradient-to-tr from-gray-400 at-center to-blue-800 sm:flex-col smd:flex-row smd:justify-between">
+      <div className="w-full m-auto p-8 bg-white shadow-lg rounded-b-md flex bg-gradient-to-tr from-gray-400 at-center to-stone-800 sm:flex-col smd:flex-row smd:justify-between">
         <div className="form">
           <h2 className="text-2xl font-semibold mb-4">Add a New Product</h2>
           <form

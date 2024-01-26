@@ -242,7 +242,7 @@ const Profile = () => {
   };
 
   return isUserLogged ? (
-    <div className="profileContainer pt-24 pb-8 p-10 md:pt-24 md:p-5 flex place-content-center sm:flex-col md:flex-row sm:gap-2 md:gap-10">
+    <div className="profileContainer bg-gradient-to-tr from-gray-400 at-center to-stone-800 pt-24 pb-8 p-10 md:pt-24 md:p-5 flex place-content-center sm:flex-col md:flex-row sm:gap-2 md:gap-10 min-h-screen">
       <div className="left flex-1 sm:w-full md:w-max md:max-w-max">
         {profileData ? (
           <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 md:w-[330px]">
@@ -353,10 +353,7 @@ const Profile = () => {
               </div>
               {profileData.role === "admin" && (
                 <Link to={"/manageStore"}>
-                
-                <button className="btn btn-sm">
-                  Manage Store
-                </button>
+                  <button className="btn btn-sm">Manage Store</button>
                 </Link>
               )}
               <div className="flex mt-4 space-x-3 md:mt-6">
