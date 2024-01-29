@@ -104,6 +104,7 @@ const Profile = () => {
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const photoFile = e.target.files?.[0];
+    console.log(photoFile);
 
     if (photoFile) {
       const url = URL.createObjectURL(photoFile);
@@ -122,34 +123,27 @@ const Profile = () => {
     const { userId } = props;
 
     const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
-      console.log(e.currentTarget.dataset.userid);
       const uid = e.currentTarget.dataset.userid;
 
       const formProfilePic = document.getElementById(
         "editFormProfilePhoto"
       ) as HTMLFormElement;
+      console.log(formProfilePic);
 
       const formData = new FormData(formProfilePic);
-      const filesInput = formData.get("newProfilePhoto");
-      console.log(filesInput);
+      const profilePic = formData.get("editProfilePhoto");
+      console.log(profilePic);
 
       axios
         .put(`http://127.0.0.1:8080/api/users/${uid}`, formData)
         .then((res) => {
           console.log(res);
-          const photoPath = res.data.userPhotoUpdated.profilePhoto;
+          const photoPath = res.data.userUpdated.profilePhoto;
 
-          // const staticWord = "static";
-          // const trimmingPath = photoPath.slice(6);
-          // const newPath = staticWord + trimmingPath;
-          // console.log(`new path ${newPath}`);
           CLIENT_URL.current = res.data.CLIENT_URL;
 
           setPathPhoto(`http://${CLIENT_URL.current}/${photoPath}`);
 
-          console.log(pathPhoto);
-
-          // console.log(profilePhotoUrl);
           setIsPhotoUploaded(false);
           setUserHasPhoto(true);
         })
@@ -310,32 +304,7 @@ const Profile = () => {
                     className="w-full h-full rounded-full"
                   />
                 )}
-                <div className="opacity-0 group-hover:opacity-60 absolute inset-0 bg-black transition-opacity flex flex-col rounded-full items-center justify-center">
-                  <form id="formProfilePhoto" encType="multipart/form-data">
-                    <input
-                      onChange={handleFileChange}
-                      type="file"
-                      name="profilePhoto"
-                      id="profilePhoto"
-                      hidden
-                    />
-                    <label
-                      htmlFor="profilePhoto"
-                      className="inset-0 cursor-pointer flex flex-col items-center w-7 h-auto"
-                    >
-                      <img
-                        src="src/assets/icons/camara.png"
-                        alt=""
-                        className="w-full h-auto"
-                      />
-                      <span className="text-white">Upload Photo</span>
-                    </label>
-                  </form>
-                </div>
               </div>
-              {isPhotoUploaded && (
-                <ConfirmProfilePhotoBtn userId={profileData.id} />
-              )}
               <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                 {profileData?.fullName}
               </h5>
@@ -413,12 +382,12 @@ const Profile = () => {
                     <input
                       onChange={handleFileChange}
                       type="file"
-                      name="profilePhoto"
-                      id="newProfilePhoto"
+                      name="editProfilePhoto"
+                      id="editProfilePhoto"
                       hidden
                     />
                     <label
-                      htmlFor="profilePhoto"
+                      htmlFor="editProfilePhoto"
                       className="inset-0 cursor-pointer flex flex-col items-center w-7 h-auto"
                     >
                       <img

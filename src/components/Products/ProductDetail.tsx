@@ -55,8 +55,6 @@ const ProductDetail = () => {
         toast: true,
         position: "center",
         showConfirmButton: true,
-        // timer: 2000,
-        // timerProgressBar: true,
   });
   
   const handleDelete = async () => {
@@ -107,7 +105,7 @@ const ProductDetail = () => {
         toast.addEventListener("mouseleave", Swal.resumeTimer);
       },
     });
-    // const pid: string | undefined = productData?._id
+    
     const handleAlertCartEmpty = (): void => {
       Toast.fire({
         title: "Add To Cart First",
