@@ -41,7 +41,7 @@ const Login: React.FC = () => {
 
   async function getAccessToken(codeParam: string) {
     const response = await axios.get<ResponseType>(
-      `http://127.0.0.1:8080/api/sessions/getGhToken?code=${codeParam}`
+      `${apiUrl}/api/sessions/getGhToken?code=${codeParam}`
     );
     const data = response.data;
     
@@ -70,7 +70,7 @@ const Login: React.FC = () => {
   }, [isUserLogged]);
 
   async function getUserData() {
-    await fetch(`http://127.0.0.1:8080/api/sessions/getGhUser`, {
+    await fetch(`${apiUrl}/api/sessions/getGhUser`, {
       method: "GET",
       headers: {
         Authorization: "Bearer " + localStorage.getItem("accessToken"),
@@ -125,7 +125,7 @@ const Login: React.FC = () => {
       return;
     }
     await axios
-      .post(`https://${apiUrl}/api/sessions/login`, userCredentials, {
+      .post(`${apiUrl}/api/sessions/login`, userCredentials, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
