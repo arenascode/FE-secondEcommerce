@@ -22,6 +22,9 @@ const Login: React.FC = () => {
     isUserLogged,
   } = useSessions();
 
+  const apiUrl = import.meta.env.VITE_API_URL
+  console.log(apiUrl);
+  
   const { getCartById, setCartList, subTotalProducts, setCartIdStorage } =
     useCart();
   const { setProfileData } = useSessions();
@@ -41,7 +44,7 @@ const Login: React.FC = () => {
       `http://127.0.0.1:8080/api/sessions/getGhToken?code=${codeParam}`
     );
     const data = response.data;
-    console.log(data);
+    
     if (data?.access_token) {
       localStorage.setItem("accessToken", data?.access_token);
       setRerender(!rerender);
@@ -112,8 +115,8 @@ const Login: React.FC = () => {
     },
   });
 
+
   const userLogin = async () => {
-    console.log(userCredentials);
 
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -122,7 +125,7 @@ const Login: React.FC = () => {
       return;
     }
     await axios
-      .post("http://127.0.0.1:8080/api/sessions/login", userCredentials, {
+      .post(`${apiUrl}/api/sessions/login`, userCredentials, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
