@@ -1,20 +1,11 @@
 import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSessions } from "../context/SessionsContext";
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CloseOutlined } from "@mui/icons-material";
 import SessionExpired from "./SessionExpired";
 
-type ProfileData = {
-  email: string;
-  first_name: string;
-  last_name: string;
-  fullName: string;
-  age: number;
-  role: string;
-  id: string;
-};
 
 export type PhotoFile = File | null | string;
 
@@ -43,7 +34,7 @@ const Profile = () => {
   const CLIENT_URL = useRef<string | null>(null);
   const targetDivRef = useRef<HTMLDivElement>(null);
 
-  const { isLoading, refetch } = useQuery({
+  const {refetch } = useQuery({
     queryKey: ["user"],
     queryFn: () => {
       //Review this:
@@ -131,8 +122,6 @@ const Profile = () => {
       console.log(formProfilePic);
 
       const formData = new FormData(formProfilePic);
-      const profilePic = formData.get("editProfilePhoto");
-      console.log(profilePic);
 
       axios
         .put(`http://127.0.0.1:8080/api/users/${uid}`, formData)
