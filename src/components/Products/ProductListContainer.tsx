@@ -44,6 +44,8 @@ const ProductListContainer = () => {
   const { category, setCategory } = useCart();
 
   const apiUrl = import.meta.env.VITE_API_URL;
+  console.log(apiUrl);
+  
 
   useEffect(() => {
     getProducts();
@@ -51,7 +53,7 @@ const ProductListContainer = () => {
 
   //** Get Products */
   const getProducts = () => {
-    fetch(`https://${apiUrl}/api/products?category=${category}`)
+    fetch(`${apiUrl}/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -97,7 +99,7 @@ const ProductListContainer = () => {
       }
       setCategory(category);
 
-      fetch(`http://localhost:8080/api/products?category=${category}`)
+      fetch(`${apiUrl}/api/products?category=${category}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
@@ -201,7 +203,7 @@ const ProductListContainer = () => {
       }
 
       fetch(
-        `http://localhost:8080/api/products?sortprice=${dataSort}&category=${category}&page=${pageNumber}`
+        `${apiUrl}/api/products?sortprice=${dataSort}&category=${category}&page=${pageNumber}`
       )
         .then((res) => res.json())
         .then((data) => {
@@ -284,7 +286,7 @@ const ProductListContainer = () => {
       >
         <figure>
           <img
-            src={`http://${CLIENT_URL.current}${p.thumbnails[0]}`}
+            src={`${CLIENT_URL.current}${p.thumbnails[0]}`}
             alt={p.title}
             className="object-cover"
           />
