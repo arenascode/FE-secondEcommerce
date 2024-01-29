@@ -44,14 +44,14 @@ const ProductListContainer = () => {
   const { category, setCategory } = useCart();
 
   const apiUrl = import.meta.env.VITE_API_URL;
-  
+
   useEffect(() => {
     getProducts();
   }, []);
 
   //** Get Products */
   const getProducts = () => {
-    fetch(`${apiUrl}/api/products?category=${category}`)
+    fetch(`https://${apiUrl}/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);

@@ -125,7 +125,7 @@ const Login: React.FC = () => {
       return;
     }
     await axios
-      .post(`${apiUrl}/api/sessions/login`, userCredentials, {
+      .post(`https://${apiUrl}/api/sessions/login`, userCredentials, {
         withCredentials: true,
         headers: {
           "Content-Type": "application/json",
