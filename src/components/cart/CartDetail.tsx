@@ -9,7 +9,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import PaymentForm from "./PaymentForm";
 import SessionExpired from "../sessions/SessionExpired";
 import { Breadcrumbs } from "@mui/material";
-import { Home, Payment, ShoppingCart, TwoWheelerOutlined } from "@mui/icons-material";
+import { Home, ShoppingCart, TwoWheelerOutlined } from "@mui/icons-material";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
@@ -29,7 +29,6 @@ const CartDetail = () => {
   const [showCart, setShowCart] = useState<boolean>(true);
   const [showForm, setShowForm] = useState<boolean>(false);
   const CLIENT_URL = useRef<string>("");
-  const [showLogin, setShowLogin] = useState<boolean>(false);
 
   useEffect(() => {
     isUserLogged
