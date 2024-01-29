@@ -14,7 +14,6 @@ export type ProfileData = {
 };
 
 type SessionsContextType = {
-  handleConfirmPhoto: (e: React.MouseEvent<HTMLButtonElement>) => void;
   setProfileData: React.Dispatch<React.SetStateAction<ProfileData | null>>;
   profileData: ProfileData | null;
   setIsUserLogged: React.Dispatch<React.SetStateAction<boolean>>;
@@ -26,12 +25,11 @@ type SessionsContextType = {
   logOut: () => void;
   pathToRedirect: string;
   setPathToRedirect: React.Dispatch<React.SetStateAction<string>>;
-  setUserHasPhoto: React.Dispatch<React.SetStateAction<boolean | null>>
-  userHasPhoto: boolean | null
+  setUserHasPhoto: React.Dispatch<React.SetStateAction<boolean>>
+  userHasPhoto: boolean
 };
 
 const SessionsContext = createContext<SessionsContextType>({
-  handleConfirmPhoto: () => { },
   setProfileData: () => { },
   profileData: null,
   setIsUserLogged: () => { },
@@ -43,7 +41,7 @@ const SessionsContext = createContext<SessionsContextType>({
   logOut: () => { },
   pathToRedirect: '/',
   setPathToRedirect: () => { },
-  setUserHasPhoto: () => { },
+  setUserHasPhoto: () => null,
   userHasPhoto: false,
 })
 
@@ -77,7 +75,6 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     "userLogged",
     false
   );
-  console.log(isUserLogged);
 
   const [CLIENT_URL, setCLIENT_URL] = useLocalStorage<string>("CLIENT_URL", "");
 
@@ -93,18 +90,6 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     "notRefresh"
   );
   const [userHasPhoto, setUserHasPhoto] = useLocalStorage<boolean>('userHasPhoto', false)
-
-  const handleConfirmPhoto = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.dataset.userId);
-    console.log(`hii!!`);
-
-    // axios.put(`http://127.0.0.1:8080/api/users/${profileData?.id}`)
-    //   .then((res) => {
-    //     console.log(res);
-    //     setProfilePhotoUrl(res.data.profilePhoto)
-    // })
-  };
-
   
   //**Log Out function */
 
@@ -159,8 +144,6 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
   const contextValue: SessionsContextType = {
     pathPhoto: pathPhoto,
     setPathPhoto: setPathPhoto,
-    // setProfilePhotoUrl:setProfilePhotoUrl,
-    handleConfirmPhoto: handleConfirmPhoto,
     setProfileData: setProfileData,
     profileData: profileData,
     isUserLogged: isUserLogged,

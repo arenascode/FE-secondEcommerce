@@ -52,8 +52,6 @@ const ProductListContainer = () => {
     fetch(`http://127.0.0.1:8080/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-
         setProducts(data.products.docs);
         const pageOptions: PageOptions = {
           prevPage: data.products.prevPage,
@@ -61,8 +59,6 @@ const ProductListContainer = () => {
           hasNextPage: data.products.hasNextPage,
           hasPrevPage: data.products.hasPrevPage,
         };
-        console.log(pageOptions);
-
         setPageOptions(pageOptions);
         // setCategory("");
 
@@ -98,7 +94,6 @@ const ProductListContainer = () => {
         category = "";
       }
       setCategory(category);
-      console.log(category);
 
       fetch(`http://localhost:8080/api/products?category=${category}`)
         .then((res) => res.json())

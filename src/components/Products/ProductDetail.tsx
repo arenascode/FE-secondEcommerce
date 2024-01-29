@@ -17,7 +17,6 @@ const ProductDetail = () => {
 
   const location = useLocation();
   const firstPartPath: string = location.pathname.split("/")[1];
-  console.log(profileData);
   
   const CLIENT_URL = useRef(null);
 
@@ -113,9 +112,7 @@ const ProductDetail = () => {
       });
     };
 
-    const handleEdit = () => {
-      console.log({isUserLogged});
-      
+    const handleEdit = () => { 
       isUserLogged && <Navigate to={'/sessionExpired'}/>
     }
 

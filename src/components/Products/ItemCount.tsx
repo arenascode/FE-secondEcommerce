@@ -12,7 +12,6 @@ productStock: number
 
 
 const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
-  console.log(productStock);
   
   const [count, setCount] = useState(1)
 
@@ -56,13 +55,7 @@ const ItemCount:React.FC<ItemCountProps> = ({productId, productStock}) => {
     console.log(pathToRedirect);
     
     addToCart(productId, count)
-    // if (isUserLogged) {
-    // } else {
-    //   Toast.fire({
-    //     icon: "warning",
-    //     title: `Please login first to add product`,
-    //   });
-    // }
+
   }
   
   return (

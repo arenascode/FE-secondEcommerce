@@ -38,7 +38,6 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     fetch(`http://localhost:8080/api/products?page=1/&sortprice=${Sort}`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
         setProducts(data.products.docs);
         setArrowRight(data.products.hasNextPage);
         setArrowLeft(data.products.hasPrevPage);
@@ -54,16 +53,12 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     fetch(`http://localhost:8080/api/products?page=2&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-
         setProducts(data.products.docs);
-
         setArrowRight(data.products.hasNextPage);
         setArrowLeft(data.products.hasPrevPage);
         setPreviousPage(data.products.prevPage);
         setNextPage(data.products.nextPage);
         setPageNumber(data.products.page)
-        // console.log(`nextPage ${data.products.nextPage}`);
 
         CLIENT_URL.current = data.CLIENT_URL;
       })
@@ -76,7 +71,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     fetch(`http://localhost:8080/api/products?page=3&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        
         setPageNumber(data.products.page)
         setProducts(data.products.docs);
         setArrowRight(data.products.hasNextPage);
@@ -98,7 +93,6 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
       setBtnColor1(false);
       setBtnColor2(true);
     }
-    // console.log(`nextPage un arrow ${nextPage}`);
    
     fetch(`http://localhost:8080/api/products?page=${nextPage}&sortprice=${Sort}/`)
       .then((res) => res.json())
@@ -115,7 +109,6 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
       .catch((err) => console.log(err));
   }
   function previousOnePage() {
-    // console.log(`previousPage in arrowLeft ${previousPage}`);
 
     fetch(
       `http://localhost:8080/api/products?page=${previousPage}&sortprice=${Sort}/`

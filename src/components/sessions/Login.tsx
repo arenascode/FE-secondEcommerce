@@ -60,8 +60,6 @@ const Login: React.FC = () => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const codeParam = urlParams.get("code");
-    console.log(codeParam);
-    console.log(Boolean(localStorage.getItem("accessToken")));
 
     if (codeParam && localStorage.getItem("accessToken") === null) {
       getAccessToken(codeParam);
@@ -79,14 +77,9 @@ const Login: React.FC = () => {
         return response.json();
       })
       .then((data) => {
-        console.log(data);
         const photoPath = data.profilePhoto;
-        console.log(photoPath);
 
         if (photoPath) {
-          console.log(`The user has have profilePicture`);
-
-          console.log(`new path ${photoPath}`);
           // CLIENT_URL.current = result.data.CLIENT_URL;
           setUserHasPhoto(true);
           setPathPhoto(photoPath);
@@ -136,20 +129,16 @@ const Login: React.FC = () => {
         },
       })
       .then(async (result) => {
-        console.log(result);
         if (result.status === 200) {
           const photoPath = result.data.loggedUserDto.profilePhoto;
-          console.log(photoPath);
 
           if (photoPath) {
             console.log(`The user has have profilePicture`);
             const staticWord = "static";
             const trimmingPath = photoPath.slice(6);
             const newPath = staticWord + trimmingPath;
-            console.log(`new path ${newPath}`);
             CLIENT_URL.current = result.data.CLIENT_URL;
             setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
-            console.log(CLIENT_URL);
             setUserHasPhoto(true);
           }
           Toast.fire({
@@ -158,12 +147,12 @@ const Login: React.FC = () => {
           });
           setIsUserLogged(true);
           setProfileData(result.data.loggedUserDto);
-          console.log(`currentLocation in Login ${pathToRedirect}`);
+
           if (result.data.loggedUserDto.cartId !== "") {
             setCartIdStorage(result.data.loggedUserDto.cartId);
             const cartSaved: ProductCart[] | string | unknown =
               await getCartById(result.data.loggedUserDto.cartId);
-            console.log(cartSaved);
+
             if (Array.isArray(cartSaved)) {
               setCartList(cartSaved);
               subTotalProducts(cartSaved);
@@ -174,8 +163,6 @@ const Login: React.FC = () => {
             }
           }
 
-          
-
           setTimeout(() => {
             window.location.replace(pathToRedirect);
             setPathToRedirect("/");
@@ -183,7 +170,6 @@ const Login: React.FC = () => {
         }
       })
       .catch((err) => {
-        console.log(err);
         if (err.response.status === 401) {
           Toast.fire({
             icon: "error",
@@ -199,16 +185,15 @@ const Login: React.FC = () => {
   };
 
   useEffect(() => {
-    const isLockedButton = (email == null || email == "") || (password == null || password == "");
+    const isLockedButton =
+      email == null || email == "" || password == null || password == "";
     isLockedButton ? setLockButton(true) : setLockButton(false);
-    setErrorMail(false)
+    setErrorMail(false);
   }, [email, password]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
-    
     if (e.key === "Enter") {
-      console.log(`user press enter key`);
-      userLogin()
+      userLogin();
     }
   };
 

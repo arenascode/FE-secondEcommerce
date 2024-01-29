@@ -39,17 +39,15 @@ const Users = () => {
       axios.get(`http://127.0.0.1:8080/api/users`, {
         withCredentials: true
       }).then((res) => {
-        console.log(res);
         CLIENT_URL.current = res.data.CLIENT_URL;
         SetUsers(res.data.users)
         // return res.data.users
       }).catch((err) => {
-        console.log(err);
+        console.error(err);
         setIsUserLogged(false)
       })
     }
   })
-  console.log({isLoading});
   
   //* Render Users 
 

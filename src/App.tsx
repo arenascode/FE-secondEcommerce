@@ -13,10 +13,13 @@ import RestorePass from "./components/sessions/RestorePass";
 import ManageStore from "./components/manageStore/ManageStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UploadProduct from "./components/Products/UpdateProduct";
-import PaymentForm from "./components/cart/PaymentForm";
 import SessionExpired from "./components/sessions/SessionExpired";
 import { useEffect } from "react";
 import axios from "axios";
+
+interface ProtectedRouteProps {
+  children: React.ReactNode
+}
 
 function App() {
   const queryClient = new QueryClient();
@@ -43,7 +46,7 @@ function App() {
   
   console.log({ isUserLogged });
 
-  const ProtectedRoute: React.FC = ({ children }) => {
+  const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     console.log("rendering ProtectedRoute");
 
     if (!isUserLogged) {
@@ -69,16 +72,13 @@ function App() {
               path="/manageStore"
               element={<ProtectedRoute>{<ManageStore />}</ProtectedRoute>}
             />
-            {/* <Route path="manageStore" element={<ManageStore />}></Route> */}
             <Route path={"/products"} element={<Products />} />
             <Route path={"/products/:id"} element={<ProductDetail />} />
-            {/* <Route path={"/editproduct/:id"} element={<UploadProduct />} /> */}
             <Route
               path={"/editproduct/:id"}
               element={<ProtectedRoute>{<UploadProduct />}</ProtectedRoute>}
             />
             <Route path="/cartDetail/" element={<CartDetail />} />
-            <Route path="/paymentForm" element={<PaymentForm />} />
             <Route path="/sessionExpired" element={<SessionExpired />} />
           </Routes>
         </BrowserRouter>

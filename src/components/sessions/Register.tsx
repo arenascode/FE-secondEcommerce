@@ -12,15 +12,9 @@ const Register = () => {
   useEffect(() => {
 
     if (firstPassword.length >= 6 && repeatPassword.length >= 6) {
-      console.log(`first condition`);
-
-      console.log(firstPassword, repeatPassword);
       setPasswordMatch(true);
     } else {
       setPasswordMatch(false);
-      console.log(`second condition`);
-
-      console.log(firstPassword, repeatPassword);
     }
   }, [firstPassword, repeatPassword]);
 
@@ -28,7 +22,6 @@ const Register = () => {
     setFirstPassword(e.currentTarget.value);
 
     if (firstPassword.length < 5) {
-      console.log(firstPassword.length);
       setMinLengthPass(false);
     } else {
       setMinLengthPass(true);
@@ -77,7 +70,6 @@ const Register = () => {
           age: userAge,
           password: userPass,
         };
-        console.log(objDataUser);
 
         fetch("http://127.0.0.1:8080/api/sessions/register", {
           method: "POST",
@@ -113,7 +105,6 @@ const Register = () => {
           title: `The passwords don't match`,
         });
       }
-      // formRegister.reset();
     }
   };
 

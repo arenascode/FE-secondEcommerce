@@ -2,7 +2,7 @@ import axios from "axios";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import { useSessions } from "../context/SessionsContext";
 import { Link } from "react-router-dom";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { CloseOutlined } from "@mui/icons-material";
 import SessionExpired from "./SessionExpired";
 
@@ -72,8 +72,6 @@ const Profile = () => {
         });
     },
   });
-
-  const queryClient = useQueryClient();
 
   const userMutation = useMutation({
     mutationFn: async (formToSend) => {
@@ -204,7 +202,7 @@ const Profile = () => {
       setErrorMail(true);
       return;
     }
-
+    //@ts-ignore
     userMutation.mutate(formToSend);
   };
 
@@ -455,20 +453,6 @@ const Profile = () => {
                     Invalid eMail Format
                   </span>
                 )}
-                {/* <div className="relative">
-                  <label
-                    htmlFor="fileInput"
-                    className="cursor-pointer text-blue-500 border border-blue-500 rounded-md px-4 py-2 inline-block"
-                  >
-                    Choose File
-                  </label>
-                  <input
-                    id="fileInput"
-                    type="file"
-                    className="hidden"
-                    // Add your onChange handler here if needed
-                  />
-                </div> */}
                 <label
                   htmlFor="email"
                   className="border-b border-gray-300 focus:border-blue-500"

@@ -1,8 +1,5 @@
 import { Order } from "./Users";
 import { Product } from "../Products/ProductListContainer";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
-import { useState } from "react";
 
 //*
 interface ChildComponentProps {
@@ -20,48 +17,9 @@ interface ChildComponentProps {
   };
   CLIENT_URL: string | null;
 }
-interface Role {
-  role: string;
-}
+
 const CustomerCard: React.FC<ChildComponentProps> = ({ User, CLIENT_URL }) => {
-  const [showRoles, setShowRoles] = useState<boolean>(false);
-  const [role, setRole] = useState<string>("");
 
-  const queryClient = useQueryClient();
-
-  const userMutation = useMutation<
-    AxiosResponse,
-    Error,
-    { uid: string; newRole: Role }
-  >({
-    mutationFn: async ({ uid, newRole }) => {
-      console.log(newRole);
-
-      return await axios.put(
-        `http://127.0.0.1:8080/api/users/changeUserRoleByAdmin/${uid}`,
-        newRole,
-        {
-          withCredentials: true,
-        }
-      );
-    },
-    onSuccess: () => {
-      //@ts-ignore
-      queryClient.invalidateQueries(["users"]);
-    },
-  });
-
-  const handleChangeRole = (event: SelectChangeEvent) => {
-    const roleSelected = event.target.value;
-    const uid = event.target.name;
-    const newRole = {
-      role: roleSelected,
-    };
-    setRole(roleSelected);
-    console.log(uid);
-    console.log(roleSelected);
-    userMutation.mutate({ uid, newRole });
-  };
 
   return (
     <div className="card sm:w-80 bg-base-100 shadow-2xl p-2 bg-gradient-to-tr from-gray-400 at-center to-stone-700 glass">

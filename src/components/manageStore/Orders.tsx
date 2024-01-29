@@ -15,7 +15,7 @@ const Orders = () => {
   const [salesAmount, setSalesAmount] = useState<number>();
   const [orders, setOrders] = useState<Order[]>([]);
 
-  const { isLoading, data } = useQuery({
+  const { isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: () => {
       axios
@@ -23,7 +23,6 @@ const Orders = () => {
           withCredentials: true,
         })
         .then((res) => {
-          console.log(res);
           setOrders(res?.data);
           return res.data;
         })
@@ -41,8 +40,6 @@ const Orders = () => {
     }, 0);
     setSalesAmount(sales);
   }, [orders]);
-
-  console.log(salesAmount);
 
   return (
     <div className="flex gap-2">

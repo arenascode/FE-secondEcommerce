@@ -33,7 +33,6 @@ const RestorePass = () => {
     await axios.post("http://127.0.0.1:8080/api/sessions/restorePassword/sendMail", {email})
       .then(res => {
         if (res.status === 200) {
-          console.log(res.data);
           Toast.fire({
             title: res.data,
             icon: "success"
@@ -42,7 +41,6 @@ const RestorePass = () => {
         }
       })
       .catch(err => {
-        console.log(err)
         Toast.fire({
           title: err.response.data.message,
           icon: "error"

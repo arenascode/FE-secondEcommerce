@@ -38,24 +38,7 @@ const ManageStore = () => {
   const CLIENT_URL = useRef(null);
 
 
-  const { setIsUserLogged, setProfileData, profileData } = useSessions();
-
-  // useEffect(() => {
-  //   axios
-  //     .get("http://127.0.0.1:8080/api/sessions/current", {
-  //       withCredentials: true,
-  //     })
-  //     .then((res) => {
-  //       console.log(res);
-        
-  //       setProfileData(res.data.currentUserDTO);
-  //     }).catch((err) => {
-  //       console.log(err)
-  //       setIsUserLogged(false)
-  //       setProfileData(null)
-  //     }
-  //      );
-  // }, []);
+  const { profileData } = useSessions();
 
   // Functions for CRUD operations
   const fetchProducts = async () => {
@@ -86,14 +69,11 @@ const ManageStore = () => {
 
   //* Fetch Customers
   const fetchCustomers = async () => {
-    console.log(`fetching customers`);
-
     setShowCustomers(true);
     setFormToAddProduct(false);
     setShowProducts(false);
     setShowOrders(false);
   };
-  console.log(showCustomers);
 
   //*Show Orders Component
   const handleShowOrders = () => {

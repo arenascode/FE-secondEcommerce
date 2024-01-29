@@ -34,7 +34,7 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
 
   const productMutation = useMutation({
     mutationFn: async (formToSend) => {
-      return axios
+      return await axios
         .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
           withCredentials: true,
         })
@@ -59,6 +59,7 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
         });
     }, 
     onSuccess: () => {
+      //@ts-ignore
       queryClient.invalidateQueries(["productId"])
     }
   },
@@ -99,7 +100,7 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
         formToSend.append(key, value)
       }
     }
-    
+    //@ts-ignore
     productMutation.mutate(formToSend)
 
   };

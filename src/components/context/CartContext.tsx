@@ -39,6 +39,7 @@ type CartContextType = {
   getCartById: (cid: string) => void;
   setSubTotal: React.Dispatch<React.SetStateAction<number>>;
   setCartIdStorage: React.Dispatch<React.SetStateAction<string>>;
+  outOfStock: boolean
 };
 
 const CartContext = createContext<CartContextType>({
@@ -60,6 +61,7 @@ const CartContext = createContext<CartContextType>({
   getCartById: () => {},
   setSubTotal: () => { },
   setCartIdStorage: () => { },
+  outOfStock: false
 });
 
 export const useCart = () => {
@@ -83,11 +85,9 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const [cartIdStorage, setCartIdStorage] = useLocalStorage("cid", cartId);
 
   const [outOfStock, setOutOfStock] = useState<boolean>(false);
-  console.log(outOfStock);
 
   //* To add to cart *//
   const addToCart = (pid: string | undefined, qty: number): void => {
-    console.log(pid, qty);
 
     const cartData = {
       pid: pid,
@@ -105,28 +105,25 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
         toast.addEventListener("mouseleave", Swal.resumeTimer);
       },
     });
-    console.log(typeof cartIdStorage);
+
     if (cartIdStorage !== "") {
       
       axios
         .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
         .then((res) => {
-          console.log(res);
           const productInCart = res.data.cartById.products.find(
             (p: ProductCart) => p._id._id === cartData.pid
           );
-          console.log(productInCart);
 
           if (productInCart) {
             actualStockProduct = productInCart._id.stock;
-            console.log(actualStockProduct);
+  
             if (actualStockProduct <= productInCart.quantity) {
               Toast.fire({
                 icon: "warning",
                 title: `The cart has all the stock available of this product`,
               });
               setOutOfStock(true);
-              console.log(outOfStock);
               return;
             }
           }
@@ -144,7 +141,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
                     cartData.quantity > 1 ? "unidades" : "unidad"
                   } a tu carrito`,
                 });
-                console.log(res.data);
+                
                 setCartId(res.data._id);
                 setCartIdStorage(res.data._id);
                 setCartList(res.data.products);
@@ -161,7 +158,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
               }
             })
             .catch((err) => {
-              console.log(err);
+              
               if (err.response.status === 400) {
                 Toast.fire({
                   icon: "error",
@@ -184,7 +181,6 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
             });
         });
     } else {
-      console.error('Failed, does not exist CID in storage');
       axios
         .post("http://127.0.0.1:8080/api/carts", cartData, {
           withCredentials: true,
@@ -197,7 +193,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
                 cartData.quantity > 1 ? "unidades" : "unidad"
               } a tu carrito`,
             });
-            console.log(res.data);
+
             setCartId(res.data._id);
             setCartIdStorage(res.data._id);
             setCartList(res.data.products);
@@ -226,7 +222,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
           }
         })
         .catch((err) => {
-          console.log(err);
+          
           if (err.response.status === 401) {
             Toast.fire({
               icon: "error",
@@ -253,19 +249,16 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   //* calculate Cart Qty */
   const cartQuantity = () => {
     const cartQty = cartList.reduce((qty, p) => qty + p.quantity, 0);
-    // setCartQty(cartQty);
     return cartQty;
   };
 
   //* subtotal Products */
   const subTotalProducts = (cartList: ProductCart[]): number => {
-    console.log(cartList);
 
     const subTotalCart = cartList.reduce(
       (sub, p) => (sub += p._id.price * p.quantity),
       0
     );
-    console.log(subTotalCart);
 
     setSubTotal(subTotalCart);
     return subTotalCart;
@@ -275,14 +268,12 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   const deleteProductInCart = (
     e: React.MouseEvent<HTMLButtonElement>
   ): void => {
-    console.log(e.currentTarget.dataset.pid);
     const pid = e.currentTarget.dataset.pid;
     axios
       .delete(
         `http://127.0.0.1:8080/api/carts/${cartIdStorage}/products/${pid}`
       )
       .then((res) => {
-        console.log(res.data);
         setCartList(res.data.products);
         subTotalProducts(res.data.products);
       });
@@ -290,10 +281,8 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
 
   //*Empty Cart */
   const emptyCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e.currentTarget.dataset.cid);
     const cid = e.currentTarget.dataset.cid;
     axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`).then((res) => {
-      console.log(res);
       setCartList(res.data.products);
       setSubTotal(0);
     });
@@ -304,7 +293,6 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     await axios
       .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
       .then((res) => {
-        console.log(res);
         if (res.status === 200)
         setCartList([]);
         setSubTotal(0);
@@ -321,21 +309,17 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
           withCredentials: true
         }
       );
-      console.log(response);
 
       if (
         response.data &&
         response.data.cartById &&
         response.data.cartById.products
       ) {
-        // Assuming the response has a 'products' property
+        
         const newProducts = response.data.cartById.products;
-        console.log(newProducts);
 
-        // Merge the existing cart with the new products
         const updatedCart = [...newProducts];
 
-        // You might want to update the state or do something else with the updatedCart here
         return updatedCart;
       } else {
         return { message: "Invalid response format" };
@@ -343,7 +327,6 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     } catch (error) {
       console.error("Error fetching cart:", error);
 
-      // Return an error object
       return { message: (error as Error).message || "An error occurred" };
     }
   };
@@ -367,6 +350,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     getCartById: getCartById,
     setSubTotal: setSubTotal,
     setCartIdStorage: setCartIdStorage,
+    outOfStock: outOfStock
   };
 
   return (
