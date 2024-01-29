@@ -11,10 +11,6 @@ import { useCart } from "../context/CartContext";
 import { Breadcrumbs } from "@mui/material";
 import { Home, TwoWheelerOutlined } from "@mui/icons-material";
 
-const apiUrl = import.meta.env.VITE_API_URL
- 
-console.log(apiUrl)
-  
 export type Product = {
   _id: string;
   title: string;
@@ -47,6 +43,8 @@ const ProductListContainer = () => {
 
   const { category, setCategory } = useCart();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   useEffect(() => {
     getProducts();
   }, []);
@@ -99,7 +97,7 @@ const ProductListContainer = () => {
       }
       setCategory(category);
 
-      fetch(`${http://localhost:8080}/api/products?category=${category}`)
+      fetch(`http://localhost:8080/api/products?category=${category}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
