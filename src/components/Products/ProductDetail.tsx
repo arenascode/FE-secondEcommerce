@@ -11,6 +11,8 @@ import axios from "axios";
 const ProductDetail = () => {
   const { id } = useParams();
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   const { setCategory, subTotal } = useCart();
 
   const { profileData, isUserLogged } = useSessions();
@@ -28,7 +30,7 @@ const ProductDetail = () => {
     queryKey: ["productId"],
     queryFn: () => {
       axios
-        .get(`http://localhost:8080/api/products/${id}`, {
+        .get(`${apiUrl}/api/products/${id}`, {
           withCredentials: true,
         })
         .then((res) => {
@@ -71,7 +73,7 @@ const ProductDetail = () => {
         });
         //* Disabled for security
         // await axios
-        //   .delete(`http://127.0.0.1:8080/api/products/${id}`, {
+        //   .delete(`${apiUrl}/api/products/${id}`, {
         //     withCredentials: true,
         // })
         // .then(() => {
@@ -121,7 +123,7 @@ const ProductDetail = () => {
         <div className={`imgContainer ${firstPartPath == 'editproduct' ? '' : 'lg:w-1/2'} p-2`}>
           <figure className=" overflow-hidden rounded-lg sm:max-h-72 md:max-h-96 lg:max-h-[28rem]">
             <img
-              src={`http://${CLIENT_URL.current}${productData?.thumbnails[0]}`}
+              src={`${CLIENT_URL.current}${productData?.thumbnails[0]}`}
               alt="Shoes"
               className="rounded-xl h-full"
             />
