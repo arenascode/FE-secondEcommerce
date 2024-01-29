@@ -11,6 +11,10 @@ import { useCart } from "../context/CartContext";
 import { Breadcrumbs } from "@mui/material";
 import { Home, TwoWheelerOutlined } from "@mui/icons-material";
 
+const apiUrl = import.meta.env.VITE_API_URL
+ 
+console.log(apiUrl)
+  
 export type Product = {
   _id: string;
   title: string;
@@ -49,7 +53,7 @@ const ProductListContainer = () => {
 
   //** Get Products */
   const getProducts = () => {
-    fetch(`http://127.0.0.1:8080/api/products?category=${category}`)
+    fetch(`${apiUrl}/api/products?category=${category}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -95,7 +99,7 @@ const ProductListContainer = () => {
       }
       setCategory(category);
 
-      fetch(`http://localhost:8080/api/products?category=${category}`)
+      fetch(`${http://localhost:8080}/api/products?category=${category}`)
         .then((res) => res.json())
         .then((data) => {
           console.log(data);
