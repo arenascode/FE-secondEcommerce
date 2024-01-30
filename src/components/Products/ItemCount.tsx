@@ -51,7 +51,8 @@ const ItemCount: React.FC<ItemCountProps> = ({ productId, productStock }) => {
   };
   const addToCartHandler = () => {
     setPathToRedirect(location.pathname);
-
+    console.log({isUserLogged});
+    
     if (isUserLogged) {
       addToCart(productId, count);
     } else {

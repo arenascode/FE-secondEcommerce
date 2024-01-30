@@ -228,7 +228,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
           if (err.response.status === 401) {
             Toast.fire({
               icon: "error",
-              title: `${err.response.data.errorMsg}`,
+              title: `Login To Add Products`,
               showConfirmButton: true,
             });
           }
