@@ -280,7 +280,7 @@ const Profile = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "src/assets/user.png"
+                        : "/user.png"
                     }
                     alt="Profile Picture"
                   />

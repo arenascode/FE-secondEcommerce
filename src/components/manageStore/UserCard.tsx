@@ -29,7 +29,7 @@ const CustomerCard: React.FC<ChildComponentProps> = ({ User, CLIENT_URL }) => {
             src={
               User.profilePhoto
                 ? `http://${CLIENT_URL}/${User.profilePhoto}`
-                : "/src/assets/user.png"
+                : "/user.png"
             }
             alt="userPhoto"
             className="rounded-xl sm:max-w-[8rem]"
