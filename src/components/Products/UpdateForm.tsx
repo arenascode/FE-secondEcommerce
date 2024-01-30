@@ -30,12 +30,14 @@ const UpdateProductForm: React.FC<ProductIdProps> = (productId) => {
     category: "",
   });
   
+  const apiUrl = import.meta.env.VITE_API_URL
+  
   const queryClient = useQueryClient();
 
   const productMutation = useMutation({
     mutationFn: async (formToSend) => {
       return await axios
-        .put(`http://127.0.0.1:8080/api/products/${pId}`, formToSend, {
+        .put(`${apiUrl}/api/products/${pId}`, formToSend, {
           withCredentials: true,
         })
         .then((res) => {

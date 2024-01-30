@@ -40,10 +40,11 @@ const ManageStore = () => {
 
   const { profileData } = useSessions();
 
+  const apiUrl = import.meta.env.VITE_API_URL;
   // Functions for CRUD operations
   const fetchProducts = async () => {
     // Implement logic to fetch products from API/database
-    await axios.get("http://127.0.0.1:8080/api/products").then((res) => {
+    await axios.get(`${apiUrl}/api/products`).then((res) => {
       setProducts(res.data.products.docs);
       CLIENT_URL.current = res.data.CLIENT_URL;
       setShowProducts(true);
@@ -103,7 +104,7 @@ const ManageStore = () => {
       >
         <figure>
           <img
-            src={`http://${CLIENT_URL.current}${p.thumbnails[0]}`}
+            src={`${CLIENT_URL.current}${p.thumbnails[0]}`}
             alt={p.title}
             className="object-cover"
           />

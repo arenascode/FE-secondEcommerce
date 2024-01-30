@@ -9,6 +9,8 @@ const RestorePass = () => {
   const [email, setEmail] = useState<string | null>(null)
   const [errorMail, setErrorMail] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const Toast = Swal.mixin({
     toast: true,
     position: "top-end",
@@ -30,7 +32,7 @@ const RestorePass = () => {
       return;
     }
 
-    await axios.post("http://127.0.0.1:8080/api/sessions/restorePassword/sendMail", {email})
+    await axios.post(`${apiUrl}/api/sessions/restorePassword/sendMail`, {email})
       .then(res => {
         if (res.status === 200) {
           Toast.fire({

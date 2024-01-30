@@ -33,6 +33,8 @@ const AddProductForm: React.FC = () => {
   };
   const form = document.querySelector("form");
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -49,7 +51,7 @@ const AddProductForm: React.FC = () => {
     addProductForm.append("productImg", file as File);
 
     await axios
-      .post("http://127.0.0.1:8080/api/products", addProductForm, {
+      .post(`${apiUrl}/api/products`, addProductForm, {
         withCredentials: true,
       })
       .then((res) => {

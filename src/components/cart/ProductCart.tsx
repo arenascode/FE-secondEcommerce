@@ -27,7 +27,7 @@ const ProductInCart: React.FC<ProductCartProps> = ({ product, CLIENT_URL }) => {
         <div className="rounded-md shadow-lg">
           <div className="imgContainer sm:h-max-[9rem] sm:w-max-[100px] lg:w-[200px] lg:h-max md:max-w-[200px] xl:h-[280px]">
             <img
-              src={`http://${CLIENT_URL}${product._id.thumbnails}`}
+              src={`${CLIENT_URL}${product._id.thumbnails}`}
               alt="productPhoto"
               className="w-full object-cover h-full rounded-md shadow-lg md:h-[150px]"
             />

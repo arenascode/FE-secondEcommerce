@@ -15,11 +15,13 @@ const Orders = () => {
   const [salesAmount, setSalesAmount] = useState<number>();
   const [orders, setOrders] = useState<Order[]>([]);
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   const { isLoading } = useQuery({
     queryKey: ["orders"],
     queryFn: () => {
       axios
-        .get(`http://127.0.0.1:8080/api/orders`, {
+        .get(`${apiUrl}/api/orders`, {
           withCredentials: true,
         })
         .then((res) => {

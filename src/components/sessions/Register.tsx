@@ -9,8 +9,9 @@ const Register = () => {
   const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [errorMail, setErrorMail] = useState(false);
 
-  useEffect(() => {
+  const apiUrl = import.meta.env.VITE_API_URL;
 
+  useEffect(() => {
     if (firstPassword.length >= 6 && repeatPassword.length >= 6) {
       setPasswordMatch(true);
     } else {
@@ -41,8 +42,8 @@ const Register = () => {
   });
 
   const handleErrorMail = () => {
-    setErrorMail(false)
-  }
+    setErrorMail(false);
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -58,7 +59,7 @@ const Register = () => {
       const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
       if (!pattern.test(userEmail as string)) {
-        setErrorMail(true)
+        setErrorMail(true);
         return;
       }
 
@@ -71,7 +72,7 @@ const Register = () => {
           password: userPass,
         };
 
-        fetch("http://127.0.0.1:8080/api/sessions/register", {
+        fetch(`${apiUrl}/api/sessions/register`, {
           method: "POST",
           body: JSON.stringify(objDataUser),
           headers: {

@@ -68,6 +68,8 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     },
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   //**Register Session */
 
   //**Login Session */
@@ -107,7 +109,7 @@ const SessionsContextProvider = ({ children }: SessionsContextProviderProps) => 
     }).then(async (res) => {
       if (res.isConfirmed) {
         await axios
-      .get(`http://127.0.0.1:8080/api/sessions/logout`, {
+      .get(`${apiUrl}/api/sessions/logout`, {
         withCredentials: true,
       })
       .then((res) => {

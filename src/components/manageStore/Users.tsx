@@ -32,11 +32,12 @@ const Users = () => {
   const [users, SetUsers] = useState<User[]>();
 
   const CLIENT_URL = useRef<string | null>(null)
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const { isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: () => {
-      axios.get(`http://127.0.0.1:8080/api/users`, {
+      axios.get(`${apiUrl}/api/users`, {
         withCredentials: true
       }).then((res) => {
         CLIENT_URL.current = res.data.CLIENT_URL;
