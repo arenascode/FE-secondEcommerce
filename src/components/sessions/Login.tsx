@@ -16,8 +16,7 @@ const Login: React.FC = () => {
   const {
     setPathPhoto,
     setIsUserLogged,
-    pathToRedirect,
-    setPathToRedirect,
+    //setPathToRedirect
     setUserHasPhoto,
     isUserLogged,
   } = useSessions();
