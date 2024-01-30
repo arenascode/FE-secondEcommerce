@@ -33,6 +33,9 @@ function App() {
     axios
       .get(`${apiUrl}/api/sessions/current`, {
         withCredentials: true,
+        headers: {
+          "Content-Type": "application/json",
+        }
       })
       .then((res) => {
         setProfileData(res.data.currentUserDTO);

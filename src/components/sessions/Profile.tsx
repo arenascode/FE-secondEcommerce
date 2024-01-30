@@ -34,34 +34,36 @@ const Profile = () => {
   const CLIENT_URL = useRef<string | null>(null);
   const targetDivRef = useRef<HTMLDivElement>(null);
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   const {refetch } = useQuery({
     queryKey: ["user"],
     queryFn: () => {
       //Review this:
       // setUserHasPhoto(false); //
       axios
-        .get("http://127.0.0.1:8080/api/sessions/current", {
+        .get(`${apiUrl}/api/sessions/current`, {
           withCredentials: true,
         })
         .then((res) => {
           if (res.status === 200) {
             setProfileData(res.data.currentUserDTO);
 
-            axios(
-              `http://127.0.0.1:8080/api/users/${res.data.currentUserDTO.id}`
-            ).then((user) => {
-              const photoPath = user.data.profilePhoto;
+            axios(`${apiUrl}/api/users/${res.data.currentUserDTO.id}`).then(
+              (user) => {
+                const photoPath = user.data.profilePhoto;
 
-              if (photoPath) {
-                // const staticWord = "static";
-                // const trimmingPath = photoPath.slice(6);
-                CLIENT_URL.current = res.data.CLIENT_URL;
-                const newPath = `http://${CLIENT_URL.current}/${photoPath}`;
-                setPathPhoto(newPath);
-                setUserHasPhoto(true);
+                if (photoPath) {
+                  // const staticWord = "static";
+                  // const trimmingPath = photoPath.slice(6);
+                  CLIENT_URL.current = res.data.CLIENT_URL;
+                  const newPath = `${CLIENT_URL.current}/${photoPath}`;
+                  setPathPhoto(newPath);
+                  setUserHasPhoto(true);
+                }
+                setIsUserLogged(true);
               }
-              setIsUserLogged(true);
-            });
+            );
           }
         })
         .catch((err) => {
@@ -72,11 +74,7 @@ const Profile = () => {
         });
     },
   });
-
-  const apiUrl = import.meta.env.VITE_API_URL
-  console.log(apiUrl);
-  
-  
+    
   const userMutation = useMutation({
     mutationFn: async (formToSend) => {
       return axios
