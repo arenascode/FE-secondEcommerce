@@ -141,7 +141,7 @@ const Login: React.FC = () => {
             const trimmingPath = photoPath.slice(6);
             const newPath = staticWord + trimmingPath;
             CLIENT_URL.current = result.data.CLIENT_URL;
-            setPathPhoto(`http://${CLIENT_URL.current}/${newPath}`);
+            setPathPhoto(`${CLIENT_URL.current}/${newPath}`);
             setUserHasPhoto(true);
           }
           Toast.fire({
