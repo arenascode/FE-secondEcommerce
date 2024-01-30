@@ -134,7 +134,8 @@ const Login: React.FC = () => {
       .then(async (result) => {
         if (result.status === 200) {
           const photoPath = result.data.loggedUserDto.profilePhoto;
-
+          console.log(result.data);
+          
           if (photoPath) {
             console.log(`The user has have profilePicture`);
             const staticWord = "static";

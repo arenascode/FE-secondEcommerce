@@ -67,11 +67,11 @@ const CartDetail = () => {
 
   const EmptyCart = () => {
     return (
-      <div className="bg-gradient-to-tr from-gray-400 at-center to-stone-800 h-screen glass hover:bg-stone-800 pt-28 p-6 align-middle justify-center">
-        <div className="card sm:w-max sm:ml-[10rem] bg-base-100 shadow-xl lg:mt-28 md:ml-[16rem] lg:ml-[24rem] xl:mr-64">
-          <div className="card-body items-center text-center">
-            <h1 className="card-title">Your Cart is Empty!</h1>
-            <p className="text-lg">
+      <div className="bg-gradient-to-tr from-gray-400 at-center to-stone-800 min-h-[100dvh] w-full glass flex hover:bg-stone-800 pt-28 justify-center">
+        <div className="card sm:w-max bg-base-100 shadow-xl lg:mt-28 md:ml-[4rem] lg:ml-[6rem] xl:mr-64 h-max p-3">
+          <div className="flex flex-col gap-6 items-center text-center max-h-max p-4">
+            <h1 className="card-title sm:text-md">Your Cart is Empty!</h1>
+            <p className="text-lg sm:text-sm">
               We invite you to get to know all of our Motorcycles!
             </p>
             <div className="card-actions">

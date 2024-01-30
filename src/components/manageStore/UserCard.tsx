@@ -28,7 +28,7 @@ const CustomerCard: React.FC<ChildComponentProps> = ({ User, CLIENT_URL }) => {
           <img
             src={
               User.profilePhoto
-                ? `http://${CLIENT_URL}/${User.profilePhoto}`
+                ? `${CLIENT_URL}/${User.profilePhoto}`
                 : "/user.png"
             }
             alt="userPhoto"
