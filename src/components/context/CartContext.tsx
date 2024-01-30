@@ -86,6 +86,8 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
 
   const [outOfStock, setOutOfStock] = useState<boolean>(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   //* To add to cart *//
   const addToCart = (pid: string | undefined, qty: number): void => {
 
@@ -109,7 +111,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     if (cartIdStorage !== "") {
       
       axios
-        .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
+        .get(`${apiUrl}/api/carts/${cartIdStorage}`)
         .then((res) => {
           const productInCart = res.data.cartById.products.find(
             (p: ProductCart) => p._id._id === cartData.pid
@@ -130,7 +132,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
           setOutOfStock(false);
 
           axios
-            .post("http://127.0.0.1:8080/api/carts", cartData, {
+            .post(`${apiUrl}/api/carts`, cartData, {
               withCredentials: true,
             })
             .then(function (res) {
@@ -182,7 +184,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
         });
     } else {
       axios
-        .post("http://127.0.0.1:8080/api/carts", cartData, {
+        .post(`${apiUrl}/api/carts`, cartData, {
           withCredentials: true,
         })
         .then(function (res) {
@@ -271,7 +273,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
     const pid = e.currentTarget.dataset.pid;
     axios
       .delete(
-        `http://127.0.0.1:8080/api/carts/${cartIdStorage}/products/${pid}`
+        `${apiUrl}/api/carts/${cartIdStorage}/products/${pid}`
       )
       .then((res) => {
         setCartList(res.data.products);
@@ -282,7 +284,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   //*Empty Cart */
   const emptyCart = (e: React.MouseEvent<HTMLButtonElement>) => {
     const cid = e.currentTarget.dataset.cid;
-    axios.delete(`http://127.0.0.1:8080/api/carts/${cid}`).then((res) => {
+    axios.delete(`${apiUrl}/api/carts/${cid}`).then((res) => {
       setCartList(res.data.products);
       setSubTotal(0);
     });
@@ -291,7 +293,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   //* Confirm Purchase
   const confirmPurchase = async () => {
     await axios
-      .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}/purchase`)
+      .get(`${apiUrl}/api/carts/${cartIdStorage}/purchase`)
       .then((res) => {
         if (res.status === 200)
         setCartList([]);
@@ -305,7 +307,7 @@ const CartContextProvider = ({ children }: CartContextProviderProps) => {
   > => {
     try {
       const response = await axios.get(
-        `http://127.0.0.1:8080/api/carts/${cid}`, {
+        `${apiUrl}/api/carts/${cid}`, {
           withCredentials: true
         }
       );
