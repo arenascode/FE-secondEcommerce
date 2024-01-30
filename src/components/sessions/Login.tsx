@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineArrowRight, AiOutlineGithub } from "react-icons/ai";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useSessions } from "../context/SessionsContext";
 import { ProductCart, useCart } from "../context/CartContext";
 import Swal from "sweetalert2";
@@ -167,9 +167,10 @@ const Login: React.FC = () => {
           }
 
           setTimeout(() => {
-            window.location.replace(pathToRedirect);
-            setPathToRedirect("/");
-          }, 1000);
+            <Navigate to={'/'}/>
+            // window.location.replace(pathToRedirect);
+            // setPathToRedirect("/");
+          }, 2000);
         }
       })
       .catch((err) => {
