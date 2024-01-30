@@ -169,7 +169,7 @@ const NavBar = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "src/assets/user.png"
+                        : "/user.png"
                     }
                   />
                 ) : (
@@ -177,7 +177,7 @@ const NavBar = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "/src/assets/user.png"
+                        : "/user.png"
                     }
                   />
                 )}

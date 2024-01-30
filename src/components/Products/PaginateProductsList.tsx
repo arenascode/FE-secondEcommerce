@@ -145,7 +145,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     <div className="flex justify-center mt-6 gap-8 mb-5 ">
       <button onClick={previousOnePage}>
         <img
-          src="src/assets/icons/left-arrow.png"
+          src="/icons/left-arrow.png"
           alt=""
           className={`${
             arrowLeft ? "block" : "hidden"
@@ -179,7 +179,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
       </button>
       <button onClick={nextOnePage}>
         <img
-          src="src/assets/icons/right-arrow.png"
+          src="/icons/right-arrow.png"
           alt=""
           className={` ${
             arrowRight ? "block" : "hidden"
