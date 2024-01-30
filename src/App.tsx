@@ -14,8 +14,7 @@ import ManageStore from "./components/manageStore/ManageStore";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import UploadProduct from "./components/Products/UpdateProduct";
 import SessionExpired from "./components/sessions/SessionExpired";
-import { useEffect } from "react";
-import axios from "axios";
+
 
 interface ProtectedRouteProps {
   children: React.ReactNode
@@ -23,11 +22,11 @@ interface ProtectedRouteProps {
 
 function App() {
 
-  const apiUrl = import.meta.env.VITE_API_URL
+  // const apiUrl = import.meta.env.VITE_API_URL
 
   const queryClient = new QueryClient();
 
-  const { isUserLogged, setProfileData, setIsUserLogged, setUserHasPhoto } = useSessions();
+  const { isUserLogged,  } = useSessions();
   
   // useEffect(() => {
   //   axios
