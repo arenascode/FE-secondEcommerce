@@ -13,6 +13,8 @@ import { Home, ShoppingCart, TwoWheelerOutlined } from "@mui/icons-material";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_KEY);
 
+const apiUrl = import.meta.env.VITE_API_URL
+
 const CartDetail = () => {
   const {
     cartIdStorage,
@@ -33,7 +35,7 @@ const CartDetail = () => {
   useEffect(() => {
     isUserLogged
       ? axios
-          .get(`http://127.0.0.1:8080/api/carts/${cartIdStorage}`)
+          .get(`${apiUrl}/api/carts/${cartIdStorage}`)
           .then((res) => {
             console.log(res.data);
             setCartList(res.data.cartById.products);
@@ -46,7 +48,7 @@ const CartDetail = () => {
   const handlePaymentIntent = async () => {
     await axios
       .post(
-        `http://127.0.0.1:8080/api/payments/payment-intents`,
+        `${apiUrl}/api/payments/payment-intents`,
         { subTotal },
         {
           withCredentials: true,

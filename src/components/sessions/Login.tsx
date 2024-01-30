@@ -16,7 +16,8 @@ const Login: React.FC = () => {
   const {
     setPathPhoto,
     setIsUserLogged,
-    //setPathToRedirect
+    pathToRedirect,
+    setPathToRedirect,
     setUserHasPhoto,
     isUserLogged,
   } = useSessions();
@@ -164,11 +165,11 @@ const Login: React.FC = () => {
               console.error("Unexpected type for cartSaved:", cartSaved);
             }
           }
+          setPathToRedirect("/");
 
           setTimeout(() => {
             <Navigate to={'/'}/>
-            // window.location.replace(pathToRedirect);
-            // setPathToRedirect("/");
+            window.location.replace(pathToRedirect);
           }, 2000);
         }
       })
