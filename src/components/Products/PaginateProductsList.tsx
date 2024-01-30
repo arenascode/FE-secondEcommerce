@@ -16,6 +16,8 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   setProducts, PageOptions, Sort, setPageNumber
 }) => {
 
+  const apiUrl = import.meta.env.VITE_API_URL
+
   useEffect(() => {
     setArrowLeft(false)
   }, []) 
@@ -35,7 +37,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor2(false);
     setBtnColor3(false);
     
-    fetch(`http://localhost:8080/api/products?page=1/&sortprice=${Sort}`)
+    fetch(`${apiUrl}/api/products?page=1/&sortprice=${Sort}`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -50,7 +52,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor1(false);
     setBtnColor2(true);
     setBtnColor3(false);
-    fetch(`http://localhost:8080/api/products?page=2&sortprice=${Sort}/`)
+    fetch(`${apiUrl}/api/products?page=2&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -58,7 +60,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
         setArrowLeft(data.products.hasPrevPage);
         setPreviousPage(data.products.prevPage);
         setNextPage(data.products.nextPage);
-        setPageNumber(data.products.page)
+        setPageNumber(data.products.page);
 
         CLIENT_URL.current = data.CLIENT_URL;
       })
@@ -68,11 +70,10 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
     setBtnColor1(false);
     setBtnColor2(false);
     setBtnColor3(true);
-    fetch(`http://localhost:8080/api/products?page=3&sortprice=${Sort}/`)
+    fetch(`${apiUrl}/api/products?page=3&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
-        
-        setPageNumber(data.products.page)
+        setPageNumber(data.products.page);
         setProducts(data.products.docs);
         setArrowRight(data.products.hasNextPage);
         setArrowLeft(data.products.hasPrevPage);
@@ -94,7 +95,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
       setBtnColor2(true);
     }
    
-    fetch(`http://localhost:8080/api/products?page=${nextPage}&sortprice=${Sort}/`)
+    fetch(`${apiUrl}/api/products?page=${nextPage}&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
@@ -110,9 +111,7 @@ const PaginateProductsList: React.FC<ChildComponentProps> = ({
   }
   function previousOnePage() {
 
-    fetch(
-      `http://localhost:8080/api/products?page=${previousPage}&sortprice=${Sort}/`
-    )
+    fetch(`${apiUrl}/api/products?page=${previousPage}&sortprice=${Sort}/`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data.products.docs);
