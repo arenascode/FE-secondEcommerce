@@ -14,7 +14,7 @@ const ItemCount: React.FC<ItemCountProps> = ({ productId, productStock }) => {
   const [count, setCount] = useState(1);
 
   const { addToCart } = useCart();
-  const { setPathToRedirect, pathToRedirect, isUserLogged } = useSessions();
+  const { setPathToRedirect, isUserLogged } = useSessions();
   const location = useLocation();
 
   const Toast = Swal.mixin({
