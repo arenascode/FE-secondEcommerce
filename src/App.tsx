@@ -29,26 +29,26 @@ function App() {
 
   const { isUserLogged, setProfileData, setIsUserLogged, setUserHasPhoto } = useSessions();
   
-  useEffect(() => {
-    axios
-      .get(`${apiUrl}/api/sessions/current`, {
-        withCredentials: true,
-        headers: {
-          "Content-Type": "application/json",
-        }
-      })
-      .then((res) => {
-        setProfileData(res.data.currentUserDTO);
-      })
-      .catch((err) => {
-        console.log(err);
-        if (err.response.status == 401) {
-          setIsUserLogged(false);
-          setProfileData(null);
-          setUserHasPhoto(false);
-        }
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(`${apiUrl}/api/sessions/current`, {
+  //       withCredentials: true,
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       }
+  //     })
+  //     .then((res) => {
+  //       setProfileData(res.data.currentUserDTO);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //       if (err.response.status == 401) {
+  //         setIsUserLogged(false);
+  //         setProfileData(null);
+  //         setUserHasPhoto(false);
+  //       }
+  //     });
+  // }, []);
   
   console.log({ isUserLogged });
 
