@@ -73,10 +73,14 @@ const Profile = () => {
     },
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL
+  console.log(apiUrl);
+  
+  
   const userMutation = useMutation({
     mutationFn: async (formToSend) => {
       return axios
-        .put(`http://127.0.0.1:8080/api/users/${profileData?.id}`, formToSend, {
+        .put(`${apiUrl}/api/users/${profileData?.id}`, formToSend, {
           withCredentials: true,
         })
         .then(() => {
@@ -122,14 +126,14 @@ const Profile = () => {
       const formData = new FormData(formProfilePic);
 
       axios
-        .put(`http://127.0.0.1:8080/api/users/${uid}`, formData)
+        .put(`${apiUrl}/api/users/${uid}`, formData)
         .then((res) => {
           console.log(res);
           const photoPath = res.data.userUpdated.profilePhoto;
 
           CLIENT_URL.current = res.data.CLIENT_URL;
 
-          setPathPhoto(`http://${CLIENT_URL.current}/${photoPath}`);
+          setPathPhoto(`${CLIENT_URL.current}/${photoPath}`);
 
           setIsPhotoUploaded(false);
           setUserHasPhoto(true);
@@ -202,6 +206,7 @@ const Profile = () => {
       setErrorMail(true);
       return;
     }
+
     //@ts-ignore
     userMutation.mutate(formToSend);
   };

@@ -22,6 +22,9 @@ interface ProtectedRouteProps {
 }
 
 function App() {
+
+
+
   const queryClient = new QueryClient();
 
   const { isUserLogged, setProfileData, setIsUserLogged, setUserHasPhoto } = useSessions();
