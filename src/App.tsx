@@ -23,7 +23,7 @@ interface ProtectedRouteProps {
 
 function App() {
 
-
+  const apiUrl = import.meta.env.VITE_API_URL
 
   const queryClient = new QueryClient();
 
@@ -31,20 +31,20 @@ function App() {
   
   useEffect(() => {
     axios
-    .get("http://127.0.0.1:8080/api/sessions/current", {
-      withCredentials: true,
-    })
-    .then((res) => {
-      setProfileData(res.data.currentUserDTO);
-    }).catch((err) => {
-      console.log(err)
-      if (err.response.status == 401) {
-        setIsUserLogged(false)
-        setProfileData(null)
-        setUserHasPhoto(false)
-      }
-    }
-    )
+      .get(`${apiUrl}/api/sessions/current`, {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setProfileData(res.data.currentUserDTO);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (err.response.status == 401) {
+          setIsUserLogged(false);
+          setProfileData(null);
+          setUserHasPhoto(false);
+        }
+      });
   }, []);
   
   console.log({ isUserLogged });
