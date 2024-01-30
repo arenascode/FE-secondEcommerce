@@ -48,7 +48,7 @@ const ProductInCart: React.FC<ProductCartProps> = ({ product, CLIENT_URL }) => {
       <td className="deleteProduct pl-3 py-4">
         <button onClick={deleteProductInCart} data-pid={product._id._id}>
           <img
-            src="../src/assets/icons/borrar.png"
+            src="/icons/borrar.png"
             alt="deleteIcon"
             width={"24px"}
           />

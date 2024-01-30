@@ -289,7 +289,7 @@ const Profile = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "/src/assets/user.png"
+                        : "/user.png"
                     }
                     className="w-full h-full rounded-full"
                   />
@@ -353,7 +353,7 @@ const Profile = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "src/assets/user.png"
+                        : "/user.png"
                     }
                     alt="Profile Picture"
                   />
@@ -362,7 +362,7 @@ const Profile = () => {
                     src={
                       isUserLogged && userHasPhoto
                         ? `${pathPhoto}`
-                        : "/src/assets/user.png"
+                        : "/user.png"
                     }
                     className="w-full h-full rounded-full"
                   />
@@ -381,7 +381,7 @@ const Profile = () => {
                       className="inset-0 cursor-pointer flex flex-col items-center w-7 h-auto"
                     >
                       <img
-                        src="src/assets/icons/camara.png"
+                        src="/icons/camara.png"
                         alt=""
                         className="w-full h-auto"
                       />
