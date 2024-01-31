@@ -232,7 +232,7 @@ const ProductDetail = () => {
         isLoading ? (
           "Loading..."
         ) : (
-          <div className="py-20 flex justify-center px-2 md:px-6 bg-gradient-to-tr from-gray-400 at-center to-stone-800">
+          <div className="py-20 flex justify-center px-2 md:px-6 bg-gradient-to-tr from-gray-400 at-center to-stone-800 min-h-screen">
             <ProductCard productData={product ? product : undefined} />
           </div>
         )
