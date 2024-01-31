@@ -25,7 +25,7 @@ const ProductInCart: React.FC<ProductCartProps> = ({ product, CLIENT_URL }) => {
     <tr className="bg-white dark:bg-gray-800 items-center rounded-sm md:text-xl">
       <td className="sm:pl-1 pl-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white flex flex-col items-center gap-2 md:w-[200px] md:pl-0 lg:pl-6">
         <div className="rounded-md shadow-lg">
-          <div className="imgContainer sm:h-max-[9rem] sm:w-max-[100px] lg:w-[200px] lg:h-max md:max-w-[200px] xl:h-[280px]">
+          <div className="imgContainer sm:h-max-[9rem] sm:w-max-[100px] lg:w-[200px] lg:h-max md:max-w-[200px] xl:h-max">
             <img
               src={`${CLIENT_URL}${product._id.thumbnails}`}
               alt="productPhoto"
